@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="employeeDAOBean"
+		class="com.esrinea.dotGeo.tracking.model.component.employee.EmployeeDAOImpl">
+	</bean>
+
+
+	<!-- Transaction Config -->
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="emf" />
+	</bean>
+
+	<!-- Test database -->
+	<!-- JPA Entity Manager Factory -->
+	<bean id="emf"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.OpenJpaVendorAdapter">
+				<property name="showSql" value="true" />
+				<!-- <property name="formatSql" value="true" /> -->
+				<!-- <property name="useSqlComments" value="true"/> -->
+			</bean>
+		</property>
+	</bean>
+
+	<!-- BoneCP configuration -->
+	<bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource"
+		destroy-method="close">
+		<property name="driverClass">
+			<value>oracle.jdbc.pool.OracleDataSource</value>
+		</property>
+		<property name="jdbcUrl">
+			<value>jdbc:oracle:thin:@localhost:1521:xe</value>
+		</property>
+		<property name="username">
+			<value>hr</value>
+		</property>
+		<property name="password">
+			<value>hr</value>
+		</property>
+		<property name="idleConnectionTestPeriodInMinutes" value="60" />
+		<property name="idleMaxAgeInMinutes" value="240" />
+		<property name="maxConnectionsPerPartition" value="5" />
+		<property name="minConnectionsPerPartition" value="5" />
+		<property name="partitionCount" value="3" />
+		<property name="acquireIncrement" value="10" />
+		<property name="statementsCacheSize" value="50" />
+		<property name="releaseHelperThreads" value="3" />
+	</bean>
+
+
+</beans>
