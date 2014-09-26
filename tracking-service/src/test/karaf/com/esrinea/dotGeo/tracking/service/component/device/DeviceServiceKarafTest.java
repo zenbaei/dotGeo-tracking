@@ -1,11 +1,11 @@
-package com.esrinea.dotGeo.tracking.service.test;
+package com.esrinea.dotGeo.tracking.service.component.device;
 
 import org.apache.log4j.Logger;
 
 import com.esrinea.dotGeo.tracking.model.component.employee.Employee;
 import com.esrinea.dotGeo.tracking.service.component.device.DeviceService;
 
-public class DeviceServiceTest {
+public class DeviceServiceKarafTest {
 	
 	private DeviceService deviceService;
 	private Logger log = Logger.getLogger(getClass());

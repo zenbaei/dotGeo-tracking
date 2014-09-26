@@ -24,7 +24,7 @@
 		ref="deviceServiceBean" />
 		
 		<!-- test bean -->
-	<bean id="testDeviceService" class="com.esrinea.dotGeo.tracking.service.test.DeviceServiceTest"
+	<bean id="deviceServiceTest" class="com.esrinea.dotGeo.tracking.service.component.device.DeviceServiceTest"
 		init-method="test">
 		<property name="deviceService" ref="deviceServiceBean" />
 	</bean>

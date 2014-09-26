@@ -11,8 +11,11 @@
 		<version>1.0.0</version>
 		<relativePath>../tracking-parent-pom</relativePath>
 	</parent>
-	
+
 	<build>
+
+		<sourceDirectory>/src/main/java</sourceDirectory>
+
 		<plugins>
 			<plugin>
 				<groupId>org.apache.felix</groupId>

@@ -56,8 +56,8 @@
 						<Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
 						<Bundle-ContactAddress>geoeventprocessor@esri.com</Bundle-ContactAddress>
 						<Bundle-Version>${project.version}</Bundle-Version>
-						<Export-Package />
-						<Private-Package>com.esrinea.dotGeo.tracking.processor</Private-Package>
+						<Export-Package>com.esrinea.dotGeo.tracking.processor.component.tracking.*</Export-Package>
+						<!-- <Private-Package>com.esrinea.dotGeo.tracking.processor</Private-Package> -->
 						<Import-Package>*</Import-Package>
 					</instructions>
 				</configuration>

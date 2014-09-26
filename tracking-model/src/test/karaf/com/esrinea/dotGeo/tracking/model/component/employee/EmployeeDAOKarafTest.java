@@ -1,11 +1,11 @@
-package com.esrinea.dotGeo.tracking.model.test;
+package com.esrinea.dotGeo.tracking.model.component.employee;
 
 import org.apache.log4j.Logger;
 
 import com.esrinea.dotGeo.tracking.model.component.employee.Employee;
 import com.esrinea.dotGeo.tracking.model.component.employee.EmployeeDAO;
 
-public class EmployeeDAOTest {
+public class EmployeeDAOKarafTest {
 
 	private EmployeeDAO  employeeDAO;
 	private Logger log = Logger.getLogger(getClass());

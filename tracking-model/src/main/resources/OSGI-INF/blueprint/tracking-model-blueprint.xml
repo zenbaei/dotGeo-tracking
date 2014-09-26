@@ -16,7 +16,7 @@
 	</bean>
 
 	<!-- test bean -->
-	<bean id="testJpa" class="com.esrinea.dotGeo.tracking.model.test.EmployeeDAOTest"
+	<bean id="employeeDAOKarafTest" class="com.esrinea.dotGeo.tracking.model.component.employee.EmployeeDAOKarafTest"
 		init-method="test">
 		<property name="employeeDAO" ref="employeeDAOBean" />
 	</bean>

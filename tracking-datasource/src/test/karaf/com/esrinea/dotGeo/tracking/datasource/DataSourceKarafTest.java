@@ -15,9 +15,9 @@ import javax.sql.DataSource;
  * test DS connection at the deploy time
  * @author Gabriel
  */
-public class DsTest {
+public class DataSourceKarafTest {
     
-    private static final Logger logger = Logger.getLogger(DsTest.class.getName());
+    private static final Logger logger = Logger.getLogger(DataSourceKarafTest.class.getName());
     
     private DataSource datasource;
     private String testQuery;

@@ -1,4 +1,4 @@
-package com.esrinea.dotGeo.tracking.processor;
+package com.esrinea.dotGeo.tracking.processor.component.tracking;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -10,15 +10,15 @@ import com.esri.ges.processor.GeoEventProcessorBase;
 import com.esri.ges.processor.GeoEventProcessorDefinition;
 import com.esrinea.dotGeo.tracking.service.component.device.DeviceService;
 
-public class DotGeoProcessor extends GeoEventProcessorBase {
-	private static final Log LOG = LogFactory.getLog(DotGeoProcessor.class);
+public class TrackingProcessor extends GeoEventProcessorBase {
+	private static final Log LOG = LogFactory.getLog(TrackingProcessor.class);
 
 	private long lastReport = 0;
 	private int maxMessageRate = 500;
 	private boolean printedWarning;
 	private DeviceService deviceService;
 
-	protected DotGeoProcessor(GeoEventProcessorDefinition definition, DeviceService deviceService)
+	protected TrackingProcessor(GeoEventProcessorDefinition definition, DeviceService deviceService)
 			throws ComponentException {
 		super(definition);
 		this.deviceService = deviceService;
@@ -27,20 +27,20 @@ public class DotGeoProcessor extends GeoEventProcessorBase {
 	@Override
 	public GeoEvent process(GeoEvent geoEvent) throws Exception {
 
-		LOG.info("Succeeded to find employee");
-		LOG.info(deviceService.getEmployee(100l));
-
+		LOG.info("Geo Event Device ID: " + geoEvent.getTrackId());
+		LOG.info("Geo Event x cord: " + geoEvent.getField("x_cord"));
+		
 		if (maxMessageRate > 0) {
 			if ((System.currentTimeMillis() - lastReport) > maxMessageRate) {
 				if (!printedWarning)
-					LOG.debug("Sample Processing ... (Limiting output to no more than 1 line every "
+					LOG.debug("Tracking Processing ... (Limiting output to no more than 1 line every "
 							+ maxMessageRate + " ms)");
 				else
-					LOG.debug("Sample Processing ... ");
+					LOG.debug("Tracking Processing ... ");
 				lastReport = System.currentTimeMillis();
 			}
 		} else
-			LOG.debug("Sample Processing ... ");
+			LOG.debug("Tracking Processing ... ");
 
 		return geoEvent;
 	}

@@ -16,14 +16,14 @@
 		interface="com.esrinea.dotGeo.tracking.service.component.device.DeviceService"
 		availability="mandatory" />
 
-	<bean id="dotGeoProcessorServiceBean"
-		class="com.esrinea.dotGeo.tracking.processor.DotGeoProcessorService"
+	<bean id="trackingProcessorServiceBean"
+		class="com.esrinea.dotGeo.tracking.processor.component.tracking.TrackingProcessorService"
 		activation="eager">
 		<property name="bundleContext" ref="blueprintBundleContext" />
 		<property name="deviceService" ref="deviceServiceRef" />
 	</bean>
 
-	<service id="dotGeoProcessorService" ref="dotGeoProcessorServiceBean"
+	<service id="trackingProcessorService" ref="trackingProcessorServiceBean"
 		interface="com.esri.ges.processor.GeoEventProcessorService" />
 
 

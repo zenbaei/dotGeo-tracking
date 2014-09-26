@@ -24,7 +24,7 @@
 
 
 	<!-- test bean -->
-	<bean class="com.esrinea.dotGeo.tracking.datasource.DsTest" init-method="test">
+	<bean class="com.esrinea.dotGeo.tracking.datasource.DataSourceKarafTest" init-method="test">
 		<property name="datasource" ref="dataSource" />
 		<property name="testQuery" value="select * from employees" />
 	</bean>
