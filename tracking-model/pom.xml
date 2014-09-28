@@ -45,6 +45,14 @@
 			<systemPath>C:/Users/islam.zenbaei/.m2/repository/com/oracle/ojdbc14/10/ojdbc14-10.jar</systemPath>
 			<scope>system</scope>
 		</dependency>
+		
+		<dependency>
+			<groupId>com.microsoft</groupId>
+			<artifactId>jdbc</artifactId>
+			<version>4</version>
+		</dependency>
+		
+		
 	</dependencies>
 
 	<build>

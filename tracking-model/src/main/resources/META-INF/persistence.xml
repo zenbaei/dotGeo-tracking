@@ -5,7 +5,20 @@
 	<persistence-unit name="hr" transaction-type="JTA">
 		<provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
 		<jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=jdbc/hr)</jta-data-source>
-		<class>com.esrinea.dotGeo.tracking.model.component.employee.Employee</class>
+		<class>com.esrinea.dotGeo.tracking.model.component.alertConfiguration.entity.AlertConfiguration</class>
+		<class>com.esrinea.dotGeo.tracking.model.component.alertLiveFeed.entity.AlertLiveFeed</class>
+		<class>com.esrinea.dotGeo.tracking.model.component.alert.entity.Alert</class>
+		<class>com.esrinea.dotGeo.tracking.model.component.sensorConfiguration.entity.SensorConfiguration</class>
+		<class>com.esrinea.dotGeo.tracking.model.component.sensorType.entity.SensorType</class>
+		<class>com.esrinea.dotGeo.tracking.model.component.sensor.entity.Sensor</class>
+		<class>com.esrinea.dotGeo.tracking.model.component.sensorLiveFeed.entity.SensorLiveFeed</class>
+		<class>com.esrinea.dotGeo.tracking.model.component.deviceType.entity.DeviceType</class>
+		<class>com.esrinea.dotGeo.tracking.model.component.device.entity.Device</class>
+		<class>com.esrinea.dotGeo.tracking.model.component.resourceLiveFeed.entity.ResourceLiveFeed</class>
+		<class>com.esrinea.dotGeo.tracking.model.component.resourceType.entity.ResourceType</class>
+		<class>com.esrinea.dotGeo.tracking.model.component.resource.entity.Resource</class>
+		<class>com.esrinea.dotGeo.tracking.model.component.execludedAlert.entity.ExecludedAlert</class>
+		<class>com.esrinea.dotGeo.tracking.model.component.execludedSensor.entity.ExecludedSensor</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
 			<property name="openjpa.Log" value="DefaultLevel=INFO, Tool=INFO" />
