@@ -1,4 +1,4 @@
-package com.esrinea.dotGeo.tracking.service.component;
+package com.esrinea.dotGeo.tracking.service.component.device;
 
 import junit.framework.Assert;
 

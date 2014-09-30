@@ -33,7 +33,8 @@
 			<value>com.microsoft.sqlserver.jdbc.SQLServerDataSource</value>
 		</property>
 		<property name="jdbcUrl">
-			<value>jdbc:sqlserver://192.168.9.33:1433;databaseName=GeoEventsTracking1</value>
+			<value>jdbc:sqlserver://192.168.9.33:1433;databaseName=GeoEventsTracking1;selectMethod=cursor;sendStringParametersAsUnicode=false
+			</value>
 		</property>
 		<property name="username">
 			<value>sa</value>
@@ -52,7 +53,10 @@
 	</bean>
 
 
-	<bean id="deviceBean"
+	<bean id="deviceDAO"
 		class="com.esrinea.dotGeo.tracking.model.component.device.dao.DeviceDAOImpl">
+	</bean>
+	<bean id="resourceLiveFeedDAO"
+		class="com.esrinea.dotGeo.tracking.model.component.resourceLiveFeed.dao.ResourceLiveFeedDAOImpl">
 	</bean>
 </beans>

@@ -2,9 +2,6 @@ package com.esrinea.dotGeo.tracking.service.component.device;
 
 import org.apache.log4j.Logger;
 
-import com.esrinea.dotGeo.tracking.model.component.employee.Employee;
-import com.esrinea.dotGeo.tracking.service.component.device.DeviceService;
-
 public class DeviceServiceKarafTest {
 	
 	private DeviceService deviceService;
@@ -15,8 +12,6 @@ public class DeviceServiceKarafTest {
 	}
 	
 	public void test(){
-		Employee emp = deviceService.getEmployee(200l);
-		log.info("Employee: " + emp.getLastName() +" has been retrived succefully");
 	}
 
 }
