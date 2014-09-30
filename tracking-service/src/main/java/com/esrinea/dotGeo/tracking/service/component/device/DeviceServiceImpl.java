@@ -1,9 +1,11 @@
 package com.esrinea.dotGeo.tracking.service.component.device;
 
-import org.springframework.stereotype.Service;
+import com.esrinea.dotGeo.tracking.model.component.device.entity.Device;
+import com.esrinea.dotGeo.tracking.service.common.AbstractService;
 
-@Service
-public class DeviceServiceImpl implements DeviceService {
+
+
+public class DeviceServiceImpl extends AbstractService<Device> implements DeviceService {
 
 	
 }

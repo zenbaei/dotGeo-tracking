@@ -13,8 +13,8 @@ public class SensorConfigurationServiceTest extends DeviceServiceTest{
 	private SensorConfigurationService sensorConfigurationService;
 	
 	@Test
-	public void testApplyBusinessRule(){
-		
+	public void testIsBusinessRuleSatisfied(){
+		deviceService.find(1);
 	}
 	
 }
