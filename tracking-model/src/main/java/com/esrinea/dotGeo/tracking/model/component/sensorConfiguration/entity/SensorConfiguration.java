@@ -1,21 +1,17 @@
 package com.esrinea.dotGeo.tracking.model.component.sensorConfiguration.entity;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.TableGenerator;
 
 import com.esrinea.dotGeo.tracking.model.component.alertConfiguration.entity.AlertConfiguration;
 import com.esrinea.dotGeo.tracking.model.component.sensor.entity.Sensor;
@@ -53,6 +49,9 @@ public class SensorConfiguration implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="Sensor_DBID")
 	private Sensor sensor;
+	
+	@Column(name="IsRetired")
+	private boolean retired;
 
 	public SensorConfiguration() {
 	}
@@ -80,5 +79,36 @@ public class SensorConfiguration implements Serializable {
 	public void setTextValue(String textValue) {
 		this.textValue = textValue;
 	}
+	
+	public boolean isRetired() {
+		return retired;
+	}
+	
+	public void setRetired(boolean retired) {
+		this.retired = retired;
+	}
+	
+	public String getConfigText() {
+		return configText;
+	}
+	
+	public void setConfigText(String configText) {
+		this.configText = configText;
+	}
+	
+	public Sensor getSensor() {
+		return sensor;
+	}
 
+	@Override
+	public String toString() {
+		return "SensorConfiguration [id=" + id + ", configText=" + configText
+				+ ", maxValue=" + maxValue + ", minValue=" + minValue
+				+ ", textValue=" + textValue + ", sensor=" + sensor
+				+ ", retired=" + retired + "]";
+	}
+	
+	
+	
+	 
 }

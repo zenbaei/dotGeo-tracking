@@ -43,4 +43,12 @@ public class DeviceType implements Serializable {
 		this.sensors = sensors;
 	}
 
+	@Override
+	public String toString() {
+		return "DeviceType [id=" + id + "]";
+	}
+
+	
+	
+	
 }

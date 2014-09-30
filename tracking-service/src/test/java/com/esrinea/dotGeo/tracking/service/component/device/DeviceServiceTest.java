@@ -17,7 +17,7 @@ import com.esrinea.dotGeo.tracking.service.component.device.DeviceService;
 public class DeviceServiceTest {
 
 	@Autowired
-	private DeviceService deviceService;
+	protected DeviceService deviceService;
 
 	@Test
 	public void testGetEmployee() {

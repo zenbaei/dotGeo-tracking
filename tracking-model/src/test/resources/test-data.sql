@@ -20,3 +20,5 @@ INSERT INTO SENSOR_CONFIGURATION(SENSOR_DBID, MAXVALUE,MINVALUE,CONFIG_TEXT) val
 
 --SELECT * FROM TrackingFinalV1.dbo.sensor_configuration;
 --SELECT * FROM sensor_configuration;
+
+--select * from TrackingFinalV1.dbo.sensors_liveFeeds;

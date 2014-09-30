@@ -31,7 +31,7 @@ public class Sensor implements Serializable {
 	private int id;
 
 	@Column(name = "IsRetired")
-	private boolean isRetired;
+	private boolean retired;
 
 	@Column(name = "Name_En")
 	private String nameEn;
@@ -55,13 +55,13 @@ public class Sensor implements Serializable {
 	}
 
 	public boolean isRetired() {
-		return isRetired;
+		return retired;
 	}
-
-	public void setRetired(boolean isRetired) {
-		this.isRetired = isRetired;
+	
+	public void setRetired(boolean retired) {
+		this.retired = retired;
 	}
-
+	
 	public List<SensorConfiguration> getSensorConfigurations() {
 		return sensorConfigurations;
 	}
@@ -78,4 +78,12 @@ public class Sensor implements Serializable {
 	public void setDeviceType(DeviceType deviceType) {
 		this.deviceType = deviceType;
 	}
+
+	@Override
+	public String toString() {
+		return "Sensor [id=" + id + ", retired=" + retired + ", nameEn="
+				+ nameEn + ", deviceType=" + deviceType + "]";
+	}
+	
+	
 }
