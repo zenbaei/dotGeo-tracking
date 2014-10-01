@@ -10,8 +10,6 @@
 	</bean>
 
 
-
-
 	<bean id="deviceService"
 		class="com.esrinea.dotGeo.tracking.service.component.device.DeviceServiceImpl">
 		<constructor-arg ref="deviceDAO" />

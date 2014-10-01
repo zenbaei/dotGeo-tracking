@@ -5,10 +5,12 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.esrinea.dotGeo.tracking.model.component.alert.entity.Alert;
 import com.esrinea.dotGeo.tracking.model.component.sensor.entity.Sensor;
 import com.google.common.collect.Sets;
 
@@ -25,8 +27,11 @@ public class DeviceType implements Serializable {
 	@Column(name = "DeviceType_DBID", unique = true, nullable = false)
 	private int id;
 
-	@OneToMany(mappedBy = "deviceType")
+	@OneToMany(mappedBy = "deviceType", fetch = FetchType.EAGER)
 	private List<Sensor> sensors;
+
+	@OneToMany(mappedBy = "deviceType", fetch = FetchType.EAGER)
+	private List<Alert> alerts;
 
 	public DeviceType() {
 	}
@@ -39,8 +44,8 @@ public class DeviceType implements Serializable {
 		return sensors;
 	}
 
-	public void setSensors(List<Sensor> sensors) {
-		this.sensors = sensors;
+	public List<Alert> getAlerts() {
+		return alerts;
 	}
 
 	@Override
@@ -48,7 +53,4 @@ public class DeviceType implements Serializable {
 		return "DeviceType [id=" + id + "]";
 	}
 
-	
-	
-	
 }

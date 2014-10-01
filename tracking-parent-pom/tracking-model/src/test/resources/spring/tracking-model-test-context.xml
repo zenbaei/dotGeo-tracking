@@ -59,4 +59,7 @@
 	<bean id="resourceLiveFeedDAO"
 		class="com.esrinea.dotGeo.tracking.model.component.resourceLiveFeed.dao.ResourceLiveFeedDAOImpl">
 	</bean>
+	<bean id="sensorLiveFeedDAO"
+		class="com.esrinea.dotGeo.tracking.model.component.sensorLiveFeed.dao.SensorLiveFeedDAOImpl">
+	</bean>
 </beans>

@@ -13,6 +13,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.esrinea.dotGeo.tracking.model.component.alert.entity.Alert;
+import com.esrinea.dotGeo.tracking.model.component.alertConfiguration.entity.AlertConfiguration;
 import com.esrinea.dotGeo.tracking.model.component.device.entity.Device;
 import com.esrinea.dotGeo.tracking.model.component.deviceType.entity.DeviceType;
 import com.esrinea.dotGeo.tracking.model.component.sensor.entity.Sensor;
@@ -46,10 +48,22 @@ public class DeviceDAOTest {
 
 	@Test
 	public void testGetSensors() {
-		List<Sensor> sensors = device.getDeviceType().getSensors();
-		assertEquals("OIL", sensors.get(0).getNameEn());
+		Sensor oilSensor = device.getDeviceType().getSensors().get(0);
+		assertEquals("OIL", oilSensor.getNameEn());
 	}
 
-	
+	@Test
+	public void testGetAlerts() {
+		Alert oilAlert = device.getDeviceType().getAlerts().get(0);
+		assertEquals("Oil Alert", oilAlert.getNameEn());
+	}
+
+	@Test
+	public void testGetAlertConfigurations() {
+		List<AlertConfiguration> oilAlertConfigurations = device.getDeviceType()
+				.getAlerts().get(0).getAlertConfigurations();
+		assertEquals("In", oilAlertConfigurations.get(0).getSensorConfiguration()
+				.getTextValue());
+	}
 
 }

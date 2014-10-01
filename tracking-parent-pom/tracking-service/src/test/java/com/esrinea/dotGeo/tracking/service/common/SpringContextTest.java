@@ -11,7 +11,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.esrinea.dotGeo.tracking.service.component.device.DeviceService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:/META-INF/spring/*")
+@ContextConfiguration(locations = { "classpath:/META-INF/spring/*",
+		"classpath:/spring/tracking-service-test-context.xml",
+		"classpath:/spring/tracking-model-test-context.xml" })
 public class SpringContextTest {
 
 	@Test
@@ -19,10 +21,10 @@ public class SpringContextTest {
 		ApplicationContext ctx = SpringContext.getApplicationContext();
 
 		DeviceService deviceService = (DeviceService) ctx
-				.getBean(DeviceService.class);
-		
+				.getBean("deviceService");
+
 		assertNotNull(deviceService);
-		
+
 	}
 
 }

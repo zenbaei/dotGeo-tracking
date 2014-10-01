@@ -10,8 +10,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.hamcrest.core.Is;
-
 import com.esrinea.dotGeo.tracking.model.component.deviceType.entity.DeviceType;
 import com.esrinea.dotGeo.tracking.model.component.resource.entity.Resource;
 
@@ -29,7 +27,7 @@ public class Device implements Serializable {
 	private int id;
 
 	@Column(name = "IsRetired")
-	private boolean isRetired;
+	private boolean retired;
 
 	@ManyToOne
 	@JoinColumn(name = "DeviceType_DBID")
@@ -42,36 +40,21 @@ public class Device implements Serializable {
 	public Device() {
 	}
 
-	public void setId(int id) {
-		this.id = id;
-	}
-
 	public int getId() {
 		return id;
 	}
 
 	public boolean isRetired() {
-		return isRetired;
-	}
-	
-	public void setRetired(boolean isRetired) {
-		this.isRetired = isRetired;
+		return retired;
 	}
 
 	public DeviceType getDeviceType() {
 		return deviceType;
 	}
 
-	public void setDeviceType(DeviceType deviceType) {
-		this.deviceType = deviceType;
-	}
-
 	public Resource getResource() {
 		return resource;
 	}
 
-	public void setResource(Resource resource) {
-		this.resource = resource;
-	}
 
 }

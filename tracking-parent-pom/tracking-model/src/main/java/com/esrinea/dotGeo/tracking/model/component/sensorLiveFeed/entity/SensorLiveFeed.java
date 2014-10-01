@@ -19,39 +19,47 @@ import javax.persistence.TemporalType;
 import com.esrinea.dotGeo.tracking.model.component.device.entity.Device;
 import com.esrinea.dotGeo.tracking.model.component.sensorConfiguration.entity.SensorConfiguration;
 
-
 /**
  * The persistent class for the Sensors_LiveFeeds database table.
  * 
  */
 @Entity
-@Table(name="Sensors_LiveFeeds")
-@NamedQuery(name="SensorsLiveFeed.findAll", query="SELECT s FROM SensorLiveFeed s")
+@Table(name = "Sensors_LiveFeeds")
+@NamedQuery(name = "SensorsLiveFeed.findAll", query = "SELECT s FROM SensorLiveFeed s")
 public class SensorLiveFeed implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@TableGenerator(name = "sensorLiveFeed", table = "SEQUENCE_STORE", pkColumnName = "SEQ_NAME", pkColumnValue = "SENSOR_LIVE_FEEDS", valueColumnName = "SEQ_VALUE", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "sensorLiveFeed")
-	@Column(name="Sensor_LiveFeeds_DBID", unique=true, nullable=false)
+	@Column(name = "Sensor_LiveFeeds_DBID", unique = true, nullable = false)
 	private int id;
 
 	@ManyToOne
-	@JoinColumn(name="Device_DBID")
+	@JoinColumn(name = "Device_DBID")
 	private Device device;
 
-	@Column(name="Sensor_Value")
+	@Column(name = "Sensor_Value")
 	private String sensorValue;
 
 	@ManyToOne
-	@JoinColumn(name="SensorConfigDBID")
+	@JoinColumn(name = "SensorConfigDBID")
 	private SensorConfiguration sensorConfiguration;
-	
-	@Column(name="Sensor_DateTime")
+
+	@Column(name = "Sensor_DateTime")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateTime;
 
 	public SensorLiveFeed() {
+	}
+
+	public SensorLiveFeed(Device device,
+			SensorConfiguration sensorConfiguration, String sensorValue,
+			Date dateTime) {
+		this.sensorConfiguration = sensorConfiguration;
+		this.device = device;
+		this.sensorValue = sensorValue;
+		this.dateTime = dateTime;
 	}
 
 	public Device getDevice() {
@@ -89,7 +97,5 @@ public class SensorLiveFeed implements Serializable {
 	public int getId() {
 		return id;
 	}
-
-	
 
 }

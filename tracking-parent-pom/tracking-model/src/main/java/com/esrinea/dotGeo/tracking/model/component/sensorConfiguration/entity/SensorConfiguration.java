@@ -16,41 +16,40 @@ import javax.persistence.Table;
 import com.esrinea.dotGeo.tracking.model.component.alertConfiguration.entity.AlertConfiguration;
 import com.esrinea.dotGeo.tracking.model.component.sensor.entity.Sensor;
 
-
 /**
  * The persistent class for the Sensor_Configuration database table.
  * 
  */
 @Entity
-@Table(name="Sensor_Configuration")
-@NamedQuery(name="SensorConfiguration.findAll", query="SELECT s FROM SensorConfiguration s")
+@Table(name = "Sensor_Configuration")
+@NamedQuery(name = "SensorConfiguration.findAll", query = "SELECT s FROM SensorConfiguration s")
 public class SensorConfiguration implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="SensorConfig_DBID", unique=true, nullable=false)
+	@Column(name = "SensorConfig_DBID", unique = true, nullable = false)
 	private int id;
 
-	@Column(name="Config_Text")
+	@Column(name = "Config_Text")
 	private String configText;
 
-	@Column(name="MaxValue", precision=53)
+	@Column(name = "MaxValue", precision = 53)
 	private double maxValue;
 
-	@Column(name="MinValue", precision=53)
+	@Column(name = "MinValue", precision = 53)
 	private double minValue;
 
-	@Column(name="TextValue")
+	@Column(name = "TextValue")
 	private String textValue;
 
-	@OneToMany(mappedBy="sensorConfiguration", fetch=FetchType.EAGER)
+	@OneToMany(mappedBy = "sensorConfiguration", fetch = FetchType.EAGER)
 	private List<AlertConfiguration> alertConfigurations;
 
 	@ManyToOne
-	@JoinColumn(name="Sensor_DBID")
+	@JoinColumn(name = "Sensor_DBID")
 	private Sensor sensor;
-	
-	@Column(name="IsRetired")
+
+	@Column(name = "IsRetired")
 	private boolean retired;
 
 	public SensorConfiguration() {
@@ -75,29 +74,33 @@ public class SensorConfiguration implements Serializable {
 	public String getTextValue() {
 		return textValue;
 	}
-	
+
 	public void setTextValue(String textValue) {
 		this.textValue = textValue;
 	}
-	
+
 	public boolean isRetired() {
 		return retired;
 	}
-	
+
 	public void setRetired(boolean retired) {
 		this.retired = retired;
 	}
-	
+
 	public String getConfigText() {
 		return configText;
 	}
-	
+
 	public void setConfigText(String configText) {
 		this.configText = configText;
 	}
-	
+
 	public Sensor getSensor() {
 		return sensor;
+	}
+
+	public int getId() {
+		return id;
 	}
 
 	@Override
@@ -107,8 +110,5 @@ public class SensorConfiguration implements Serializable {
 				+ ", textValue=" + textValue + ", sensor=" + sensor
 				+ ", retired=" + retired + "]";
 	}
-	
-	
-	
-	 
+
 }

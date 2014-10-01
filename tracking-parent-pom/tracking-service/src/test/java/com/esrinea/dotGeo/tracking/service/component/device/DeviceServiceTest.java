@@ -13,7 +13,8 @@ import com.esrinea.dotGeo.tracking.service.component.device.DeviceService;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
 		"classpath:/META-INF/spring/application-context.xml",
-		"classpath:/spring/tracking-service-test-context.xml"})
+		"classpath:/spring/tracking-service-test-context.xml",
+		"classpath:/spring/tracking-model-test-context.xml" })
 public class DeviceServiceTest {
 
 	@Autowired
