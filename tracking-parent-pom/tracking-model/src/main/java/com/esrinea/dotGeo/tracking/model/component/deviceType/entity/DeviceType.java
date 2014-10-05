@@ -12,7 +12,6 @@ import javax.persistence.Table;
 
 import com.esrinea.dotGeo.tracking.model.component.alert.entity.Alert;
 import com.esrinea.dotGeo.tracking.model.component.sensor.entity.Sensor;
-import com.google.common.collect.Sets;
 
 /**
  * The persistent class for the Tracking_Device_Types database table.

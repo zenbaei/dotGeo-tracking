@@ -5,7 +5,7 @@
 	<feature name="tracking" version="1.0.0"
 		description="Enable using datasource, Dot Geo schema with openJPA and spring for business layer">
 
-		<!-- feature url: mvn:com.esrinea.dotGeo/tracking-feature/1.0.0/xml/features -->
+		<!-- feature:add-url mvn:com.esrinea.dotGeo/tracking-feature/1.0.0/xml/features -->
 
 		<!-- feature dependencies -->
 		<feature>jpa</feature>
@@ -28,7 +28,7 @@
 		<!-- application bundles -->
 		<bundle>mvn:com.esrinea.dotGeo/tracking-datasource/1.0.0</bundle>
 		<bundle>mvn:com.esrinea.dotGeo/tracking-model/1.0.0</bundle>
-		<bundle>mvn:com.esrinea.dotGeo/tracking-service/1.0.0</bundle>
-		<bundle>mvn:com.esrinea.dotGeo/tracking-processor/1.0.0</bundle>
+	<!-- 	<bundle>mvn:com.esrinea.dotGeo/tracking-service/1.0.0</bundle>
+		<bundle>mvn:com.esrinea.dotGeo/tracking-processor/1.0.0</bundle> -->
 	</feature>
 </features>

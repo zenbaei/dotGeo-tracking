@@ -17,6 +17,7 @@ import com.esrinea.dotGeo.tracking.model.component.alert.entity.Alert;
 import com.esrinea.dotGeo.tracking.model.component.alertConfiguration.entity.AlertConfiguration;
 import com.esrinea.dotGeo.tracking.model.component.device.entity.Device;
 import com.esrinea.dotGeo.tracking.model.component.deviceType.entity.DeviceType;
+import com.esrinea.dotGeo.tracking.model.component.execludedAlert.entity.ExecludedAlert;
 import com.esrinea.dotGeo.tracking.model.component.sensor.entity.Sensor;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -60,10 +61,13 @@ public class DeviceDAOTest {
 
 	@Test
 	public void testGetAlertConfigurations() {
-		List<AlertConfiguration> oilAlertConfigurations = device.getDeviceType()
-				.getAlerts().get(0).getAlertConfigurations();
-		assertEquals("In", oilAlertConfigurations.get(0).getSensorConfiguration()
-				.getTextValue());
+		List<AlertConfiguration> oilAlertConfigurations = device.getDeviceType().getAlerts().get(0).getAlertConfigurations();
+		assertEquals("In", oilAlertConfigurations.get(0).getSensorConfiguration().getTextValue());
 	}
 
+	@Test
+	public void testGetExecludedAlerts() {
+		Alert oilAlert = device.getDeviceType().getAlerts().get(0);
+		assertEquals("Oil Alert", device.getResource().getExecludedAlerts().get(oilAlert).getAlert().getNameEn());
+	}
 }

@@ -9,20 +9,20 @@
                         http://aries.apache.org/xmlns/transactions/v1.0.0 http://aries.apache.org/schemas/transaction/transactionv10.xsd
                         http://aries.apache.org/xmlns/jpa/v1.1.0 http://aries.apache.org/schemas/jpa/jpa_110.xsd">
 
-	<bean id="employeeDAOBean"
-		class="com.esrinea.dotGeo.tracking.model.component.employee.EmployeeDAOImpl">
+	<bean id="deviceDAO"
+		class="com.esrinea.dotGeo.tracking.model.component.device.dao.DeviceDAOImpl">
 		<jpa:context property="entityManager" unitname="hr" />
 		<tx:transaction method="*" value="Required" />
 	</bean>
 
-	<!-- test bean -->
-	<bean id="employeeDAOKarafTest" class="com.esrinea.dotGeo.tracking.model.component.employee.EmployeeDAOKarafTest"
+	<bean id="deviceDAOKarafTest"
+		class="com.esrinea.dotGeo.tracking.model.component.device.dao.DeviceDAOKarafTest"
 		init-method="test">
-		<property name="employeeDAO" ref="employeeDAOBean" />
+		<property name="deviceDAO" ref="deviceDAO" />
 	</bean>
 
 	<service
-		interface="com.esrinea.dotGeo.tracking.model.component.employee.EmployeeDAO"
-		ref="employeeDAOBean" />
+		interface="com.esrinea.dotGeo.tracking.model.component.device.dao.DeviceDAO"
+		ref="deviceDAO" />
 
 </blueprint>

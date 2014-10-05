@@ -28,5 +28,9 @@ public abstract class AbstractDAO<T> implements GenericDAO<T> {
 		entityManager.persist(entity);		
 		LOG.info("Entity " + entity.getClass().getSimpleName() + " has been created.");
 	}
+	
+	public void setEntityManager(EntityManager entityManager) {
+		this.entityManager = entityManager;
+	}
 
 }

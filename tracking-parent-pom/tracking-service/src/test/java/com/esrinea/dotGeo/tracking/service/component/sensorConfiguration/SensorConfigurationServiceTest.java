@@ -1,15 +1,15 @@
 package com.esrinea.dotGeo.tracking.service.component.sensorConfiguration;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
-import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.esrinea.dotGeo.tracking.model.component.sensorConfiguration.entity.SensorConfiguration;
 import com.esrinea.dotGeo.tracking.service.component.device.DeviceServiceTest;
-import com.esrinea.dotGeo.tracking.service.component.sensorConfiguration.SensorConfigurationService;
 
 public class SensorConfigurationServiceTest extends DeviceServiceTest {
 

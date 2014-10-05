@@ -56,5 +56,11 @@ public class Device implements Serializable {
 		return resource;
 	}
 
+	@Override
+	public String toString() {
+		return "Device [id=" + id + ", retired=" + retired + ", deviceType=" + deviceType + ", resource=" + resource + "]";
+	}
+
+	
 
 }

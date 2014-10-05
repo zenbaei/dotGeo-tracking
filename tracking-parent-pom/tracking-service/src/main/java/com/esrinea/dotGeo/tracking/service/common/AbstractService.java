@@ -14,5 +14,10 @@ public abstract class AbstractService<T> implements GenericService<T> {
 	public T find(int id) {
 		return genericDAO.find(id);
 	}
+	
+	@Override
+	public void create(T entity) {
+		genericDAO.create(entity);
+	}
 
 }

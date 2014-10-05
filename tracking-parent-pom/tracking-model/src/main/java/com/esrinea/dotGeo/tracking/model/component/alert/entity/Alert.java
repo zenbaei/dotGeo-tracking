@@ -15,7 +15,6 @@ import javax.persistence.Table;
 
 import com.esrinea.dotGeo.tracking.model.component.alertConfiguration.entity.AlertConfiguration;
 import com.esrinea.dotGeo.tracking.model.component.deviceType.entity.DeviceType;
-import com.esrinea.dotGeo.tracking.model.component.execludedAlert.entity.ExecludedAlert;
 
 /**
  * The persistent class for the Alerts database table.
@@ -44,18 +43,8 @@ public class Alert implements Serializable {
 	@JoinColumn(name = "DeviceType_DBID", nullable = false)
 	private DeviceType deviceType;
 
-	@OneToMany(mappedBy = "alert", fetch = FetchType.EAGER)
-	private List<ExecludedAlert> execludedAlerts;
 
 	public Alert() {
-	}
-
-	public DeviceType getDeviceType() {
-		return deviceType;
-	}
-
-	public void setDeviceType(DeviceType deviceType) {
-		this.deviceType = deviceType;
 	}
 
 	public int getId() {
@@ -68,10 +57,6 @@ public class Alert implements Serializable {
 
 	public List<AlertConfiguration> getAlertConfigurations() {
 		return alertConfigurations;
-	}
-
-	public List<ExecludedAlert> getExecludedAlerts() {
-		return execludedAlerts;
 	}
 
 	public boolean isRetired() {

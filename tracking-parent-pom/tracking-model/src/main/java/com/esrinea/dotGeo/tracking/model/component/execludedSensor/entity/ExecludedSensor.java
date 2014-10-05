@@ -41,16 +41,18 @@ public class ExecludedSensor implements Serializable {
 		return this.sensor;
 	}
 
-	public void setSensor(Sensor sensor) {
-		this.sensor = sensor;
-	}
 
 	public Resource getResource() {
 		return resource;
 	}
-	
-	public void setResource(Resource resource) {
-		this.resource = resource;
+
+	@Override
+	public String toString() {
+		return "ExecludedSensor [id=" + id + ", sensor=" + sensor
+				+ ", resource=" + resource + "]";
 	}
+	
+
+	
 
 }

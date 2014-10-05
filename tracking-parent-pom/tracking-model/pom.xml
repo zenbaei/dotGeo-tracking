@@ -65,7 +65,7 @@
 				<configuration>
 					<instructions>
 						<Meta-Persistence>META-INF/persistence.xml</Meta-Persistence>
-						<Export-Package>com.esrinea.dotGeo.tracking.model.component.employee, com.esrinea.dotGeo.tracking.model.test</Export-Package>
+						<Export-Package>com.esrinea.dotGeo.tracking.model.*</Export-Package>
 						<Import-Package>
 							org.apache.openjpa.enhance,
 							org.apache.openjpa.util,

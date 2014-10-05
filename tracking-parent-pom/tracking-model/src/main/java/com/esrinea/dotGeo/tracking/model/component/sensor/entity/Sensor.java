@@ -78,6 +78,34 @@ public class Sensor implements Serializable {
 	public void setDeviceType(DeviceType deviceType) {
 		this.deviceType = deviceType;
 	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		result = prime * result + ((nameEn == null) ? 0 : nameEn.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Sensor other = (Sensor) obj;
+		if (id != other.id)
+			return false;
+		if (nameEn == null) {
+			if (other.nameEn != null)
+				return false;
+		} else if (!nameEn.equals(other.nameEn))
+			return false;
+		return true;
+	}
 
 	@Override
 	public String toString() {
