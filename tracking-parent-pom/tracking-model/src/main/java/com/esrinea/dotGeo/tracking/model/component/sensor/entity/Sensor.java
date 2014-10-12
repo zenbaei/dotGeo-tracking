@@ -36,10 +36,10 @@ public class Sensor implements Serializable {
 	@Column(name = "Name_En")
 	private String nameEn;
 
-	@OneToMany(mappedBy = "sensor", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "sensor", fetch = FetchType.LAZY)
 	private List<SensorConfiguration> sensorConfigurations;
 
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name = "DeviceType_DBID")
 	private DeviceType deviceType;
 
@@ -110,7 +110,7 @@ public class Sensor implements Serializable {
 	@Override
 	public String toString() {
 		return "Sensor [id=" + id + ", retired=" + retired + ", nameEn="
-				+ nameEn + ", deviceType=" + deviceType + "]";
+				+ nameEn + "]";
 	}
 	
 	

@@ -35,11 +35,14 @@
 		<property name="jdbcUrl">
 			<value>jdbc:sqlserver://192.168.9.33:1433;databaseName=GeoEventsTracking1;selectMethod=cursor;sendStringParametersAsUnicode=false
 			</value>
+			<!-- <value>jdbc:sqlserver://ISLAM-ZENBAEI:1433;databaseName=TrackingFinalV1;selectMethod=cursor;sendStringParametersAsUnicode=false</value> -->
 		</property>
 		<property name="username">
+			<!-- <value>tracking</value> -->
 			<value>sa</value>
 		</property>
 		<property name="password">
+			<!-- <value>tracking</value> -->
 			<value>P@ssw0rd</value>
 		</property>
 		<property name="idleConnectionTestPeriodInMinutes" value="60" />

@@ -12,21 +12,24 @@
                         http://cxf.apache.org/blueprint/jaxrs http://cxf.apache.org/schemas/blueprint/jaxrs.xsd 
                         http://cxf.apache.org/blueprint/core http://cxf.apache.org/schemas/blueprint/core.xsd">
 
-	<!-- <reference id="employeeDAORef" interface="com.esrinea.dotGeo.tracking.model.component.employee.EmployeeDAO"
+	<reference id="deviceDAO"
+		interface="com.esrinea.dotGeo.tracking.model.component.device.dao.DeviceDAO"
 		availability="mandatory" />
 
-	<bean id="deviceServiceBean"
+	<bean id="deviceService"
 		class="com.esrinea.dotGeo.tracking.service.component.device.DeviceServiceImpl">
-		<property name="employeeDAO" ref="employeeDAORef" />
+		<property name="deviceDAO" ref="deviceDAO" />
 	</bean>
 
-	<service interface="com.esrinea.dotGeo.tracking.service.component.device.DeviceService"
-		ref="deviceServiceBean" />
-		
-		test bean
-	<bean id="deviceServiceTest" class="com.esrinea.dotGeo.tracking.service.component.device.DeviceServiceTest"
+	<service
+		interface="com.esrinea.dotGeo.tracking.service.component.device.DeviceService"
+		ref="deviceService" />
+
+	<!-- test bean -->
+	<bean id="deviceServiceTest"
+		class="com.esrinea.dotGeo.tracking.service.component.device.DeviceServiceTest"
 		init-method="test">
-		<property name="deviceService" ref="deviceServiceBean" />
-	</bean> -->
+		<property name="deviceService" ref="deviceService" />
+	</bean>
 
 </blueprint>

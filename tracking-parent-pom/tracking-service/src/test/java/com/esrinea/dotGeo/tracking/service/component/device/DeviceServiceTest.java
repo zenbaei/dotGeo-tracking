@@ -19,7 +19,7 @@ public class DeviceServiceTest {
 	protected DeviceService deviceService;
 
 	@Test
-	public void testGetEmployee() {
+	public void testGetDeviceService() {
 		Assert.assertNotNull(deviceService);
 	}
 

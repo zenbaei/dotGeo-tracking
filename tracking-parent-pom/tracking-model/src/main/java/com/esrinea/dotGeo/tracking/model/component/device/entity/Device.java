@@ -4,9 +4,11 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -19,8 +21,11 @@ import com.esrinea.dotGeo.tracking.model.component.resource.entity.Resource;
  */
 @Entity
 @Table(name = "Tracking_Devices")
+@NamedNativeQuery(name = "Device.findById", query = "SELECT dev.* FROM Tracking_Devices dev JOIN Tracking_Device_Types devType ON dev.DeviceType_DBID = devType.DeviceType_DBID "
+		+ "LEFT JOIN Sensors sens ON devType.DeviceType_DBID = sens.DeviceType_DBID " + "WHERE dev.Device_DBID = ? AND dev.isRetired = 0 AND sens.isRetired = 1")
 public class Device implements Serializable {
 	private static final long serialVersionUID = 1L;
+	
 
 	@Id
 	@Column(name = "Device_DBID", unique = true, nullable = false)
@@ -29,11 +34,11 @@ public class Device implements Serializable {
 	@Column(name = "IsRetired")
 	private boolean retired;
 
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name = "DeviceType_DBID")
 	private DeviceType deviceType;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name = "Device_DBID")
 	private Resource resource;
 
@@ -48,6 +53,10 @@ public class Device implements Serializable {
 		return retired;
 	}
 
+	public void setDeviceType(DeviceType deviceType) {
+		this.deviceType = deviceType;
+	}
+	
 	public DeviceType getDeviceType() {
 		return deviceType;
 	}
@@ -60,7 +69,5 @@ public class Device implements Serializable {
 	public String toString() {
 		return "Device [id=" + id + ", retired=" + retired + ", deviceType=" + deviceType + ", resource=" + resource + "]";
 	}
-
-	
 
 }

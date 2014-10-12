@@ -19,7 +19,7 @@
 			<artifactId>openjpa</artifactId>
 			<version>${org.apache.openjpa.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-orm</artifactId>
@@ -45,14 +45,14 @@
 			<systemPath>C:/Users/islam.zenbaei/.m2/repository/com/oracle/ojdbc14/10/ojdbc14-10.jar</systemPath>
 			<scope>system</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.microsoft</groupId>
 			<artifactId>jdbc</artifactId>
 			<version>4</version>
 		</dependency>
-		
-		
+
+
 	</dependencies>
 
 	<build>
@@ -67,33 +67,21 @@
 						<Meta-Persistence>META-INF/persistence.xml</Meta-Persistence>
 						<Export-Package>com.esrinea.dotGeo.tracking.model.*</Export-Package>
 						<Import-Package>
-							org.apache.openjpa.enhance,
-							org.apache.openjpa.util,
-							serp.*,
 							*
+							<!-- javax.persistence;version="[1.0.0,2.1.0]", Needed for proxying's 
+								Javassist enhancement during runtime org.hibernate.proxy, javassist.util.proxy, 
+								org.hibernate.ejb.HibernatePersistence, -->
+							<!-- org.apache.openjpa.enhance, org.apache.openjpa.util, serp.*, 
+								* -->
 						</Import-Package>
 					</instructions>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.openjpa</groupId>
-				<artifactId>openjpa-maven-plugin</artifactId>
-				<version>${org.apache.openjpa.version}</version>
-				<configuration>
-					<includes>com.esrinea.dotGeo.tracking.model.component.*</includes>
-					<addDefaultConstructor>true</addDefaultConstructor>
-					<enforcePropertyRestrictions>true</enforcePropertyRestrictions>
-				</configuration>
-				<executions>
-					<execution>
-						<id>enhancer</id>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>enhance</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+			<!-- <plugin> <groupId>org.apache.openjpa</groupId> <artifactId>openjpa-maven-plugin</artifactId> 
+				<version>${org.apache.openjpa.version}</version> <configuration> <includes>com.esrinea.dotGeo.tracking.model.component.*</includes> 
+				<addDefaultConstructor>true</addDefaultConstructor> <enforcePropertyRestrictions>true</enforcePropertyRestrictions> 
+				</configuration> <executions> <execution> <id>enhancer</id> <phase>process-classes</phase> 
+				<goals> <goal>enhance</goal> </goals> </execution> </executions> </plugin> -->
 		</plugins>
 	</build>
 </project>

@@ -12,9 +12,9 @@
                         http://cxf.apache.org/blueprint/jaxrs http://cxf.apache.org/schemas/blueprint/jaxrs.xsd 
                         http://cxf.apache.org/blueprint/core http://cxf.apache.org/schemas/blueprint/core.xsd">
 
-	<!-- reference id="deviceServiceRef"
+	<reference id="deviceService"
 		interface="com.esrinea.dotGeo.tracking.service.component.device.DeviceService"
-		availability="mandatory" /> -->
+		availability="mandatory" />
 
 	<bean id="trackingProcessorServiceBean"
 		class="com.esrinea.dotGeo.tracking.processor.component.tracking.TrackingProcessorService"

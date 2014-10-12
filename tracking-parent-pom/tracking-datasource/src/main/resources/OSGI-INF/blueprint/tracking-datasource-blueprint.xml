@@ -9,14 +9,19 @@
                         http://aries.apache.org/xmlns/transactions/v1.0.0 http://aries.apache.org/schemas/transaction/transactionv10.xsd
                         http://aries.apache.org/xmlns/jpa/v1.1.0 http://aries.apache.org/schemas/jpa/jpa_110.xsd">
 
-	<bean id="dataSource" class="oracle.jdbc.pool.OracleDataSource">
-		<property name="URL" value="jdbc:oracle:thin:@localhost:1521:xe" />
-		<property name="user" value="hr" />
-		<property name="password" value="hr" />
+	<!-- <bean id="dataSource" class="oracle.jdbc.pool.OracleDataSource"> <property 
+		name="URL" value="jdbc:oracle:thin:@localhost:1521:xe" /> <property name="user" 
+		value="hr" /> <property name="password" value="hr" /> </bean> -->
+
+	<bean id="dataSource" class="com.microsoft.sqlserver.jdbc.SQLServerDataSource">
+		<property name="URL"
+			value="jdbc:sqlserver://192.168.9.33:1433;databaseName=GeoEventsTracking1;selectMethod=cursor;sendStringParametersAsUnicode=false" />
+		<property name="user" value="sa" />
+		<property name="password" value="P@ssw0rd" />
 	</bean>
-	
+
 	<!-- register the data source as an osgi service -->
-	 <service interface="javax.sql.DataSource" ref="dataSource">
+	<service interface="javax.sql.DataSource" ref="dataSource">
 		<service-properties>
 			<entry key="osgi.jndi.service.name" value="jdbc/hr" />
 		</service-properties>
@@ -24,9 +29,10 @@
 
 
 	<!-- test bean -->
-	<bean class="com.esrinea.dotGeo.tracking.datasource.DataSourceKarafTest" init-method="test">
+	<bean class="com.esrinea.dotGeo.tracking.datasource.DataSourceKarafTest"
+		init-method="test">
 		<property name="datasource" ref="dataSource" />
-		<property name="testQuery" value="select * from employees" />
+		<property name="testQuery" value="select * from tracking_devices" />
 	</bean>
 
 </blueprint>

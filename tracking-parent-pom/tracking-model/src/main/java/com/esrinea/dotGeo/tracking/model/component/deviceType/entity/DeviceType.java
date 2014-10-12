@@ -49,7 +49,7 @@ public class DeviceType implements Serializable {
 
 	@Override
 	public String toString() {
-		return "DeviceType [id=" + id + "]";
+		return "DeviceType [id=" + id + ", sensors=" + sensors + ", alerts=" + alerts + "]";
 	}
 
 }

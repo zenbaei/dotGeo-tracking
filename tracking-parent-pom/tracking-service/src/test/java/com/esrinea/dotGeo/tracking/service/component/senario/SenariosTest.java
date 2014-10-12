@@ -3,9 +3,7 @@ package com.esrinea.dotGeo.tracking.service.component.senario;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -18,8 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.esrinea.dotGeo.tracking.model.component.alert.entity.Alert;
 import com.esrinea.dotGeo.tracking.model.component.alertConfiguration.entity.AlertConfiguration;
 import com.esrinea.dotGeo.tracking.model.component.device.entity.Device;
-import com.esrinea.dotGeo.tracking.model.component.execludedAlert.entity.ExecludedAlert;
-import com.esrinea.dotGeo.tracking.model.component.execludedSensor.entity.ExecludedSensor;
 import com.esrinea.dotGeo.tracking.model.component.resourceLiveFeed.entity.ResourceLiveFeed;
 import com.esrinea.dotGeo.tracking.model.component.sensor.entity.Sensor;
 import com.esrinea.dotGeo.tracking.model.component.sensorConfiguration.entity.SensorConfiguration;
@@ -42,7 +38,9 @@ public class SenariosTest extends DeviceServiceTest {
 	private SimpleDateFormat simpleDateFormat;
 	private Date feedDateTime;
 	private Device device;
-	private double sensorValue;;
+	private double sensorValue;
+	
+	
 
 	@Before
 	public void setup() {
@@ -100,7 +98,7 @@ public class SenariosTest extends DeviceServiceTest {
 	public void testSensorSenario() {
 		device = deviceService.find(deviceId);
 		List<Sensor> sensors = device.getDeviceType().getSensors();
-		Map<Sensor, ExecludedSensor> execludedSensors = device.getResource().getExecludedSensors();
+	//	Map<Sensor, ExecludedSensor> execludedSensors = device.getResource().getExecludedSensors();
 
 		// check if device type has no sensors
 		if (sensors == null || sensors.isEmpty()) {
@@ -123,13 +121,13 @@ public class SenariosTest extends DeviceServiceTest {
 				continue;
 			}
 
-			// check if sensor is excluded from the resource using that device
+		/*	// check if sensor is excluded from the resource using that device
 			if (execludedSensors != null && !execludedSensors.isEmpty()) {
 				if (execludedSensors.containsKey(sensor)) {
 					LOG.trace("Sensor is execluded, it will be discarded.");
 					continue;
 				}
-			}
+			}*/
 
 			// check if sensor's configuration is retired
 			for (SensorConfiguration sensorConfiguration : sensor.getSensorConfigurations()) {
@@ -155,9 +153,7 @@ public class SenariosTest extends DeviceServiceTest {
 	public void testAlertSenario() {
 		device = deviceService.find(deviceId);
 		List<Alert> alerts = device.getDeviceType().getAlerts();
-		Map<Alert, ExecludedAlert> execludedAlerts = device.getResource().getExecludedAlerts();
-		Map<Sensor, AlertConfiguration> alertConfigurations = new HashMap<Sensor, AlertConfiguration>();
-		;
+	//	Map<Alert, ExecludedAlert> execludedAlerts = device.getResource().getExecludedAlerts();
 
 		// check if device has no alerts
 		if (alerts == null || alerts.isEmpty()) {
@@ -179,14 +175,14 @@ public class SenariosTest extends DeviceServiceTest {
 				LOG.warn("Alert has no configurations, it will be discarded.");
 				continue;
 			}
-
+/*
 			// check if alert is excluded on the resource using that device
 			if (execludedAlerts != null && !execludedAlerts.isEmpty()) {
 				if (execludedAlerts.containsKey(alert)) {
 					LOG.trace("Alert is execluded, it will be discarded.");
 					continue;
 				}
-			}
+			}*/
 
 			// check if alert configuration is retired
 			for (AlertConfiguration alertConfiguration : alert.getAlertConfigurations()) {

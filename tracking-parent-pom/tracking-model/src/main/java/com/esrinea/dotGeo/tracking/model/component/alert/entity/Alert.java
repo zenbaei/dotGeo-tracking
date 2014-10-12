@@ -66,7 +66,7 @@ public class Alert implements Serializable {
 	@Override
 	public String toString() {
 		return "Alert [id=" + id + ", retired=" + retired + ", nameEn="
-				+ nameEn + ", deviceType=" + deviceType + "]";
+				+ nameEn  + "]";
 	}
 	
 	

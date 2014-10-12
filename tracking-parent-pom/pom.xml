@@ -147,5 +147,7 @@
 		<module>tracking-model</module>
 		<module>tracking-processor</module>
 		<module>tracking-service</module>
+		<module>hibernate-feature</module>
+		<module>eclipselink-adapter</module>
 	</modules>
 </project>
