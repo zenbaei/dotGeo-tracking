@@ -5,8 +5,8 @@
 	<persistence-unit name="hr" transaction-type="JTA">
 
 		<!-- <provider>org.hibernate.ejb.HibernatePersistence</provider> -->
-		<!-- <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider> -->
-		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+		<provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
+	<!-- 	<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider> -->
 
 		<jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=jdbc/hr)</jta-data-source>
 
@@ -28,15 +28,17 @@
 
 		<properties>
 
-			<!-- <property name="hibernate.archive.autodetection" value="class" /> 
-				<property name="hibernate.dialect" value="org.hibernate.dialect.SQLServerDialect" 
-				/> <property name="show_sql" value="true" /> <property name="hibernate.temp.use_jdbc_metadata_defaults" 
+	<!-- <property name="hibernate.archive.autodetection" value="class" /> <property 
+		name="hibernate.dialect" value="org.hibernate.dialect.SQLServerDialect" /> 
+		<property name="show_sql" value="true" /> --> <!-- <property name="hibernate.temp.use_jdbc_metadata_defaults" 
 				value="false" /> -->
 			<!-- <property name="hibernate.hbm2ddl.auto" value="create-drop" /> -->
 
-			<!-- <property name="openjpa.Log" value="DefaultLevel=INFO, Tool=INFO, 
-				Runtime=TRACE" /> <property name="openjpa.jdbc.DBDictionary" value="sqlserver" 
-				/> <property name="DynamicEnhancementAgent " value="false" /> -->
+			<property name="openjpa.Log"
+	value="DefaultLevel=INFO, Tool=INFO, 
+				Runtime=TRACE" />
+	<property name="openjpa.jdbc.DBDictionary" value="sqlserver" />
+	<property name="DynamicEnhancementAgent " value="false" />
 		</properties>
 	</persistence-unit>
 </persistence>

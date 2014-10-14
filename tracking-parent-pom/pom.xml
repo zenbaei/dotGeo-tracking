@@ -147,7 +147,9 @@
 		<module>tracking-model</module>
 		<module>tracking-processor</module>
 		<module>tracking-service</module>
-		<module>hibernate-feature</module>
-		<module>eclipselink-adapter</module>
+		<!-- <module>hibernate-feature</module>
+		<module>eclipselink-feature</module>
+		<module>eclipselink-activator</module> -->
+		<module>openjpa-feature</module>
 	</modules>
 </project>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0"
-	name="EclipseLink_2.5.2">
+	name="EclipseLink_2.4.2">
 
-	<feature name="eclipselink" version="2.5.2" description="EclipseLink JPA">
+	<feature name="eclipselink" version="2.4.2" description="EclipseLink JPA">
 
-		<!-- feature:add-url mvn:com.esrinea.dotGeo/hibernate-feature/1.0.0/xml/features -->
+		<!-- features:addurl mvn:com.esrinea.dotGeo/eclipselink-feature/1.0.0/xml/features -->
 		<!-- featuresBoot=ssh,management,hibernate, add this to start hibernate 
 			bundle while starting karaf -->
 

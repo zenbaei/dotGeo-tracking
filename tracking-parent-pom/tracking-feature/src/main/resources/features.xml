@@ -2,15 +2,17 @@
 <features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0"
 	name="tracking-1.0.0">
 
-	<feature name="tracking" version="1.0.0"
-		description="Enable using datasource, Dot Geo schema with openJPA and spring for business layer">
+	<feature name="tracking" version="1.0.0" description="DotGeo Tracking Modules">
 
-		<!-- feature:add-url mvn:com.esrinea.dotGeo/tracking-feature/1.0.0/xml/features -->
+		<!-- features:addurl mvn:com.esrinea.dotGeo/tracking-feature/1.0.0/xml/features -->
+
+
+		<!-- feature dependencies -->
+		<feature>mvn:com.esrinea.dotGeo/openjpa-feature/1.0.0</feature>
 
 		<!-- application bundles -->
 		<bundle>mvn:com.esrinea.dotGeo/tracking-datasource/1.0.0</bundle>
 		<bundle>mvn:com.esrinea.dotGeo/tracking-model/1.0.0</bundle>
-		<!-- <bundle>mvn:com.esrinea.dotGeo/tracking-service/1.0.0</bundle>
-		<bundle>mvn:com.esrinea.dotGeo/tracking-processor/1.0.0</bundle> -->
+		<!-- <bundle>mvn:com.esrinea.dotGeo/tracking-service/1.0.0</bundle> <bundle>mvn:com.esrinea.dotGeo/tracking-processor/1.0.0</bundle> -->
 	</feature>
 </features>
