@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -22,7 +23,8 @@ import com.esrinea.dotGeo.tracking.model.component.sensorConfiguration.entity.Se
  */
 @Entity
 @Table(name = "Sensors")
-@NamedQuery(name = "Sensor.findAll", query = "SELECT s FROM Sensor s")
+@NamedQueries({ @NamedQuery(name = "Sensor.findAll", query = "SELECT s FROM Sensor s"),
+		@NamedQuery(name = "Sensor.findByDeviceTypeRetired", query = "SELECT s FROM Sensor s WHERE s.deviceType.id = :id AND s.retired = :retired") })
 public class Sensor implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -39,35 +41,30 @@ public class Sensor implements Serializable {
 	@OneToMany(mappedBy = "sensor", fetch = FetchType.LAZY)
 	private List<SensorConfiguration> sensorConfigurations;
 
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "DeviceType_DBID")
 	private DeviceType deviceType;
 
 	public Sensor() {
+	}
+	
+	public int getId() {
+		return id;
 	}
 
 	public String getNameEn() {
 		return nameEn;
 	}
 
-	public void setNameEn(String nameEn) {
-		this.nameEn = nameEn;
-	}
-
 	public boolean isRetired() {
 		return retired;
 	}
-	
-	public void setRetired(boolean retired) {
-		this.retired = retired;
-	}
-	
+
 	public List<SensorConfiguration> getSensorConfigurations() {
 		return sensorConfigurations;
 	}
 
-	public void setSensorConfigurations(
-			List<SensorConfiguration> sensorConfigurations) {
+	public void setSensorConfigurations(List<SensorConfiguration> sensorConfigurations) {
 		this.sensorConfigurations = sensorConfigurations;
 	}
 
@@ -75,10 +72,7 @@ public class Sensor implements Serializable {
 		return deviceType;
 	}
 
-	public void setDeviceType(DeviceType deviceType) {
-		this.deviceType = deviceType;
-	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -109,9 +103,7 @@ public class Sensor implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Sensor [id=" + id + ", retired=" + retired + ", nameEn="
-				+ nameEn + "]";
+		return "Sensor [id=" + id + ", retired=" + retired + ", nameEn=" + nameEn + "]";
 	}
-	
-	
+
 }

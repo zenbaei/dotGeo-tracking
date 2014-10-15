@@ -65,4 +65,13 @@
 	<bean id="sensorLiveFeedDAO"
 		class="com.esrinea.dotGeo.tracking.model.component.sensorLiveFeed.dao.SensorLiveFeedDAOImpl">
 	</bean>
+	<bean id="deviceTypeDAOImpl"
+		class="com.esrinea.dotGeo.tracking.model.component.deviceType.dao.DeviceTypeDAOImpl">
+	</bean>
+	<bean id="alertDAO"
+		class="com.esrinea.dotGeo.tracking.model.component.alert.dao.AlertDAOImpl">
+	</bean>
+	<bean id="alertLiveFeedDAO"
+		class="com.esrinea.dotGeo.tracking.model.component.alertLiveFeed.dao.AlertLiveFeedDAOImpl">
+	</bean>
 </beans>

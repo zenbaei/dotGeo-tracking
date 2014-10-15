@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -26,11 +27,11 @@ public class ExecludedSensor implements Serializable {
 	@Column(name="ResExSensor_DBID", unique=true, nullable=false)
 	private int id;
 
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="Sensor_DBID", nullable=false)
 	private Sensor sensor;
 
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="Resource_DBID", nullable=false)
 	private Resource resource;
 

@@ -7,11 +7,12 @@ import java.util.List;
 
 import javax.persistence.EntityNotFoundException;
 
+import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import static org.junit.Assert.*;
 
 import com.esrinea.dotGeo.tracking.model.component.alert.entity.Alert;
 import com.esrinea.dotGeo.tracking.model.component.alertConfiguration.entity.AlertConfiguration;
@@ -22,15 +23,18 @@ import com.esrinea.dotGeo.tracking.model.component.sensorConfiguration.entity.Se
 import com.esrinea.dotGeo.tracking.model.component.sensorLiveFeed.entity.SensorLiveFeed;
 import com.esrinea.dotGeo.tracking.service.component.device.DeviceServiceTest;
 import com.esrinea.dotGeo.tracking.service.component.resourceLiveFeed.ResourceLiveFeedService;
+import com.esrinea.dotGeo.tracking.service.component.sensor.SensorService;
 import com.esrinea.dotGeo.tracking.service.component.sensorLiveFeed.SensorLiveFeedService;
 
 public class SenariosTest extends DeviceServiceTest {
 
-	private static Logger LOG = LoggerFactory.getLogger(SenariosTest.class);
+	private static Logger LOG = Logger.getLogger(SenariosTest.class);
 	@Autowired
 	private ResourceLiveFeedService resourceLiveFeedService;
 	@Autowired
 	private SensorLiveFeedService sensorLiveFeedService;
+	@Autowired
+	private SensorService sensorService; 
 
 	private int deviceId;
 	private String feedDateTimeString;
@@ -39,8 +43,6 @@ public class SenariosTest extends DeviceServiceTest {
 	private Date feedDateTime;
 	private Device device;
 	private double sensorValue;
-	
-	
 
 	@Before
 	public void setup() {
@@ -98,7 +100,7 @@ public class SenariosTest extends DeviceServiceTest {
 	public void testSensorSenario() {
 		device = deviceService.find(deviceId);
 		List<Sensor> sensors = device.getDeviceType().getSensors();
-	//	Map<Sensor, ExecludedSensor> execludedSensors = device.getResource().getExecludedSensors();
+		// Map<Sensor, ExecludedSensor> execludedSensors = device.getResource().getExecludedSensors();
 
 		// check if device type has no sensors
 		if (sensors == null || sensors.isEmpty()) {
@@ -121,13 +123,11 @@ public class SenariosTest extends DeviceServiceTest {
 				continue;
 			}
 
-		/*	// check if sensor is excluded from the resource using that device
-			if (execludedSensors != null && !execludedSensors.isEmpty()) {
-				if (execludedSensors.containsKey(sensor)) {
-					LOG.trace("Sensor is execluded, it will be discarded.");
-					continue;
-				}
-			}*/
+			/*
+			 * // check if sensor is excluded from the resource using that device if (execludedSensors != null &&
+			 * !execludedSensors.isEmpty()) { if (execludedSensors.containsKey(sensor)) {
+			 * LOG.trace("Sensor is execluded, it will be discarded."); continue; } }
+			 */
 
 			// check if sensor's configuration is retired
 			for (SensorConfiguration sensorConfiguration : sensor.getSensorConfigurations()) {
@@ -153,7 +153,7 @@ public class SenariosTest extends DeviceServiceTest {
 	public void testAlertSenario() {
 		device = deviceService.find(deviceId);
 		List<Alert> alerts = device.getDeviceType().getAlerts();
-	//	Map<Alert, ExecludedAlert> execludedAlerts = device.getResource().getExecludedAlerts();
+		// Map<Alert, ExecludedAlert> execludedAlerts = device.getResource().getExecludedAlerts();
 
 		// check if device has no alerts
 		if (alerts == null || alerts.isEmpty()) {
@@ -175,14 +175,11 @@ public class SenariosTest extends DeviceServiceTest {
 				LOG.warn("Alert has no configurations, it will be discarded.");
 				continue;
 			}
-/*
-			// check if alert is excluded on the resource using that device
-			if (execludedAlerts != null && !execludedAlerts.isEmpty()) {
-				if (execludedAlerts.containsKey(alert)) {
-					LOG.trace("Alert is execluded, it will be discarded.");
-					continue;
-				}
-			}*/
+			/*
+			 * // check if alert is excluded on the resource using that device if (execludedAlerts != null &&
+			 * !execludedAlerts.isEmpty()) { if (execludedAlerts.containsKey(alert)) {
+			 * LOG.trace("Alert is execluded, it will be discarded."); continue; } }
+			 */
 
 			// check if alert configuration is retired
 			for (AlertConfiguration alertConfiguration : alert.getAlertConfigurations()) {
@@ -191,13 +188,14 @@ public class SenariosTest extends DeviceServiceTest {
 					LOG.trace("Alert Configuration is retired, it will be discarded");
 					continue;
 				}
-				
+
 				// alert configuration is on, construct a map with valid alerts configurations
 				// it will be used after finding a Sensor Configuration on(not retired)
-			//	alertConfigurations.put(alertConfiguration.get, value)
+				// alertConfigurations.put(alertConfiguration.get, value)
 			}
-			
+
 		}
 
 	}
+	
 }

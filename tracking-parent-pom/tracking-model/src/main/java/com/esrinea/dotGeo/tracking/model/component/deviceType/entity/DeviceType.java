@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -19,6 +20,7 @@ import com.esrinea.dotGeo.tracking.model.component.sensor.entity.Sensor;
  */
 @Entity
 @Table(name = "Tracking_Device_Types")
+@NamedQuery(name="DeviceType.findByRetired", query="SELECT d FROM DeviceType d WHERE d.retired = :retired")
 public class DeviceType implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -26,11 +28,14 @@ public class DeviceType implements Serializable {
 	@Column(name = "DeviceType_DBID", unique = true, nullable = false)
 	private int id;
 
-	@OneToMany(mappedBy = "deviceType", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "deviceType", fetch = FetchType.LAZY)
 	private List<Sensor> sensors;
 
-	@OneToMany(mappedBy = "deviceType", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "deviceType", fetch = FetchType.LAZY)
 	private List<Alert> alerts;
+	
+	@Column(name="isRetired")
+	private boolean retired;
 
 	public DeviceType() {
 	}
@@ -42,14 +47,26 @@ public class DeviceType implements Serializable {
 	public List<Sensor> getSensors() {
 		return sensors;
 	}
+	
+	public void setSensors(List<Sensor> sensors) {
+		this.sensors = sensors;
+	}
 
 	public List<Alert> getAlerts() {
 		return alerts;
 	}
+	
+	public void setAlerts(List<Alert> alerts) {
+		this.alerts = alerts;
+	}
+	
+	public boolean isRetired() {
+		return retired;
+	}
 
 	@Override
 	public String toString() {
-		return "DeviceType [id=" + id + ", sensors=" + sensors + ", alerts=" + alerts + "]";
+		return "DeviceType [id=" + id + ", sensors=" + sensors + ", alerts=" + alerts + ", retired=" + retired + "]";
 	}
 
 }

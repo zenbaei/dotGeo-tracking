@@ -5,4 +5,6 @@ import com.esrinea.dotGeo.tracking.service.common.GenericService;
 
 public interface DeviceService extends GenericService<Device> {
 
+	Device find(int id, boolean retired);
+
 }

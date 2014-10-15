@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedNativeQuery;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -22,10 +24,12 @@ import com.esrinea.dotGeo.tracking.model.component.resource.entity.Resource;
 @Entity
 @Table(name = "Tracking_Devices")
 @NamedNativeQuery(name = "Device.findById", query = "SELECT dev.* FROM Tracking_Devices dev JOIN Tracking_Device_Types devType ON dev.DeviceType_DBID = devType.DeviceType_DBID "
-		+ "LEFT JOIN Sensors sens ON devType.DeviceType_DBID = sens.DeviceType_DBID " + "WHERE dev.Device_DBID = ? AND dev.isRetired = 0 AND sens.isRetired = 1")
+		+ "LEFT JOIN Sensors sens ON devType.DeviceType_DBID = sens.DeviceType_DBID "
+		+ "WHERE dev.Device_DBID = ? AND dev.isRetired = 0 AND sens.isRetired = 1")
+@NamedQueries({ @NamedQuery(name = "Device.findByIdRetired", query = "SELECT d FROM Device d WHERE d.id = :id AND d.retired = :retired") })
+
 public class Device implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
 
 	@Id
 	@Column(name = "Device_DBID", unique = true, nullable = false)
@@ -34,11 +38,11 @@ public class Device implements Serializable {
 	@Column(name = "IsRetired")
 	private boolean retired;
 
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "DeviceType_DBID")
 	private DeviceType deviceType;
 
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "Device_DBID")
 	private Resource resource;
 
@@ -48,6 +52,10 @@ public class Device implements Serializable {
 	public int getId() {
 		return id;
 	}
+	
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public boolean isRetired() {
 		return retired;
@@ -56,7 +64,7 @@ public class Device implements Serializable {
 	public void setDeviceType(DeviceType deviceType) {
 		this.deviceType = deviceType;
 	}
-	
+
 	public DeviceType getDeviceType() {
 		return deviceType;
 	}

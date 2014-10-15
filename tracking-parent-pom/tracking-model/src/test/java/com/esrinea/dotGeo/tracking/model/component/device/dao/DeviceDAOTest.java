@@ -23,7 +23,7 @@ import com.esrinea.dotGeo.tracking.model.component.deviceType.entity.DeviceType;
 import com.esrinea.dotGeo.tracking.model.component.sensor.entity.Sensor;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:/spring/tracking-model-test-context.xml" })
+@ContextConfiguration(locations = { "classpath:/spring/tracking-model-spring-test-context.xml" })
 @Transactional
 public class DeviceDAOTest {
 
@@ -38,41 +38,41 @@ public class DeviceDAOTest {
 			fail("Make sure you have inserted data from test-data.sql file");
 	}
 
-	@Ignore
+	
 	@Test
 	public void testFindById() {
 		assertEquals(1, device.getId());
 	}
 
-	@Ignore
+	
 	@Test
 	public void testGetDeviceType() {
 		DeviceType deviceType = device.getDeviceType();
 		assertEquals(1, deviceType.getId());
 	}
 
-	@Ignore
+	
 	@Test
 	public void testGetSensors() {
 		Sensor oilSensor = device.getDeviceType().getSensors().get(0);
 		assertEquals("OIL", oilSensor.getNameEn());
 	}
 
-	@Ignore
+	
 	@Test
 	public void testGetAlerts() {
 		Alert oilAlert = device.getDeviceType().getAlerts().get(0);
 		assertEquals("Oil Alert", oilAlert.getNameEn());
 	}
 
-	@Ignore
+	
 	@Test
 	public void testGetAlertConfigurations() {
 		List<AlertConfiguration> oilAlertConfigurations = device.getDeviceType().getAlerts().get(0).getAlertConfigurations();
 		assertEquals("In", oilAlertConfigurations.get(0).getSensorConfiguration().getTextValue());
 	}
 
-	@Ignore
+	
 	@Test
 	public void testGetExecludedAlerts() {
 		Alert oilAlert = device.getDeviceType().getAlerts().get(0);
@@ -82,7 +82,7 @@ public class DeviceDAOTest {
 	@Test
 	@Ignore
 	public void testFindByIdQuery() {
-		List<Device> devices = deviceDAO.findByIdQuery(1);
+		List<Device> devices = deviceDAO.findByIdNativeQuery(1);
 		// HEAT sensor should not be fetched
 		for (Device device : devices) {
 			List<Sensor> sensors = device.getDeviceType().getSensors();
@@ -94,14 +94,5 @@ public class DeviceDAOTest {
 		}
 	}
 	
-	@Test
-	public void testFindByIdCriteria(){
-		Device device = deviceDAO.findByIdCriteria(1);
-		List<Sensor> sensors = device.getDeviceType().getSensors();
-		assertNotNull("Sensors should not be Null", sensors);
-		for (Sensor sensor : sensors) {
-			assertFalse("HEAT Sensor has been fetched while it's retired, review Device.findById query",
-					"HEAT".equalsIgnoreCase(sensor.getNameEn()));
-		}
-	}
+
 }

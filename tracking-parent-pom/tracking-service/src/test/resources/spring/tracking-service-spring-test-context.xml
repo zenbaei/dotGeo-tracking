@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+	<!-- Services-start -->
+	<bean id="deviceService"
+		class="com.esrinea.dotGeo.tracking.service.component.device.DeviceServiceImpl">
+		<constructor-arg ref="deviceDAO" />
+	</bean>
+
+	<bean id="resourceLiveFeedService"
+		class="com.esrinea.dotGeo.tracking.service.component.resourceLiveFeed.ResourceLiveFeedServiceImpl">
+		<constructor-arg ref="resourceLiveFeedDAO" />
+	</bean>
+
+	<bean id="sensorLiveFeedService"
+		class="com.esrinea.dotGeo.tracking.service.component.sensorLiveFeed.SensorLiveFeedServiceImpl">
+		<constructor-arg ref="sensorLiveFeedDAO" />
+	</bean>
+
+	<bean id="sensorService"
+		class="com.esrinea.dotGeo.tracking.service.component.sensor.SensorServiceImpl">
+		<constructor-arg ref="sensorDAO" />
+	</bean>
+
+	<bean id="sensorConfigurationService"
+		class="com.esrinea.dotGeo.tracking.service.component.sensorConfiguration.SensorConfigurationServiceImpl">
+		<constructor-arg ref="sensorConfigurationDAO" />
+	</bean>
+
+	<bean id="alertService"
+		class="com.esrinea.dotGeo.tracking.service.component.alert.AlertServiceImpl">
+		<constructor-arg ref="alertDAO" />
+	</bean>
+
+	<bean id="alertConfigurationService"
+		class="com.esrinea.dotGeo.tracking.service.component.alertConfiguration.AlertConfigurationServiceImpl">
+		<constructor-arg ref="alertConfigurationDAO" />
+	</bean>
+	<!-- Services-end -->
+
+
+	<!-- DAOs-start -->
+	<bean id="deviceDAO"
+		class="com.esrinea.dotGeo.tracking.model.component.device.dao.DeviceDAOImpl">
+	</bean>
+
+	<bean id="resourceLiveFeedDAO"
+		class="com.esrinea.dotGeo.tracking.model.component.resourceLiveFeed.dao.ResourceLiveFeedDAOImpl">
+	</bean>
+
+	<bean id="sensorLiveFeedDAO"
+		class="com.esrinea.dotGeo.tracking.model.component.sensorLiveFeed.dao.SensorLiveFeedDAOImpl">
+	</bean>
+
+	<bean id="sensorDAO"
+		class="com.esrinea.dotGeo.tracking.model.component.sensor.dao.SensorDAOImpl">
+	</bean>
+
+	<bean id="sensorConfigurationDAO"
+		class="com.esrinea.dotGeo.tracking.model.component.sensorConfiguration.dao.SensorConfigurationDAOImpl">
+	</bean>
+
+	<bean id="alertDAO"
+		class="com.esrinea.dotGeo.tracking.model.component.alert.dao.AlertDAOImpl">
+	</bean>
+
+	<bean id="alertConfigurationDAO"
+		class="com.esrinea.dotGeo.tracking.model.component.alertConfiguration.dao.AlertConfigurationDAOImpl">
+	</bean>
+	<!-- DAOs-end -->
+
+	<bean id="serviceFacade"
+		class="com.esrinea.dotGeo.tracking.service.facade.ServiceFacade">
+		<property name="deviceService" ref="deviceService" />
+		<property name="sensorService" ref="sensorService" />
+		<property name="sensorConfigurationService" ref="sensorConfigurationService" />
+		<property name="alertService" ref="alertService" />
+		<property name="alertConfigurationService" ref="alertConfigurationService" />
+		<property name="deviceTypeService" ref="deviceTypeService" />
+	</bean>
+	<bean id="deviceTypeDAO"
+		class="com.esrinea.dotGeo.tracking.model.component.deviceType.dao.DeviceTypeDAOImpl">
+	</bean>
+	<bean id="deviceTypeService"
+		class="com.esrinea.dotGeo.tracking.service.component.deviceType.DeviceTypeServiceImpl">
+		<constructor-arg ref="deviceTypeDAO" />
+	</bean>
+</beans>
+

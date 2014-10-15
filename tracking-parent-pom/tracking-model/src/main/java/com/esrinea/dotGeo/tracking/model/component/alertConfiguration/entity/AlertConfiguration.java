@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
@@ -19,7 +20,10 @@ import com.esrinea.dotGeo.tracking.model.component.sensorConfiguration.entity.Se
  */
 @Entity
 @Table(name = "Alert_Configuration")
-@NamedQuery(name = "AlertConfiguration.findAll", query = "SELECT a FROM AlertConfiguration a")
+@NamedQueries({
+@NamedQuery(name = "AlertConfiguration.findAll", query = "SELECT a FROM AlertConfiguration a"),
+@NamedQuery(name = "AlertConfiguration.findByAlertRetired", query = "SELECT a FROM AlertConfiguration a WHERE a.alert.id = :alertId AND a.retired = :retired")
+})
 public class AlertConfiguration implements Serializable {
 	private static final long serialVersionUID = 1L;
 

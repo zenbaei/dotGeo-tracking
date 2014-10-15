@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -22,7 +23,9 @@ import com.esrinea.dotGeo.tracking.model.component.sensor.entity.Sensor;
  */
 @Entity
 @Table(name = "Sensor_Configuration")
-@NamedQuery(name = "SensorConfiguration.findAll", query = "SELECT s FROM SensorConfiguration s")
+@NamedQueries({
+		@NamedQuery(name = "SensorConfiguration.findAll", query = "SELECT s FROM SensorConfiguration s"),
+		@NamedQuery(name = "SensorConfiguration.findBySensorRetired", query = "SELECT s FROM SensorConfiguration s WHERE s.sensor.id = :sensorId AND s.retired = :retired") })
 public class SensorConfiguration implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -105,10 +108,8 @@ public class SensorConfiguration implements Serializable {
 
 	@Override
 	public String toString() {
-		return "SensorConfiguration [id=" + id + ", configText=" + configText
-				+ ", maxValue=" + maxValue + ", minValue=" + minValue
-				+ ", textValue=" + textValue + ", sensor=" + sensor
-				+ ", retired=" + retired + "]";
+		return "SensorConfiguration [id=" + id + ", configText=" + configText + ", maxValue=" + maxValue + ", minValue=" + minValue + ", textValue="
+				+ textValue + ", sensor=" + sensor + ", retired=" + retired + "]";
 	}
 
 }

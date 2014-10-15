@@ -2,7 +2,7 @@
 <persistence version="2.0"
 	xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
-	<persistence-unit name="hr" transaction-type="JTA">
+	<persistence-unit name="hr" transaction-type="RESOURCE_LOCAL">
 
 		<!-- <provider>org.hibernate.ejb.HibernatePersistence</provider> -->
 		<provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
@@ -36,7 +36,7 @@
 
 			<property name="openjpa.Log"
 	value="DefaultLevel=INFO, Tool=INFO, 
-				Runtime=TRACE" />
+				Runtime=INFO" />
 	<property name="openjpa.jdbc.DBDictionary" value="sqlserver" />
 	<property name="DynamicEnhancementAgent " value="false" />
 		</properties>

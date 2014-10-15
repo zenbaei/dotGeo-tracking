@@ -1,20 +1,32 @@
 package com.esrinea.dotGeo.tracking.service.component.sensorConfiguration;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
+import com.esrinea.dotGeo.tracking.model.component.sensorConfiguration.dao.SensorConfigurationDAO;
 import com.esrinea.dotGeo.tracking.model.component.sensorConfiguration.entity.SensorConfiguration;
+import com.esrinea.dotGeo.tracking.service.common.AbstractService;
 
-public class SensorConfigurationServiceImpl implements
+public class SensorConfigurationServiceImpl extends AbstractService<SensorConfiguration> implements
 		SensorConfigurationService {
+
+	private SensorConfigurationDAO sensorConfigurationDAO;
+	
+	
+	public SensorConfigurationServiceImpl(SensorConfigurationDAO sensorConfigurationDAO) {
+		super(sensorConfigurationDAO);
+		this.sensorConfigurationDAO = sensorConfigurationDAO;
+	}
 
 	private static Logger LOG = Logger
 			.getLogger(SensorConfigurationServiceImpl.class);
 
 	@Override
 	public boolean isBusinessRuleSatisfied(
-			SensorConfiguration sensorConfiguration, double receivedValue) {
+			SensorConfiguration sensorConfiguration, double receivedSensorValue) {
 
-		if (!commonCheck(sensorConfiguration, receivedValue)) {
+		if (!commonCheck(sensorConfiguration, receivedSensorValue)) {
 			return false;
 		}
 
@@ -24,8 +36,8 @@ public class SensorConfigurationServiceImpl implements
 			return false;
 		}
 
-		if (sensorConfiguration.getMinValue() < receivedValue
-				&& receivedValue < sensorConfiguration.getMaxValue()) {
+		if (sensorConfiguration.getMinValue() < receivedSensorValue
+				&& receivedSensorValue < sensorConfiguration.getMaxValue()) {
 			return true;
 		}
 
@@ -35,13 +47,13 @@ public class SensorConfigurationServiceImpl implements
 
 	@Override
 	public boolean isBusinessRuleSatisfied(
-			SensorConfiguration sensorConfiguration, String receivedValue) {
+			SensorConfiguration sensorConfiguration, String receivedSensorValue) {
 
-		if (!commonCheck(sensorConfiguration, receivedValue)) {
+		if (!commonCheck(sensorConfiguration, receivedSensorValue)) {
 			return false;
 		}
 
-		if (receivedValue == null || receivedValue.trim().isEmpty()) {
+		if (receivedSensorValue == null || receivedSensorValue.trim().isEmpty()) {
 			LOG.warn("receivedValue is Null");
 			return false;
 		}
@@ -53,7 +65,7 @@ public class SensorConfigurationServiceImpl implements
 		}
 
 		if (sensorConfiguration.getTextValue().trim()
-				.equalsIgnoreCase(receivedValue.trim())) {
+				.equalsIgnoreCase(receivedSensorValue.trim())) {
 			return true;
 		}
 
@@ -63,10 +75,10 @@ public class SensorConfigurationServiceImpl implements
 
 	// Common check done on overloaded isBusinessRuleSatisfied() method
 	private boolean commonCheck(SensorConfiguration sensorConfiguration,
-			Object receivedValue) {
+			Object receivedSensorValue) {
 
 		LOG.debug("applyBusinessRule:parameter1:" + sensorConfiguration
-				+ " parameter2:" + receivedValue);
+				+ " parameter2:" + receivedSensorValue);
 
 		if (sensorConfiguration == null) {
 			LOG.warn("SensorConfiguration is Null");
@@ -79,6 +91,11 @@ public class SensorConfigurationServiceImpl implements
 		}
 
 		return true;
+	}
+	
+	@Override
+	public List<SensorConfiguration> find(int sensorId, boolean retired) {
+		return sensorConfigurationDAO.find(sensorId, retired);
 	}
 
 }

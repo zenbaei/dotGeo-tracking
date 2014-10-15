@@ -10,7 +10,7 @@ public abstract class AbstractDAO<T> implements GenericDAO<T> {
 	@PersistenceContext
 	protected EntityManager entityManager;
 	private Class<T> entityClass;
-	protected static Logger LOG = Logger.getLogger(AbstractDAO.class);
+	private static Logger LOG = Logger.getLogger(AbstractDAO.class);
 	
 	public AbstractDAO(Class<T> entityClass) {
 		this.entityClass = entityClass;

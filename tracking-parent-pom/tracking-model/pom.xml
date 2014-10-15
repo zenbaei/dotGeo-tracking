@@ -14,8 +14,11 @@
 	</parent>
 
 	<dependencies>
-		<!-- <dependency> <groupId>org.apache.openjpa</groupId> <artifactId>openjpa</artifactId> 
-			<version>${org.apache.openjpa.version}</version> </dependency> -->
+		<dependency>
+			<groupId>org.apache.openjpa</groupId>
+			<artifactId>openjpa</artifactId>
+			<version>${org.apache.openjpa.version}</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.eclipse.persistence</groupId>
@@ -34,6 +37,12 @@
 			<groupId>com.jolbox</groupId>
 			<artifactId>bonecp</artifactId>
 			<version>0.7.1.RELEASE</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.7</version>
 		</dependency>
 
 		<dependency>
@@ -75,24 +84,24 @@
 				</configuration>
 			</plugin>
 			<plugin>
-	<groupId>org.apache.openjpa</groupId>
-	<artifactId>openjpa-maven-plugin</artifactId>
-	<version>${org.apache.openjpa.version}</version>
-	<configuration>
-		<includes>com.esrinea.dotGeo.tracking.model.component.*</includes>
-		<addDefaultConstructor>true</addDefaultConstructor>
-		<enforcePropertyRestrictions>true</enforcePropertyRestrictions>
-	</configuration>
-	<executions>
-		<execution>
-			<id>enhancer</id>
-			<phase>process-classes</phase>
-			<goals>
-				<goal>enhance</goal>
-			</goals>
-		</execution>
-	</executions>
-</plugin>
+				<groupId>org.apache.openjpa</groupId>
+				<artifactId>openjpa-maven-plugin</artifactId>
+				<version>${org.apache.openjpa.version}</version>
+				<configuration>
+					<includes>com.esrinea.dotGeo.tracking.model.component.*</includes>
+					<addDefaultConstructor>true</addDefaultConstructor>
+					<enforcePropertyRestrictions>true</enforcePropertyRestrictions>
+				</configuration>
+				<executions>
+					<execution>
+						<id>enhancer</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>enhance</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 </project>

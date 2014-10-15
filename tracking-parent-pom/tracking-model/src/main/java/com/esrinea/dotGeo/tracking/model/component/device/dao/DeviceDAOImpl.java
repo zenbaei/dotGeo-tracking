@@ -2,37 +2,36 @@ package com.esrinea.dotGeo.tracking.model.component.device.dao;
 
 import java.util.List;
 
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
+import javax.persistence.NoResultException;
+
+import org.apache.log4j.Logger;
 
 import com.esrinea.dotGeo.tracking.model.common.dao.AbstractDAO;
 import com.esrinea.dotGeo.tracking.model.component.device.entity.Device;
-import com.esrinea.dotGeo.tracking.model.component.device.entity.Device_;
 
 public class DeviceDAOImpl extends AbstractDAO<Device> implements DeviceDAO {
+
+	private static Logger LOG = Logger.getLogger(DeviceDAOImpl.class);
 
 	public DeviceDAOImpl() {
 		super(Device.class);
 	}
 
 	@Override
-	public List<Device> findByIdQuery(int id) {
+	public List<Device> findByIdNativeQuery(int id) {
 		return entityManager.createNamedQuery("Device.findById", Device.class).setParameter(1, id).getResultList();
 	}
 
-	public Device findByIdCriteria(int id) {
-		CriteriaBuilder cb = super.entityManager.getCriteriaBuilder();
-		CriteriaQuery<Device> cq = cb.createQuery(Device.class);
-
-		Root<Device> device = cq.from(Device.class);
-
-		cq.where(cb.equal(device.get(Device_.retired), new Boolean(false)));
-		cb.and(cb.equal(device.get(Device_.id), id));
-
-		TypedQuery<Device> query = super.entityManager.createQuery(cq);
-		return query.getSingleResult();
-
+	@Override
+	public Device find(int id, boolean retired) {
+		Device device = null;
+		try{
+			device = entityManager.createNamedQuery("Device.findByIdRetired", Device.class).setParameter("id", id).setParameter("retired", retired)
+					.getSingleResult();
+		} catch (NoResultException ex) {
+			LOG.info(String.format("%s with ID %s does not exist in database or is not %s.", "Device", id, retired ? "retired" : "active"));
+			throw ex;
+		}
+		return device;
 	}
 }
