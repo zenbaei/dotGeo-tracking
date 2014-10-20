@@ -32,12 +32,8 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<Export-Package>
-							com.esrinea.dotGeo.tracking.service.*
-						</Export-Package>
-						<import>*</import>
-						<!-- <Import-Package> org.apache.openjpa.*, javax.transaction.*, * 
-							</Import-Package> -->
+						<Export-Package>com.esrinea.dotGeo.tracking.service.*</Export-Package>
+						<Import-Package>*</Import-Package>
 					</instructions>
 				</configuration>
 			</plugin>

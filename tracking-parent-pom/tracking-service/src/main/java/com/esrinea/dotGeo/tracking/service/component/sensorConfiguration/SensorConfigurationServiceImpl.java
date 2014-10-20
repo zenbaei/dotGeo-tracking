@@ -6,7 +6,7 @@ import org.apache.log4j.Logger;
 
 import com.esrinea.dotGeo.tracking.model.component.sensorConfiguration.dao.SensorConfigurationDAO;
 import com.esrinea.dotGeo.tracking.model.component.sensorConfiguration.entity.SensorConfiguration;
-import com.esrinea.dotGeo.tracking.service.common.AbstractService;
+import com.esrinea.dotGeo.tracking.service.common.service.AbstractService;
 
 public class SensorConfigurationServiceImpl extends AbstractService<SensorConfiguration> implements
 		SensorConfigurationService {
@@ -41,7 +41,7 @@ public class SensorConfigurationServiceImpl extends AbstractService<SensorConfig
 			return true;
 		}
 
-		LOG.debug("Please check Business Rule logic as non of the checks were satisfied");
+		LOG.debug("Please check Business Rule logic as non of the checks were satisfied.");
 		return false;
 	}
 
@@ -69,16 +69,27 @@ public class SensorConfigurationServiceImpl extends AbstractService<SensorConfig
 			return true;
 		}
 
-		LOG.debug("Please check Business Rule logic as non of the checks were satisfied");
+		LOG.debug("Please check Business Rule logic as non of the checks were satisfied.");
 		return false;
 	}
 
+	@Override
+	public boolean isBusinessRuleSatisfiedDelegate(SensorConfiguration sensorConfiguration, Object receivedSensorValue) {
+		String val = String.valueOf(receivedSensorValue);
+		try{
+			Double d =  Double.valueOf(val);
+			return isBusinessRuleSatisfied(sensorConfiguration, d);
+		}catch(NumberFormatException | ClassCastException ex){
+			return isBusinessRuleSatisfied(sensorConfiguration, val);
+		}
+	}
+	
 	// Common check done on overloaded isBusinessRuleSatisfied() method
 	private boolean commonCheck(SensorConfiguration sensorConfiguration,
 			Object receivedSensorValue) {
 
-		LOG.debug("applyBusinessRule:parameter1:" + sensorConfiguration
-				+ " parameter2:" + receivedSensorValue);
+		LOG.debug("Apply Business Rule:\nSensor Configuration: " + sensorConfiguration
+				+ "\nReceived Sensor Value: " + receivedSensorValue);
 
 		if (sensorConfiguration == null) {
 			LOG.warn("SensorConfiguration is Null");

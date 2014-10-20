@@ -12,15 +12,15 @@
                         http://cxf.apache.org/blueprint/jaxrs http://cxf.apache.org/schemas/blueprint/jaxrs.xsd 
                         http://cxf.apache.org/blueprint/core http://cxf.apache.org/schemas/blueprint/core.xsd">
 
-	<reference id="deviceService"
-		interface="com.esrinea.dotGeo.tracking.service.component.device.DeviceService"
+	<reference id="trackingServiceFacade"
+		interface="com.esrinea.dotGeo.tracking.service.facade.TrackingServiceFacade"
 		availability="mandatory" />
 
 	<bean id="trackingProcessorServiceBean"
 		class="com.esrinea.dotGeo.tracking.processor.component.tracking.TrackingProcessorService"
 		activation="eager">
 		<property name="bundleContext" ref="blueprintBundleContext" />
-		<!-- <property name="deviceService" ref="deviceServiceRef" /> -->
+		<property name="trackingServiceFacade" ref="trackingServiceFacade" />
 	</bean>
 
 	<service id="trackingProcessorService" ref="trackingProcessorServiceBean"

@@ -8,11 +8,12 @@
 
 
 		<!-- feature dependencies -->
-		<feature>mvn:com.esrinea.dotGeo/openjpa-feature/1.0.0</feature>
+		<feature>openjpa</feature>
 
 		<!-- application bundles -->
 		<bundle>mvn:com.esrinea.dotGeo/tracking-datasource/1.0.0</bundle>
 		<bundle>mvn:com.esrinea.dotGeo/tracking-model/1.0.0</bundle>
-		<!-- <bundle>mvn:com.esrinea.dotGeo/tracking-service/1.0.0</bundle> <bundle>mvn:com.esrinea.dotGeo/tracking-processor/1.0.0</bundle> -->
+		<bundle>mvn:com.esrinea.dotGeo/tracking-service/1.0.0</bundle>
+		<bundle>mvn:com.esrinea.dotGeo/tracking-processor/1.0.0</bundle>
 	</feature>
 </features>

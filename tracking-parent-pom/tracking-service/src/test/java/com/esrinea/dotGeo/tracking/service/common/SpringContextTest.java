@@ -8,6 +8,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.esrinea.dotGeo.tracking.service.common.spring.SpringContext;
 import com.esrinea.dotGeo.tracking.service.component.device.DeviceService;
 
 @RunWith(SpringJUnit4ClassRunner.class)

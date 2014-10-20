@@ -6,7 +6,7 @@ import org.apache.log4j.Logger;
 
 import com.esrinea.dotGeo.tracking.model.component.sensor.dao.SensorDAO;
 import com.esrinea.dotGeo.tracking.model.component.sensor.entity.Sensor;
-import com.esrinea.dotGeo.tracking.service.common.AbstractService;
+import com.esrinea.dotGeo.tracking.service.common.service.AbstractService;
 
 public class SensorServiceImpl extends AbstractService<Sensor> implements SensorService {
 
@@ -21,5 +21,10 @@ public class SensorServiceImpl extends AbstractService<Sensor> implements Sensor
 	@Override
 	public List<Sensor> find(int deviceTypeId, boolean retired) {
 		return sensorDAO.find(deviceTypeId, retired);
+	}
+
+	@Override
+	public Sensor find(String sensorNameEn) {
+		return sensorDAO.find(sensorNameEn);
 	}
 }

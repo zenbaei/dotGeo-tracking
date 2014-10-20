@@ -4,13 +4,11 @@ import com.esri.ges.core.component.ComponentException;
 import com.esri.ges.processor.GeoEventProcessor;
 import com.esri.ges.processor.GeoEventProcessorServiceBase;
 import com.esrinea.dotGeo.tracking.service.component.device.DeviceService;
+import com.esrinea.dotGeo.tracking.service.facade.TrackingServiceFacade;
 
 public class TrackingProcessorService extends GeoEventProcessorServiceBase {
-	private DeviceService deviceService;
-
-	public void setDeviceService(DeviceService deviceService) {
-		this.deviceService = deviceService;
-	}
+	
+	private TrackingServiceFacade trackingServiceFacade;
 
 	public TrackingProcessorService() {
 		definition = new TrackingProcessorDefinition();
@@ -18,6 +16,10 @@ public class TrackingProcessorService extends GeoEventProcessorServiceBase {
 
 	@Override
 	public GeoEventProcessor create() throws ComponentException {
-		return new TrackingProcessor(definition, deviceService);
+		return new TrackingProcessor(definition, trackingServiceFacade);
+	}
+	
+	public void setTrackingServiceFacade(TrackingServiceFacade trackingServiceFacade) {
+		this.trackingServiceFacade = trackingServiceFacade;
 	}
 }

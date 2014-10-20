@@ -1,4 +1,4 @@
-package com.esrinea.dotGeo.tracking.service.common;
+package com.esrinea.dotGeo.tracking.service.common.service;
 
 import com.esrinea.dotGeo.tracking.model.common.dao.GenericDAO;
 

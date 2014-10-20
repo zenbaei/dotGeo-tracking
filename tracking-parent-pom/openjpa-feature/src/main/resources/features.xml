@@ -2,9 +2,9 @@
 <features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0"
 	name="openjpa-2.2.0">
 
-	<feature name="openjpa" version="1.0.0" description="openJPA Version 2.2.0">
+	<feature name="openjpa" version="2.2.0" description="openJPA Version 2.2.0">
 
-		<!-- features:addurl mvn:com.esrinea.dotGeo/openjpa-feature/1.0.0/xml/features -->
+		<!-- features:addurl mvn:com.esrinea.dotGeo/openjpa-feature/2.2.0/xml/features -->
 
 
 		<!-- feature dependencies -->

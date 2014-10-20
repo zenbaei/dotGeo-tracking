@@ -5,6 +5,7 @@
 	<artifactId>openjpa-feature</artifactId>
 	<name>OpenJPA Feature</name>
 	<packaging>jar</packaging>
+	<version>2.2.0</version>
 
 	<parent>
 		<groupId>com.esrinea.dotGeo</groupId>

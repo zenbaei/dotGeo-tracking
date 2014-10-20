@@ -15,7 +15,7 @@
 	</root>
 
 	<category name="com.esrinea.dotGeo" additivity="true">
-		<priority value="DEBUG" />
+		<priority value="TRACE" />
 	</category>
 
 

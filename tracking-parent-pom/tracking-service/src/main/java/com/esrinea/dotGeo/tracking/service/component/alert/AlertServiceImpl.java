@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.esrinea.dotGeo.tracking.model.component.alert.dao.AlertDAO;
 import com.esrinea.dotGeo.tracking.model.component.alert.entity.Alert;
-import com.esrinea.dotGeo.tracking.service.common.AbstractService;
+import com.esrinea.dotGeo.tracking.service.common.service.AbstractService;
 
 public class AlertServiceImpl extends AbstractService<Alert> implements AlertService {
 

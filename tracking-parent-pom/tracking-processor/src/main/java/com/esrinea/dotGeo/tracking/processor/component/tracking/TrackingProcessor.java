@@ -8,40 +8,33 @@ import com.esri.ges.core.geoevent.GeoEvent;
 import com.esri.ges.core.property.Property;
 import com.esri.ges.processor.GeoEventProcessorBase;
 import com.esri.ges.processor.GeoEventProcessorDefinition;
-import com.esrinea.dotGeo.tracking.service.component.device.DeviceService;
+import com.esrinea.dotGeo.tracking.service.common.dto.EventData;
+import com.esrinea.dotGeo.tracking.service.facade.TrackingServiceFacade;
 
 public class TrackingProcessor extends GeoEventProcessorBase {
 	private static final Log LOG = LogFactory.getLog(TrackingProcessor.class);
+	private TrackingServiceFacade trackingServiceFacade;
 
-	private long lastReport = 0;
-	private int maxMessageRate = 500;
-	private boolean printedWarning;
-	private DeviceService deviceService;
-
-	protected TrackingProcessor(GeoEventProcessorDefinition definition, DeviceService deviceService)
-			throws ComponentException {
+	protected TrackingProcessor(GeoEventProcessorDefinition definition, TrackingServiceFacade trackingServiceFacade) throws ComponentException {
 		super(definition);
-		this.deviceService = deviceService;
+		this.trackingServiceFacade = trackingServiceFacade;
+		trackingServiceFacade.buildDeviceType();
 	}
 
 	@Override
 	public GeoEvent process(GeoEvent geoEvent) throws Exception {
 
-		LOG.info("Geo Event Device ID: " + geoEvent.getTrackId());
-		LOG.info("Geo Event x cord: " + geoEvent.getField("x_cord"));
+		LOG.trace("Geo Event Device ID: " + geoEvent.getTrackId());
+		LOG.trace("Geo Event x cord: " + geoEvent.getField("x_cord"));
 		
-		if (maxMessageRate > 0) {
-			if ((System.currentTimeMillis() - lastReport) > maxMessageRate) {
-				if (!printedWarning)
-					LOG.debug("Tracking Processing ... (Limiting output to no more than 1 line every "
-							+ maxMessageRate + " ms)");
-				else
-					LOG.debug("Tracking Processing ... ");
-				lastReport = System.currentTimeMillis();
-			}
-		} else
-			LOG.debug("Tracking Processing ... ");
 
+		EventData eventData = new EventData((Integer) geoEvent.getField("id"), (Double) geoEvent.getField("xCoord"), (Double) geoEvent.getField("yCoord"), (Integer) geoEvent.getField("speed"), (Double) geoEvent.getField("heading"));
+
+		eventData.addSensorValue("TEMP", geoEvent.getField("TEMP"));
+		eventData.addSensorValue("OIL", geoEvent.getField("OIL"));
+
+		trackingServiceFacade.deviceFeedReceived(eventData);
+		
 		return geoEvent;
 	}
 

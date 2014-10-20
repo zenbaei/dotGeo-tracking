@@ -1,4 +1,4 @@
-package com.esrinea.dotGeo.tracking.service.common;
+package com.esrinea.dotGeo.tracking.service.common.service;
 
 public interface GenericService<T> {
 

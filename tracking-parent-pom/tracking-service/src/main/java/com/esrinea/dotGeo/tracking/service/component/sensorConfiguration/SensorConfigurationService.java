@@ -3,7 +3,7 @@ package com.esrinea.dotGeo.tracking.service.component.sensorConfiguration;
 import java.util.List;
 
 import com.esrinea.dotGeo.tracking.model.component.sensorConfiguration.entity.SensorConfiguration;
-import com.esrinea.dotGeo.tracking.service.common.GenericService;
+import com.esrinea.dotGeo.tracking.service.common.service.GenericService;
 
 public interface SensorConfigurationService extends GenericService<SensorConfiguration>{
 	
@@ -28,5 +28,13 @@ public interface SensorConfigurationService extends GenericService<SensorConfigu
 	boolean isBusinessRuleSatisfied(SensorConfiguration sensorConfiguration, String receivedSensorValue);
 
 	List<SensorConfiguration> find(int sensorId, boolean retired);
+	
+	/**
+	 * This method will delegate the received sensor value to one of corresponding methods(double or string value)
+	 * @param sensorConfiguration
+	 * @param receivedSensorValue
+	 * @return
+	 */
+	boolean isBusinessRuleSatisfiedDelegate(SensorConfiguration sensorConfiguration, Object receivedSensorValue);
 
 }

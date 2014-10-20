@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.esrinea.dotGeo.tracking.model.component.alertConfiguration.dao.AlertConfigurationDAO;
 import com.esrinea.dotGeo.tracking.model.component.alertConfiguration.entity.AlertConfiguration;
-import com.esrinea.dotGeo.tracking.service.common.AbstractService;
+import com.esrinea.dotGeo.tracking.service.common.service.AbstractService;
 
 public class AlertConfigurationServiceImpl extends AbstractService<AlertConfiguration> implements AlertConfigurationService{
 
@@ -18,6 +18,11 @@ public class AlertConfigurationServiceImpl extends AbstractService<AlertConfigur
 	@Override
 	public List<AlertConfiguration> find(int alertId, boolean retired) {
 		return alertConfigurationDAO.find(alertId, retired);
+	}
+
+	@Override
+	public AlertConfiguration findBySensorConfiguration(int sensorConfigurationId) {
+		return alertConfigurationDAO.findBySensorConfiguration(sensorConfigurationId);
 	}
 
 }

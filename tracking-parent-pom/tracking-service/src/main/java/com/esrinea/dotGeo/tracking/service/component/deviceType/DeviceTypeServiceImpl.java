@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.esrinea.dotGeo.tracking.model.component.deviceType.dao.DeviceTypeDAO;
 import com.esrinea.dotGeo.tracking.model.component.deviceType.entity.DeviceType;
-import com.esrinea.dotGeo.tracking.service.common.AbstractService;
+import com.esrinea.dotGeo.tracking.service.common.service.AbstractService;
 
 public class DeviceTypeServiceImpl extends AbstractService<DeviceType> implements DeviceTypeService {
 
