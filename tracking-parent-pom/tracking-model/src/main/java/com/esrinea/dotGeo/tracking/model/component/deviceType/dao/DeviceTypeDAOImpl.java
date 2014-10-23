@@ -21,7 +21,7 @@ public class DeviceTypeDAOImpl extends AbstractDAO<DeviceType> implements Device
 				.getResultList();
 
 		if (deviceTypes.isEmpty()) {
-			LOG.info(String.format("No %s with status of %s exists.", "Device Types", retired ? "retired" : "active"));
+			LOG.info(String.format("No %s with %s status exists.", "Device Types", retired ? "retired" : "active"));
 		}
 		
 		return deviceTypes;

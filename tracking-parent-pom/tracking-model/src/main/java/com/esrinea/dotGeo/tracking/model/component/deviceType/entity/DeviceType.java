@@ -11,6 +11,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.junit.experimental.categories.Category;
+
 import com.esrinea.dotGeo.tracking.model.component.alert.entity.Alert;
 import com.esrinea.dotGeo.tracking.model.component.sensor.entity.Sensor;
 
@@ -34,8 +36,15 @@ public class DeviceType implements Serializable {
 	@OneToMany(mappedBy = "deviceType", fetch = FetchType.LAZY)
 	private List<Alert> alerts;
 	
-	@Column(name="isRetired")
+	@Column(name="IsRetired")
 	private boolean retired;
+
+	@Column(name="DeviceType_Desc")
+	private String desc;
+	
+	public String getDesc() {
+		return desc;
+	}
 
 	public DeviceType() {
 	}

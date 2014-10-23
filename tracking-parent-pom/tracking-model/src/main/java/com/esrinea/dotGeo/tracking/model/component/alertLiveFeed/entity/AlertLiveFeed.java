@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
@@ -26,14 +27,17 @@ import com.esrinea.dotGeo.tracking.model.component.device.entity.Device;
  */
 @Entity
 @Table(name = "Alert_LiveFeeds")
-@NamedQuery(name = "AlertLiveFeed.findAll", query = "SELECT a FROM AlertLiveFeed a")
+@NamedQueries({
+@NamedQuery(name = "AlertLiveFeed.findAll", query = "SELECT a FROM AlertLiveFeed a"),
+@NamedQuery(name = "AlertLiveFeed.findByAlert", query = "SELECT a FROM AlertLiveFeed a WHERE a.alert.id = :alertId"),
+}) 
 public class AlertLiveFeed implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@TableGenerator(name = "alertLiveFeed", table = "SEQUENCE_STORE", pkColumnName = "SEQ_NAME", pkColumnValue = "ALERT_LIVE_FEEDS", valueColumnName = "SEQ_VALUE", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "alertLiveFeed")
-	@Column(name = "Alert_LiveFeeds_DBID", unique = true, nullable = false)
+	@Column(name = "ALERT_LIVEFEEDS_ID", unique = true, nullable = false)
 	private int id;
 
 	@Column(name = "Alert_DateTime", nullable = false)
@@ -48,6 +52,7 @@ public class AlertLiveFeed implements Serializable {
 	@JoinColumn(name = "Device_DBID", nullable = false)
 	private Device device;
 
+	@Column(name="Zone")
 	private String zone;
 
 	public AlertLiveFeed() {
@@ -62,6 +67,10 @@ public class AlertLiveFeed implements Serializable {
 	
 	public int getId() {
 		return id;
+	}
+	
+	public Alert getAlert() {
+		return alert;
 	}
 
 	@Override

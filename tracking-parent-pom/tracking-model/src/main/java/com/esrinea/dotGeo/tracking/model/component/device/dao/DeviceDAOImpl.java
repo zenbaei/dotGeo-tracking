@@ -29,8 +29,9 @@ public class DeviceDAOImpl extends AbstractDAO<Device> implements DeviceDAO {
 			device = entityManager.createNamedQuery("Device.findByIdRetired", Device.class).setParameter("id", id).setParameter("retired", retired)
 					.getSingleResult();
 		} catch (NoResultException ex) {
-			LOG.info(String.format("%s with ID %s does not exist in database or is not %s.", "Device", id, retired ? "retired" : "active"));
-			throw ex;
+			String errMsg = String.format("%s with ID %s does not exist in database or is not %s.", "Device", id, retired ? "retired" : "active");
+			LOG.info(errMsg);
+			throw new NoResultException(errMsg);
 		}
 		return device;
 	}

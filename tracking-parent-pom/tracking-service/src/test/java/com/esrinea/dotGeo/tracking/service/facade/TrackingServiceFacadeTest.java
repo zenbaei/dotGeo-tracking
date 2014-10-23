@@ -1,6 +1,5 @@
 package com.esrinea.dotGeo.tracking.service.facade;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,12 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.esrinea.dotGeo.tracking.model.component.alert.entity.Alert;
-import com.esrinea.dotGeo.tracking.model.component.alertConfiguration.entity.AlertConfiguration;
 import com.esrinea.dotGeo.tracking.model.component.alertLiveFeed.entity.AlertLiveFeed;
-import com.esrinea.dotGeo.tracking.model.component.sensor.entity.Sensor;
 import com.esrinea.dotGeo.tracking.model.component.sensorLiveFeed.entity.SensorLiveFeed;
 import com.esrinea.dotGeo.tracking.service.common.dto.EventData;
 import com.esrinea.dotGeo.tracking.service.component.alert.AlertService;
@@ -31,7 +29,7 @@ import com.esrinea.dotGeo.tracking.service.component.sensorLiveFeed.SensorLiveFe
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:/META-INF/spring/application-context.xml", "classpath:/spring/tracking-service-spring-test-context.xml", "classpath:/spring/tracking-model-spring-test-context.xml" })
-@Transactional
+@Transactional(propagation=Propagation.REQUIRED)
 public class TrackingServiceFacadeTest {
 
 	@Autowired

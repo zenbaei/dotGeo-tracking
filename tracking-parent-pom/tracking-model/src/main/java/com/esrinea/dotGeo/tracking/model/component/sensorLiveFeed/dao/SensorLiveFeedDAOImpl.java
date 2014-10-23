@@ -10,4 +10,9 @@ public class SensorLiveFeedDAOImpl extends AbstractDAO<SensorLiveFeed>
 		super(SensorLiveFeed.class);
 	}
 
+	@Override
+	public SensorLiveFeed find(String sensorValue) {
+		return entityManager.createNamedQuery("SensorLiveFeed.findBySensorValue", SensorLiveFeed.class).setParameter("sensorValue", sensorValue).getSingleResult();
+	}
+
 }

@@ -20,6 +20,7 @@ public abstract class AbstractDAO<T> implements GenericDAO<T> {
 	public T find(int id) {
 		T entity = entityManager.find(entityClass, id);
 		LOG.info("Entity " + entity.getClass().getSimpleName() + " with ID = " + id + " has been looked up.");
+		LOG.trace("Looked up entity details: " + entity);
 		return entity;
 	}
 	
@@ -27,6 +28,7 @@ public abstract class AbstractDAO<T> implements GenericDAO<T> {
 	public void create(T entity) {
 		entityManager.persist(entity);		
 		LOG.info("Entity " + entity.getClass().getSimpleName() + " has been created.");
+		LOG.trace("Created entity details: " + entity);
 	}
 	
 	public void setEntityManager(EntityManager entityManager) {

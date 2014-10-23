@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
@@ -25,14 +26,15 @@ import com.esrinea.dotGeo.tracking.model.component.sensorConfiguration.entity.Se
  */
 @Entity
 @Table(name = "Sensors_LiveFeeds")
-@NamedQuery(name = "SensorsLiveFeed.findAll", query = "SELECT s FROM SensorLiveFeed s")
+@NamedQueries({ @NamedQuery(name = "SensorsLiveFeed.findAll", query = "SELECT s FROM SensorLiveFeed s"), 
+	@NamedQuery(name = "SensorLiveFeed.findBySensorValue", query = "SELECT s FROM SensorLiveFeed s WHERE s.sensorValue = :sensorValue") })
 public class SensorLiveFeed implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@TableGenerator(name = "sensorLiveFeed", table = "SEQUENCE_STORE", pkColumnName = "SEQ_NAME", pkColumnValue = "SENSOR_LIVE_FEEDS", valueColumnName = "SEQ_VALUE", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "sensorLiveFeed")
-	@Column(name = "Sensor_LiveFeeds_ID", unique = true, nullable = false)
+	@Column(name = "SENSOR_LIVEfEEDS_ID", unique = true, nullable = false)
 	private int id;
 
 	@ManyToOne
@@ -53,9 +55,7 @@ public class SensorLiveFeed implements Serializable {
 	public SensorLiveFeed() {
 	}
 
-	public SensorLiveFeed(Device device,
-			SensorConfiguration sensorConfiguration, String sensorValue,
-			Date dateTime) {
+	public SensorLiveFeed(Device device, SensorConfiguration sensorConfiguration, String sensorValue, Date dateTime) {
 		this.sensorConfiguration = sensorConfiguration;
 		this.device = device;
 		this.sensorValue = sensorValue;
@@ -98,4 +98,10 @@ public class SensorLiveFeed implements Serializable {
 		return id;
 	}
 
+	@Override
+	public String toString() {
+		return "SensorLiveFeed [id=" + id + ", device=" + device + ", sensorValue=" + sensorValue + ", sensorConfiguration=" + sensorConfiguration + ", dateTime=" + dateTime + "]";
+	}
+
+	
 }

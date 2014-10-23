@@ -8,30 +8,134 @@
                         http://aries.apache.org/xmlns/transactions/v1.0.0 http://aries.apache.org/schemas/transaction/transactionv10.xsd
                         http://aries.apache.org/xmlns/jpa/v1.1.0 http://aries.apache.org/schemas/jpa/jpa_110.xsd">
 
-<!-- 
-	<bean id="jpaProvider" class="org.hibernate.ejb.HibernatePersistence" />
+	<!-- <bean id="jpaProvider" class="org.hibernate.ejb.HibernatePersistence" 
+		/> <service ref="jpaProvider" interface="javax.persistence.spi.PersistenceProvider"> 
+		<service-properties> <entry key="javax.persistence.provider" value="org.hibernate.ejb.HibernatePersistence" 
+		/> </service-properties> </service> -->
 
-	<service ref="jpaProvider" interface="javax.persistence.spi.PersistenceProvider">
-		<service-properties>
-			<entry key="javax.persistence.provider" value="org.hibernate.ejb.HibernatePersistence" />
-		</service-properties>
-	</service> -->
-
-
-	<bean id="deviceDAO"
-		class="com.esrinea.dotGeo.tracking.model.component.device.dao.DeviceDAOImpl">
-		<jpa:context property="entityManager" unitname="hr" />
-		<tx:transaction method="*" value="Required" />
-	</bean>
-
+	<!-- TestBean-Start -->
 	<bean id="deviceDAOKarafTest"
 		class="com.esrinea.dotGeo.tracking.model.component.device.dao.DeviceDAOKarafTest"
 		init-method="test">
 		<property name="deviceDAO" ref="deviceDAO" />
 	</bean>
+	<!-- TestBean-End -->
 
+
+	<!-- Device-Start -->
+	<bean id="deviceDAO"
+		class="com.esrinea.dotGeo.tracking.model.component.device.dao.DeviceDAOImpl">
+		<jpa:context property="entityManager" unitname="tracking" />
+		<tx:transaction method="*" value="Required" />
+	</bean>
 	<service
 		interface="com.esrinea.dotGeo.tracking.model.component.device.dao.DeviceDAO"
 		ref="deviceDAO" />
+	<!-- Device-End -->
+
+
+	<!-- ResourceLiveFeed-Start -->
+	<bean id="resourceLiveFeedDAO"
+		class="com.esrinea.dotGeo.tracking.model.component.resourceLiveFeed.dao.ResourceLiveFeedDAOImpl">
+		<jpa:context property="entityManager" unitname="tracking" />
+		<tx:transaction method="*" value="Required" />
+	</bean>
+	<service
+		interface="com.esrinea.dotGeo.tracking.model.component.resourceLiveFeed.dao.ResourceLiveFeedDAO"
+		ref="resourceLiveFeedDAO" />
+	<!-- ResourceLiveFeed-End -->
+
+
+
+
+	<!-- SensorLiveFeed-Start -->
+	<bean id="sensorLiveFeedDAO"
+		class="com.esrinea.dotGeo.tracking.model.component.sensorLiveFeed.dao.SensorLiveFeedDAOImpl">
+		<jpa:context property="entityManager" unitname="tracking" />
+		<tx:transaction method="*" value="Required" />
+	</bean>
+	<service
+		interface="com.esrinea.dotGeo.tracking.model.component.sensorLiveFeed.dao.SensorLiveFeedDAO"
+		ref="sensorLiveFeedDAO" />
+	<!-- SensorLiveFeed-End -->
+
+
+
+	<!-- Sensor-Start -->
+	<bean id="sensorDAO"
+		class="com.esrinea.dotGeo.tracking.model.component.sensor.dao.SensorDAOImpl">
+		<jpa:context property="entityManager" unitname="tracking" />
+		<tx:transaction method="*" value="Required" />
+	</bean>
+	<service
+		interface="com.esrinea.dotGeo.tracking.model.component.sensor.dao.SensorDAO"
+		ref="sensorDAO" />
+	<!-- Sensor-End -->
+
+
+
+	<!-- SensorConfiguration-Start -->
+	<bean id="sensorConfigurationDAO"
+		class="com.esrinea.dotGeo.tracking.model.component.sensorConfiguration.dao.SensorConfigurationDAOImpl">
+		<jpa:context property="entityManager" unitname="tracking" />
+		<tx:transaction method="*" value="Required" />
+	</bean>
+	<service
+		interface="com.esrinea.dotGeo.tracking.model.component.sensorConfiguration.dao.SensorConfigurationDAO"
+		ref="sensorConfigurationDAO" />
+	<!-- SensorConfiguration-End -->
+
+
+
+
+	<!-- Alert-Start -->
+	<bean id="alertDAO"
+		class="com.esrinea.dotGeo.tracking.model.component.alert.dao.AlertDAOImpl">
+		<jpa:context property="entityManager" unitname="tracking" />
+		<tx:transaction method="*" value="Required" />
+	</bean>
+	<service
+		interface="com.esrinea.dotGeo.tracking.model.component.alert.dao.AlertDAO"
+		ref="alertDAO" />
+	<!-- Alert-End -->
+
+
+
+	<!-- AlertConfiguration-Start -->
+	<bean id="alertConfigurationDAO"
+		class="com.esrinea.dotGeo.tracking.model.component.alertConfiguration.dao.AlertConfigurationDAOImpl">
+		<jpa:context property="entityManager" unitname="tracking" />
+		<tx:transaction method="*" value="Required" />
+	</bean>
+	<service
+		interface="com.esrinea.dotGeo.tracking.model.component.alertConfiguration.dao.AlertConfigurationDAO"
+		ref="alertConfigurationDAO" />
+	<!-- AlertConfiguration-End -->
+
+
+	<!-- DeviceType-Start -->
+	<bean id="deviceTypeDAO"
+		class="com.esrinea.dotGeo.tracking.model.component.deviceType.dao.DeviceTypeDAOImpl">
+		<jpa:context property="entityManager" unitname="tracking" />
+		<tx:transaction method="*" value="Required" />
+	</bean>
+	<service
+		interface="com.esrinea.dotGeo.tracking.model.component.deviceType.dao.DeviceTypeDAO"
+		ref="deviceTypeDAO" />
+	<!-- DeviceType-End -->
+
+
+	<!-- AlertLiveFeed-Start -->
+	<bean id="alertLiveFeedDAO"
+		class="com.esrinea.dotGeo.tracking.model.component.alertLiveFeed.dao.AlertLiveFeedDAOImpl">
+		<jpa:context property="entityManager" unitname="tracking" />
+		<tx:transaction method="*" value="Required" />
+	</bean>
+	<service
+		interface="com.esrinea.dotGeo.tracking.model.component.alertLiveFeed.dao.AlertLiveFeedDAO"
+		ref="alertLiveFeedDAO" />
+	<!-- AlertLiveFeed-End -->
+
+
 
 </blueprint>

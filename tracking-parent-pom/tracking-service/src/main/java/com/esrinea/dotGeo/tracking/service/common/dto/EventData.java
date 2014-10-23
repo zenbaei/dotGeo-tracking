@@ -35,13 +35,15 @@ public class EventData {
 		this.sensorValues = sensorValues;
 	}
 	
-	public EventData(int deviceId, double xCoord, double yCoord, int speed, double heading) {
+	public EventData(int deviceId, double xCoord, double yCoord, int speed) {
 		this.deviceId = deviceId;
 		this.feedDateTime = new Date();
 		this.xCoord = xCoord;
 		this.yCoord = yCoord;
 		this.speed = speed;
-		this.heading = heading;
+	}
+
+	public EventData() {
 	}
 
 	public int getDeviceId() {

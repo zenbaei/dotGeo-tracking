@@ -18,23 +18,36 @@ public class TrackingProcessor extends GeoEventProcessorBase {
 	protected TrackingProcessor(GeoEventProcessorDefinition definition, TrackingServiceFacade trackingServiceFacade) throws ComponentException {
 		super(definition);
 		this.trackingServiceFacade = trackingServiceFacade;
-		trackingServiceFacade.buildDeviceType();
 	}
 
 	@Override
 	public GeoEvent process(GeoEvent geoEvent) throws Exception {
+		int deviceId = 0;
+		double xCoord = 0;
+		double yCoord = 0;
+		int speed = 0;
+		Object tempSensor = null;
+		Object oilSenosr = null;
 
-		LOG.trace("Geo Event Device ID: " + geoEvent.getTrackId());
-		LOG.trace("Geo Event x cord: " + geoEvent.getField("x_cord"));
-		
+		trackingServiceFacade.buildDeviceType();
 
-		EventData eventData = new EventData((Integer) geoEvent.getField("id"), (Double) geoEvent.getField("xCoord"), (Double) geoEvent.getField("yCoord"), (Integer) geoEvent.getField("speed"), (Double) geoEvent.getField("heading"));
+		try {
+			deviceId = (Integer) geoEvent.getField("id");
+			xCoord = (Double) geoEvent.getField("xCoord");
+			yCoord = (Double) geoEvent.getField("yCoord");
+			speed = (Integer) geoEvent.getField("speed");
+			tempSensor = geoEvent.getField("TEMP");
+			oilSenosr = geoEvent.getField("OIL");
+		} catch (Exception ex) {
+			LOG.error("Unable to extract fields from received tracking geo event data, make sure the Geo Data Definition corresponds to the right field names along with their data types definied in our custom EventData object.");
+		}
 
-		eventData.addSensorValue("TEMP", geoEvent.getField("TEMP"));
-		eventData.addSensorValue("OIL", geoEvent.getField("OIL"));
+		EventData eventData = new EventData(deviceId, xCoord, yCoord, speed);
+		eventData.addSensorValue("TEMP", tempSensor);
+		eventData.addSensorValue("OIL", oilSenosr);
 
 		trackingServiceFacade.deviceFeedReceived(eventData);
-		
+
 		return geoEvent;
 	}
 

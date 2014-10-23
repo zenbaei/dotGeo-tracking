@@ -9,4 +9,6 @@ public interface SensorDAO extends GenericDAO<Sensor> {
 
 	List<Sensor> find(int deviceTypeId, boolean retired);
 
+	Sensor find(String sensorNameEn);
+
 }

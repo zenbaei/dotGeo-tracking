@@ -24,6 +24,7 @@ import com.esrinea.dotGeo.tracking.model.component.sensorConfiguration.entity.Se
 @Entity
 @Table(name = "Sensors")
 @NamedQueries({ @NamedQuery(name = "Sensor.findAll", query = "SELECT s FROM Sensor s"),
+	@NamedQuery(name = "Sensor.findByNameEn", query = "SELECT s FROM Sensor s WHERE s.nameEn = :sensorNameEn"),
 		@NamedQuery(name = "Sensor.findByDeviceTypeRetired", query = "SELECT s FROM Sensor s WHERE s.deviceType.id = :id AND s.retired = :retired") })
 public class Sensor implements Serializable {
 	private static final long serialVersionUID = 1L;

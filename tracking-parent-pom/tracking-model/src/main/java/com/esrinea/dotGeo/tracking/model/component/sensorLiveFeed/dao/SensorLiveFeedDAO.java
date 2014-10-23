@@ -5,4 +5,6 @@ import com.esrinea.dotGeo.tracking.model.component.sensorLiveFeed.entity.SensorL
 
 public interface SensorLiveFeedDAO extends GenericDAO<SensorLiveFeed>{
 
+	SensorLiveFeed find(String sensorValue);
+
 }

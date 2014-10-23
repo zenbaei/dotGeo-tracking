@@ -5,4 +5,6 @@ import com.esrinea.dotGeo.tracking.model.component.alertLiveFeed.entity.AlertLiv
 
 public interface AlertLiveFeedDAO extends GenericDAO<AlertLiveFeed> {
 
+	AlertLiveFeed findByAlert(int alertId);
+
 }

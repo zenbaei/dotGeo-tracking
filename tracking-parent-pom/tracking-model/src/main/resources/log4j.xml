@@ -14,5 +14,9 @@
 		<level value="INFO" />
 		<appender-ref ref="console" />
 	</root>
+	
+	<category name="com.esrinea.dotGeo" additivity="true">
+		<priority value="TRACE" />
+	</category>
  
 </log4j:configuration>

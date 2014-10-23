@@ -1,20 +1,16 @@
 package com.esrinea.dotGeo.tracking.model.component.sensorConfiguration.entity;
 
 import java.io.Serializable;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.esrinea.dotGeo.tracking.model.component.alertConfiguration.entity.AlertConfiguration;
 import com.esrinea.dotGeo.tracking.model.component.sensor.entity.Sensor;
 
 /**
@@ -45,8 +41,6 @@ public class SensorConfiguration implements Serializable {
 	@Column(name = "TextValue")
 	private String textValue;
 
-	@OneToMany(mappedBy = "sensorConfiguration", fetch = FetchType.EAGER)
-	private List<AlertConfiguration> alertConfigurations;
 
 	@ManyToOne
 	@JoinColumn(name = "Sensor_DBID")

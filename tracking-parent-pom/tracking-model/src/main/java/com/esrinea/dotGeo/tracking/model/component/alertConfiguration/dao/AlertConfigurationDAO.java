@@ -9,4 +9,6 @@ public interface AlertConfigurationDAO extends GenericDAO<AlertConfiguration>{
 	
 	public List<AlertConfiguration> find(int alertId, boolean retired);
 
+	public AlertConfiguration findBySensorConfiguration(int sensorConfigurationId);
+
 }

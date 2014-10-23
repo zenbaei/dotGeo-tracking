@@ -9,11 +9,12 @@ import org.apache.log4j.Logger;
 import com.esrinea.dotGeo.tracking.model.common.dao.AbstractDAO;
 import com.esrinea.dotGeo.tracking.model.component.alertConfiguration.entity.AlertConfiguration;
 import com.esrinea.dotGeo.tracking.model.component.sensorConfiguration.entity.SensorConfiguration;
+import com.esrinea.dotGeo.tracking.model.component.sensorLiveFeed.entity.SensorLiveFeed;
 
 public class AlertConfigurationDAOImpl extends AbstractDAO<AlertConfiguration> implements AlertConfigurationDAO {
 
 	protected static Logger LOG = Logger.getLogger(AlertConfigurationDAOImpl.class);
-
+	
 	public AlertConfigurationDAOImpl() {
 		super(AlertConfiguration.class);
 	}
@@ -30,6 +31,11 @@ public class AlertConfigurationDAOImpl extends AbstractDAO<AlertConfiguration> i
 
 		return alertConfigurations;
 
+	}
+
+	@Override
+	public AlertConfiguration findBySensorConfiguration(int sensorConfigurationId) {
+		return entityManager.createNamedQuery("AlertConfiguration.findBySensorConfiguration", AlertConfiguration.class).setParameter("sensorConfigurationId", sensorConfigurationId).getSingleResult();
 	}
 
 }

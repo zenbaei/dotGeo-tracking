@@ -29,4 +29,9 @@ public class SensorDAOImpl extends AbstractDAO<Sensor> implements SensorDAO {
 		return sensors;
 	}
 
+	@Override
+	public Sensor find(String sensorNameEn) {
+		return entityManager.createNamedQuery("Sensor.findByNameEn", Sensor.class).setParameter("sensorNameEn", sensorNameEn).getSingleResult();
+	}
+
 }

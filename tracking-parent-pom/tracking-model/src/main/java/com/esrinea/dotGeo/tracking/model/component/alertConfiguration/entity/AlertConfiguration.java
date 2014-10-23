@@ -22,7 +22,8 @@ import com.esrinea.dotGeo.tracking.model.component.sensorConfiguration.entity.Se
 @Table(name = "Alert_Configuration")
 @NamedQueries({
 @NamedQuery(name = "AlertConfiguration.findAll", query = "SELECT a FROM AlertConfiguration a"),
-@NamedQuery(name = "AlertConfiguration.findByAlertRetired", query = "SELECT a FROM AlertConfiguration a WHERE a.alert.id = :alertId AND a.retired = :retired")
+@NamedQuery(name = "AlertConfiguration.findByAlertRetired", query = "SELECT a FROM AlertConfiguration a WHERE a.alert.id = :alertId AND a.retired = :retired"),
+@NamedQuery(name = "AlertConfiguration.findBySensorConfiguration", query = "SELECT a FROM AlertConfiguration a WHERE a.sensorConfiguration.id = :sensorConfigurationId")
 })
 public class AlertConfiguration implements Serializable {
 	private static final long serialVersionUID = 1L;
