@@ -4,8 +4,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.common.collect.Sets;
-
 /**
  * Data received from GeoEvent will be set in that object
  * 

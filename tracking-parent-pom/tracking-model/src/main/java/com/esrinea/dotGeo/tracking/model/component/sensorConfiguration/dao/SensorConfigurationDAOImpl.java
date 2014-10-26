@@ -2,8 +2,6 @@ package com.esrinea.dotGeo.tracking.model.component.sensorConfiguration.dao;
 
 import java.util.List;
 
-import javax.persistence.EntityNotFoundException;
-
 import org.apache.log4j.Logger;
 
 import com.esrinea.dotGeo.tracking.model.common.dao.AbstractDAO;

@@ -2,14 +2,10 @@ package com.esrinea.dotGeo.tracking.model.component.alertConfiguration.dao;
 
 import java.util.List;
 
-import javax.persistence.EntityNotFoundException;
-
 import org.apache.log4j.Logger;
 
 import com.esrinea.dotGeo.tracking.model.common.dao.AbstractDAO;
 import com.esrinea.dotGeo.tracking.model.component.alertConfiguration.entity.AlertConfiguration;
-import com.esrinea.dotGeo.tracking.model.component.sensorConfiguration.entity.SensorConfiguration;
-import com.esrinea.dotGeo.tracking.model.component.sensorLiveFeed.entity.SensorLiveFeed;
 
 public class AlertConfigurationDAOImpl extends AbstractDAO<AlertConfiguration> implements AlertConfigurationDAO {
 

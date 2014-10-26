@@ -12,8 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.esrinea.dotGeo.tracking.model.component.alert.entity.Alert;
 import com.esrinea.dotGeo.tracking.model.component.alertConfiguration.entity.AlertConfiguration;
 import com.esrinea.dotGeo.tracking.model.component.alertLiveFeed.entity.AlertLiveFeed;
-import com.esrinea.dotGeo.tracking.model.component.alertSensorLiveFeed.entity.AlertSensorLiveFeed;
-import com.esrinea.dotGeo.tracking.model.component.alertSensorLiveFeed.entity.AlertSensorLiveFeedId;
 import com.esrinea.dotGeo.tracking.model.component.device.entity.Device;
 import com.esrinea.dotGeo.tracking.model.component.deviceType.entity.DeviceType;
 import com.esrinea.dotGeo.tracking.model.component.execludedAlert.entity.ExecludedAlert;
@@ -53,7 +51,7 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 	 */
 	// TODO: refresh on intervals
 	public void buildDeviceType() {
-		LOG.trace("buildDeviceType method is called to find all device types along with their sensors, sensor configurations, alerts and alert configurations.");
+		LOG.info("buildDeviceType method is called to find all device types along with their sensors, sensor configurations, alerts and alert configurations.");
 		// get all device types
 		for (DeviceType deviceType : deviceTypeService.findAll(false)) {
 			// find and set non retired sensors
@@ -91,6 +89,7 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 
 			// add deviceType to cached Map
 			deviceTypesCache.put(deviceType.getId(), deviceType);
+			LOG.info("Device's Types has been retireved and cached.");
 		}
 	}
 

@@ -1,11 +1,12 @@
 package com.esrinea.dotGeo.tracking.model.component.sensorConfiguration.entity;
 
-import com.esrinea.dotGeo.tracking.model.component.alertConfiguration.entity.AlertConfiguration;
-import com.esrinea.dotGeo.tracking.model.component.sensor.entity.Sensor;
 import javax.annotation.Generated;
 import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
+
+import com.esrinea.dotGeo.tracking.model.component.alertConfiguration.entity.AlertConfiguration;
+import com.esrinea.dotGeo.tracking.model.component.sensor.entity.Sensor;
 
 @Generated(value="Dali", date="2014-10-12T14:50:47.506+0200")
 @StaticMetamodel(SensorConfiguration.class)

@@ -18,6 +18,7 @@ public class TrackingProcessor extends GeoEventProcessorBase {
 	protected TrackingProcessor(GeoEventProcessorDefinition definition, TrackingServiceFacade trackingServiceFacade) throws ComponentException {
 		super(definition);
 		this.trackingServiceFacade = trackingServiceFacade;
+		trackingServiceFacade.buildDeviceType();
 	}
 
 	@Override
@@ -28,8 +29,6 @@ public class TrackingProcessor extends GeoEventProcessorBase {
 		int speed = 0;
 		Object tempSensor = null;
 		Object oilSenosr = null;
-
-		trackingServiceFacade.buildDeviceType();
 
 		try {
 			deviceId = (Integer) geoEvent.getField("id");

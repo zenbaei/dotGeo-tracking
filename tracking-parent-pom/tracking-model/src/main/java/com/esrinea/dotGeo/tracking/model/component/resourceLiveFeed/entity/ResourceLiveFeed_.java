@@ -1,10 +1,12 @@
 package com.esrinea.dotGeo.tracking.model.component.resourceLiveFeed.entity;
 
-import com.esrinea.dotGeo.tracking.model.component.device.entity.Device;
 import java.util.Date;
+
 import javax.annotation.Generated;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
+
+import com.esrinea.dotGeo.tracking.model.component.device.entity.Device;
 
 @Generated(value="Dali", date="2014-10-12T14:50:47.493+0200")
 @StaticMetamodel(ResourceLiveFeed.class)
