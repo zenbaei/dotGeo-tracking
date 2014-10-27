@@ -12,19 +12,20 @@ import java.util.Map;
  */
 public class EventData {
 
-	private int deviceId;
 	private Date feedDateTime;
+	private String serial;
 	private double xCoord;
 	private double yCoord;
 	private int speed;
 	private double heading;
 	private String zone;
-	private Map<String, Object> sensorValues =  new HashMap<String, Object>(); // sensor data received from GeoEvent
-	
-	
+	/**
+	 * The key represents the Device Type's sensor name while the value represents the real sensor value received from a certain device the key is added after retrieving data from GeoEvent Data Definition in the processor implementation. It is configured to hold double or String.
+	 */
+	private Map<String, Object> sensorValues = new HashMap<String, Object>();
 
-	public EventData(int deviceId, double xCoord, double yCoord, int speed, double heading, Map<String, Object> sensorValues) {
-		this.deviceId = deviceId;
+	public EventData(String serial, double xCoord, double yCoord, int speed, double heading, Map<String, Object> sensorValues) {
+		this.serial = serial;
 		this.feedDateTime = new Date();
 		this.xCoord = xCoord;
 		this.yCoord = yCoord;
@@ -32,24 +33,25 @@ public class EventData {
 		this.heading = heading;
 		this.sensorValues = sensorValues;
 	}
-	
-	public EventData(int deviceId, double xCoord, double yCoord, int speed) {
-		this.deviceId = deviceId;
+
+	public EventData(String serial, double xCoord, double yCoord, int speed, double heading) {
+		this.serial = serial;
 		this.feedDateTime = new Date();
 		this.xCoord = xCoord;
 		this.yCoord = yCoord;
 		this.speed = speed;
+		this.heading = heading;
 	}
 
 	public EventData() {
 	}
 
-	public int getDeviceId() {
-		return deviceId;
+	public String getSerial() {
+		return serial;
 	}
 
-	public void setDeviceId(int deviceId) {
-		this.deviceId = deviceId;
+	public void setSerial(String serial) {
+		this.serial = serial;
 	}
 
 	public Date getFeedDateTime() {
@@ -101,21 +103,22 @@ public class EventData {
 	}
 
 	/**
-	 * it is configured to hold double or String
+	 * The key represents the Device Type's sensor name while the value represents the real sensor value received from a certain device the key is added after retrieving data from GeoEvent Data Definition in the processor implementation. It is configured to hold double or String.
 	 */
 	public Map<String, Object> getSensorValues() {
 		return sensorValues;
 	}
-	
-	public void addSensorValue(String sensorName, Object value){
+
+	/**
+	 * The key represents the Device Type's sensor name while the value represents the real sensor value received from a certain device the key is added after retrieving data from GeoEvent Data Definition in the processor implementation. It is configured to hold double or String.
+	 */
+	public void addSensorValue(String sensorName, Object value) {
 		this.sensorValues.put(sensorName, value);
 	}
 
 	@Override
 	public String toString() {
-		return "EventData [deviceId=" + deviceId + ", feedDateTime=" + feedDateTime + ", xCoord=" + xCoord + ", yCoord=" + yCoord + ", speed=" + speed + ", heading=" + heading + ", zone=" + zone + ", sensorValues=" + sensorValues + "]";
+		return "EventData [serial=" + serial + ", feedDateTime=" + feedDateTime + ", xCoord=" + xCoord + ", yCoord=" + yCoord + ", speed=" + speed + ", heading=" + heading + ", zone=" + zone + ", sensorValues=" + sensorValues + "]";
 	}
-	
-	
 
 }

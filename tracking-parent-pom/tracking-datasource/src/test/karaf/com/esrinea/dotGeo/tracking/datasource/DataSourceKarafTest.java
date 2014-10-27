@@ -44,6 +44,7 @@ public class DataSourceKarafTest {
         Connection c = null;
         try {
             c = this.datasource.getConnection();
+            logger.info("Connected to: "+ datasource.getConnection().getMetaData().getURL());
             logger.info("testing DS, connection acquired");
             if(this.testQuery!=null) {
                 Statement stmt = c.createStatement();

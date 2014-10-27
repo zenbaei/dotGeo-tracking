@@ -41,7 +41,7 @@ public class SensorConfigurationServiceImpl extends AbstractService<SensorConfig
 			return true;
 		}
 
-		LOG.debug("Please check Business Rule logic as non of the checks were satisfied.");
+		LOG.debug("Business Rule logic is not satisfied.");
 		return false;
 	}
 
@@ -69,7 +69,7 @@ public class SensorConfigurationServiceImpl extends AbstractService<SensorConfig
 			return true;
 		}
 
-		LOG.debug("Please check Business Rule logic as non of the checks were satisfied.");
+		LOG.debug("Business Rule logic is not satisfied.");
 		return false;
 	}
 
@@ -88,18 +88,18 @@ public class SensorConfigurationServiceImpl extends AbstractService<SensorConfig
 	private boolean commonCheck(SensorConfiguration sensorConfiguration,
 			Object receivedSensorValue) {
 
-		LOG.debug("Apply Business Rule:\nSensor Configuration: " + sensorConfiguration
-				+ "\nReceived Sensor Value: " + receivedSensorValue);
-
 		if (sensorConfiguration == null) {
-			LOG.warn("SensorConfiguration is Null");
+			LOG.warn("SensorConfiguration is Null.");
 			return false;
 		}
 
 		if (sensorConfiguration.isRetired()) {
-			LOG.debug("Retired Sensor Configuration");
+			LOG.debug("Retired Sensor Configuration.");
 			return false;
 		}
+		
+		LOG.debug(String.format("Check if received value (%s) falls under the rule configured on %s Sensor." ,receivedSensorValue , sensorConfiguration.getSensor().getNameEn().toUpperCase()));
+		LOG.trace(sensorConfiguration);
 
 		return true;
 	}

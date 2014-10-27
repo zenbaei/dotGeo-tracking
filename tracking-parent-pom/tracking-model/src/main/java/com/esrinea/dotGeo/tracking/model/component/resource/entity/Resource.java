@@ -8,9 +8,9 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyJoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.esrinea.dotGeo.tracking.model.component.alert.entity.Alert;
@@ -40,8 +40,8 @@ public class Resource implements Serializable {
 	@MapKeyJoinColumn(name = "Sensor_DBID")
 	private Map<Sensor, ExecludedSensor> execludedSensors;
 
-	@ManyToOne
-	@JoinColumn(name = "Device_DBID", nullable = false)
+	@OneToOne
+	@JoinColumn(name="Device_DBID")
 	private Device device;
 
 	public Resource() {

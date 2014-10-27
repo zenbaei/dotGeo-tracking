@@ -8,9 +8,11 @@
                         http://aries.apache.org/xmlns/transactions/v1.0.0 http://aries.apache.org/schemas/transaction/transactionv10.xsd">
 
 	<!-- test bean-Start -->
-	<!-- <bean id="deviceServiceKarafTest" class="com.esrinea.dotGeo.tracking.service.component.device.DeviceServiceKarafTest" 
-		init-method="test"> <property name="deviceService" ref="deviceService" /> 
-		</bean> -->
+	<bean id="deviceServiceKarafTest"
+		class="com.esrinea.dotGeo.tracking.service.component.device.DeviceServiceKarafTest"
+		init-method="test">
+		<property name="deviceService" ref="deviceService" />
+	</bean>
 	<!-- test bean-End -->
 
 

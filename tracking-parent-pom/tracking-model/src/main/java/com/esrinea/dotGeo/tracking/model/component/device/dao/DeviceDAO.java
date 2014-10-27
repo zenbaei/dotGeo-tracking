@@ -10,4 +10,6 @@ public interface DeviceDAO extends GenericDAO<Device> {
 	List<Device> findByIdNativeQuery(int id);
 
 	Device find(int id, boolean retired);
+
+	Device find(String serial, boolean retired);
 }

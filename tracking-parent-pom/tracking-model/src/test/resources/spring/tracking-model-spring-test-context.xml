@@ -33,7 +33,7 @@
 			<value>com.microsoft.sqlserver.jdbc.SQLServerDataSource</value>
 		</property>
 		<property name="jdbcUrl">
-			<value>jdbc:sqlserver://192.168.9.33:1433;databaseName=GeoEventsTracking1;selectMethod=cursor;sendStringParametersAsUnicode=false
+			<value>jdbc:sqlserver://192.168.9.33:1433;databaseName=BetaTrackingDBV501;selectMethod=cursor;sendStringParametersAsUnicode=false
 			</value>
 			<!-- <value>jdbc:sqlserver://ISLAM-ZENBAEI:1433;databaseName=TrackingFinalV1;selectMethod=cursor;sendStringParametersAsUnicode=false</value> -->
 		</property>

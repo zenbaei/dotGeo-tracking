@@ -15,7 +15,7 @@
 
 	<bean id="dataSource" class="com.microsoft.sqlserver.jdbc.SQLServerDataSource">
 		<property name="URL"
-			value="jdbc:sqlserver://192.168.9.33:1433;databaseName=GeoEventsTracking1;selectMethod=cursor;sendStringParametersAsUnicode=false" />
+			value="jdbc:sqlserver://192.168.9.33:1433;databaseName=BetaTrackingDBV501;selectMethod=cursor;sendStringParametersAsUnicode=false" />
 		<property name="user" value="sa" />
 		<property name="password" value="P@ssw0rd" />
 	</bean>

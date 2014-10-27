@@ -7,4 +7,6 @@ public interface DeviceService extends GenericService<Device> {
 
 	Device find(int id, boolean retired);
 
+	Device find(String serial, boolean retired);
+
 }

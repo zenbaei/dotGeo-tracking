@@ -23,27 +23,51 @@ public class TrackingProcessor extends GeoEventProcessorBase {
 
 	@Override
 	public GeoEvent process(GeoEvent geoEvent) throws Exception {
-		int deviceId = 0;
+		String serial = null;
 		double xCoord = 0;
 		double yCoord = 0;
 		int speed = 0;
-		Object tempSensor = null;
-		Object oilSenosr = null;
+		double heading = 0;
+		Object speedSensor = null;
+		Object seatBelt = null;
+		// Object tempSensor = null;
+		// Object oilSenosr = null;
 
 		try {
-			deviceId = (Integer) geoEvent.getField("id");
+			// get values from GeoEvent based on the data definition of the fields
+			serial = (String) geoEvent.getField("serial");
 			xCoord = (Double) geoEvent.getField("xCoord");
 			yCoord = (Double) geoEvent.getField("yCoord");
 			speed = (Integer) geoEvent.getField("speed");
-			tempSensor = geoEvent.getField("TEMP");
-			oilSenosr = geoEvent.getField("OIL");
+			heading = (Double) geoEvent.getField("heading");
+			try {
+				speedSensor = geoEvent.getField("speedSensor");
+			} catch (Exception ex) {
+				LOG.debug("No field with name speedSensor exist in the received data definition.");
+			}
+			try {
+				seatBelt = geoEvent.getField("seatBelt");
+			} catch (Exception ex) {
+				LOG.debug("No field with name seatBelt exist in the received data definition.");
+			}
+			// tempSensor = geoEvent.getField("TEMP");
+			// oilSenosr = geoEvent.getField("OIL");
 		} catch (Exception ex) {
 			LOG.error("Unable to extract fields from received tracking geo event data, make sure the Geo Data Definition corresponds to the right field names along with their data types definied in our custom EventData object.");
+			throw ex;
 		}
+		// initialize EventData with the received values
+		EventData eventData = new EventData(serial, xCoord, yCoord, speed, heading);
 
-		EventData eventData = new EventData(deviceId, xCoord, yCoord, speed);
-		eventData.addSensorValue("TEMP", tempSensor);
-		eventData.addSensorValue("OIL", oilSenosr);
+		if (speedSensor != null) {
+			eventData.addSensorValue("SPEED", speedSensor);
+		}
+		if (seatBelt != null) {
+			eventData.addSensorValue("SEAT BELT", seatBelt);
+		}
+		
+		// eventData.addSensorValue("TEMP", tempSensor);
+		// eventData.addSensorValue("OIL", oilSenosr);
 
 		trackingServiceFacade.deviceFeedReceived(eventData);
 

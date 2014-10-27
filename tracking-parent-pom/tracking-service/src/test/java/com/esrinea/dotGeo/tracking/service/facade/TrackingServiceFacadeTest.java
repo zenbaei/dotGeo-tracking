@@ -29,7 +29,7 @@ import com.esrinea.dotGeo.tracking.service.component.sensorLiveFeed.SensorLiveFe
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:/META-INF/spring/application-context.xml", "classpath:/spring/tracking-service-spring-test-context.xml", "classpath:/spring/tracking-model-spring-test-context.xml" })
-@Transactional(propagation=Propagation.REQUIRED)
+@Transactional(propagation = Propagation.REQUIRED)
 public class TrackingServiceFacadeTest {
 
 	@Autowired
@@ -53,14 +53,16 @@ public class TrackingServiceFacadeTest {
 		sensorValues.put("OIL", "in");
 		sensorValues.put("HEAT", 95);// HEAT sensor is configured as retired in DB.
 		sensorValues.put("TEMP", 50);// this falls under Med configText in sensorConfiguration
-		eventData = new EventData(1, 2.365, 5.245, 100, 222, sensorValues);
+		sensorValues.put("SPEED", 130); // SENSOR SPEED
+		eventData = new EventData("1", 2.365, 5.245, 100, 222, sensorValues);
+
+		
 	}
 
 	@Test
 	@Rollback
 	public void testDeviceFeedReceived() {
 		serviceFacade.deviceFeedReceived(eventData);
-
 		// Check if sensorConfigurations inserted right in sensorLiveFeed
 		// find sensorLiveFeed by sensor value
 		SensorLiveFeed oilSensorLiveFeed = sensorLiveFeedService.find("in");
@@ -86,6 +88,12 @@ public class TrackingServiceFacadeTest {
 		} catch (NoResultException ex) {
 		}
 
+	}
+
+	@Test
+	@Rollback(value=false)
+	public void testSensorSpeed() {
+		serviceFacade.deviceFeedReceived(eventData);
 	}
 
 }

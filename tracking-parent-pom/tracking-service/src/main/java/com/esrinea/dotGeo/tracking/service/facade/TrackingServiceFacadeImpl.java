@@ -6,8 +6,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.esrinea.dotGeo.tracking.model.component.alert.entity.Alert;
 import com.esrinea.dotGeo.tracking.model.component.alertConfiguration.entity.AlertConfiguration;
@@ -31,7 +29,6 @@ import com.esrinea.dotGeo.tracking.service.component.sensor.SensorService;
 import com.esrinea.dotGeo.tracking.service.component.sensorConfiguration.SensorConfigurationService;
 import com.esrinea.dotGeo.tracking.service.component.sensorLiveFeed.SensorLiveFeedService;
 
-@Transactional(propagation = Propagation.REQUIRED)
 public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 
 	private static Logger LOG = Logger.getLogger(TrackingServiceFacadeImpl.class);
@@ -94,6 +91,8 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 	}
 
 	public void deviceFeedReceived(EventData eventData) {
+		LOG.debug(String.format("Event Data Received: %s ", eventData));
+
 		/**
 		 * a set to hold sensor configurations along with their associated new sensorLiveFeeds for a specific device's value that passed the configured business rule on that device's type. this set will be used to check against alerts configuration the newly created sensorLiveFeed is required when
 		 * inserting into AlertSensorLiveFeed
@@ -101,7 +100,7 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 		Set<SensorConfiguration> sensorConfigurationsAssociatedWithCreatedSensorLiveFeeds = new HashSet<SensorConfiguration>();
 
 		// find the device with received deviceId
-		Device device = deviceService.find(eventData.getDeviceId(), false);
+		Device device = deviceService.find(eventData.getSerial(), false);
 		// insert into resource live feed
 		resourceLiveFeedService.create(new ResourceLiveFeed(device, eventData.getFeedDateTime(), eventData.getxCoord(), eventData.getyCoord(), eventData.getSpeed(), eventData.getHeading(), eventData.getZone()));
 
@@ -112,53 +111,64 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 
 		// if this device's deviceType has no sensors then the deviceType won't exist in the deviceTypeMap
 		if (deviceTypesCache.get(device.getDeviceType().getId()) == null) {
-			LOG.trace(String.format("Device Type for Device %s has no sensors, the Device data has been added to Resource Live Feeds and no further checks will happen.", device));
+			LOG.debug(String.format("Device Type for Device %s has no sensors, the Device data has been added to Resource Live Feeds and no further checks will happen.", device));
 			return;
 		}
 
 		// check if deviceType's sensors are not excluded from that device
-		for (Sensor sensor : deviceTypesCache.get(device.getDeviceType().getId()).getSensors()) {// loop on deviceType's sensors, for instance TEMP sensor
+		OUTER: for (Sensor sensor : deviceTypesCache.get(device.getDeviceType().getId()).getSensors()) {// loop on deviceType's sensors, for instance TEMP sensor
 			if (!execludedSensors.containsKey(sensor)) {// ex; TEMP sensor is active on that device,
 				if (sensor.getSensorConfigurations() == null) {
-					continue;// log has been added in buildDeviceType()
+					LOG.warn(String.format("The Sensor %s has no Sensor Configurations. This sensor will be escaped.", sensor));
+					continue;
 				}
+
+				Object sensorValue = eventData.getSensorValues().get(sensor.getNameEn().toUpperCase());// get receivedSensorValue from EventData's sensorValues Map using cached deviceType sensors' name, it should be saved as TEMP key and the received value
+				if (sensorValue == null) { // count for an input stream that was configured to send some of the deviceType's sensors
+					LOG.warn(String.format("Device Type of %s didn't send data for sensor %s", device.getDeviceType().getDesc(), sensor.getNameEn().toUpperCase()));
+					continue;
+				}
+
 				for (SensorConfiguration sensorConfiguration : sensor.getSensorConfigurations()) { // loop on deviceType sensor's sensorConfiguration, TEMP sensor configuration has 3 configurations (LOW,MED,HIGH)
-					Object sensorValue = eventData.getSensorValues().get(sensor.getNameEn().toUpperCase());// get receivedSensorValue from EventData's sensorValues Map using cached deviceType sensors' name, it should be saved as TEMP key and the received value
-					if (sensorValue == null) { // count for an input stream that was configured to send some of the deviceType's sensors
-						LOG.trace(String.format("Device Type of %s didn't send data for sensor %s", device.getDeviceType().getDesc(), sensor.getNameEn().toUpperCase()));
-						continue;
-					}
 					if (sensorConfigurationService.isBusinessRuleSatisfiedDelegate(sensorConfiguration, sensorValue)) {// received sensor value fall under the business rule, the 3 TEMP sensor configurations will be checked against the received value
 						SensorLiveFeed sensorLiveFeed = new SensorLiveFeed(device, sensorConfiguration, String.valueOf(sensorValue), eventData.getFeedDateTime()); // insert SensorLiveFeed into Database
 						sensorLiveFeedService.create(sensorLiveFeed);
 						sensorConfigurationsAssociatedWithCreatedSensorLiveFeeds.add(sensorLiveFeed.getSensorConfiguration()); // keep sensor configurations that fall under the business rule
+						continue OUTER; // if reached then one sensor configuration has succeed then move to the next sensor
 					}
 				}
 			}
 		}
 
 		if (deviceTypesCache.get(device.getDeviceType().getId()).getAlerts() == null) {
-			LOG.trace(String.format("Device Type for Device %s has no alerts, the Device data has been added to Resource Live Feeds and Sensor Live Feeds and no further checks will happen.", device));
+			LOG.debug(String.format("Device Type for Device %s has no alerts, the Device data has been added to Resource Live Feeds and Sensor Live Feeds and no further checks will happen.", device));
 			return;
 		}
 
 		// check if deviceType's alerts are not excluded from that device
 		OUTER: for (Alert alert : deviceTypesCache.get(device.getDeviceType().getId()).getAlerts()) {// loop on deviceType's alerts
 			if (!execludedAlerts.containsKey(alert)) {// alert is active on that device
-				LOG.trace(String.format("Checking Alert: %s", alert.getNameEn().toUpperCase()));
+
+				LOG.debug(String.format("Checking Alert: %s", alert.getNameEn().toUpperCase()));
+
+				if (alert.getAlertConfigurations() == null) {
+					LOG.warn(String.format("The Alert %s has no Alert Configurations. This alert will be escaped.", alert));
+					continue;
+				}
+
 				for (AlertConfiguration alertConfiguration : alert.getAlertConfigurations()) {// loop on deviceType alert's alertConfiguration, compound alerts will have more than configuration that group sensor configurations together, for instance OIL level is low and TEMP is 50
-					if (alert.getAlertConfigurations() == null) {
-						continue;// log has been added in buildDeviceType()
-					}
+					LOG.debug("Checking " + alertConfiguration.getSensorConfiguration());
+					// check if the Alert Configuration configured on the device's DeviceType has its sensorConfiguration //TODO: complete description
 					if (sensorConfigurationsAssociatedWithCreatedSensorLiveFeeds.contains(alertConfiguration.getSensorConfiguration())) {// an alert could be compound(hold more than a rule) if one rule is not satisfied then move to next alert
-						LOG.trace(String.format("Alert configuration passed on sensor configuration: %s.", alertConfiguration.getSensorConfiguration()));
+						LOG.debug(String.format("Alert configuration passed on Alert %s.", alert.getNameEn().toUpperCase()));
 						continue;// as long as rules are included in the current alert then continue checking
 					} else {
-						LOG.trace(String.format("Alert configuration failed on sensor configuration: %s.", alertConfiguration.getSensorConfiguration()));
-						LOG.trace(String.format("Alert %s will be discarded.", alert.getNameEn().toUpperCase()));
+						LOG.debug(String.format("Sensor configuration failed on Alert %s.", alert.getNameEn().toUpperCase()));
+						LOG.debug(String.format("Alert %s will be discarded.", alert.getNameEn().toUpperCase()));
 						continue OUTER;// if a rule isn't included then ignore the current alert and check the next alert
 					}
 				}
+
 				// if this line is reached then all alertConfiguration in an alert had their rules satisfied
 				AlertLiveFeed alertLiveFeed = new AlertLiveFeed(device, alert, eventData.getFeedDateTime(), eventData.getZone());// insert AlertLiveFeed only if all rules in an alert is satisfied
 				alertLiveFeedService.create(alertLiveFeed);

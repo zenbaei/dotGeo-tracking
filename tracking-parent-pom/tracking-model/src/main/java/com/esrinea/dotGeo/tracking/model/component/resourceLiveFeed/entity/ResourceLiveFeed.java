@@ -29,7 +29,7 @@ public class ResourceLiveFeed implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name = "ID")
+	@Column(name = "Resource_livefeeds_DBID")
 	@TableGenerator(name = "resourceLiveFeed", table = "SEQUENCE_STORE", pkColumnName = "SEQ_NAME", pkColumnValue = "RESOURCE_LIVE_FEEDS", valueColumnName = "SEQ_VALUE", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "resourceLiveFeed")
 	private int id;

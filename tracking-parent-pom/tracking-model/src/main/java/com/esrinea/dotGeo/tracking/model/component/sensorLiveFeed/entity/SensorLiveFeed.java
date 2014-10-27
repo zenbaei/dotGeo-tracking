@@ -34,7 +34,7 @@ public class SensorLiveFeed implements Serializable {
 	@Id
 	@TableGenerator(name = "sensorLiveFeed", table = "SEQUENCE_STORE", pkColumnName = "SEQ_NAME", pkColumnValue = "SENSOR_LIVE_FEEDS", valueColumnName = "SEQ_VALUE", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "sensorLiveFeed")
-	@Column(name = "SENSOR_LIVEfEEDS_ID", unique = true, nullable = false)
+	@Column(name = "Sensor_LiveFeeds_DBID", unique = true, nullable = false)
 	private int id;
 
 	@ManyToOne

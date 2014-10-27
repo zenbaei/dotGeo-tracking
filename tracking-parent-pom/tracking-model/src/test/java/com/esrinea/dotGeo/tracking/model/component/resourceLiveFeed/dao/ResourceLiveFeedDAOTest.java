@@ -17,7 +17,7 @@ import com.esrinea.dotGeo.tracking.model.component.device.dao.DeviceDAOTest;
 import com.esrinea.dotGeo.tracking.model.component.resourceLiveFeed.entity.ResourceLiveFeed;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:/spring/tracking-model-test-context.xml" })
+@ContextConfiguration(locations = { "classpath:/spring/tracking-model-spring-test-context.xml" })
 @Transactional
 public class ResourceLiveFeedDAOTest extends DeviceDAOTest {
 

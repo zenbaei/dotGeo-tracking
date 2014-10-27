@@ -29,7 +29,7 @@ public class TrackingProcessorDefinition extends GeoEventProcessorDefinitionBase
 
 	@Override
 	public String getDescription() {
-		return "This is the tracking processor.";
+		return "Dot Geo Tracking Processor.";
 	}
 
 	@Override

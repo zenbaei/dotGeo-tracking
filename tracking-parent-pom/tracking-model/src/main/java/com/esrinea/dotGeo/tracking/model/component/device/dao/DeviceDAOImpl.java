@@ -24,15 +24,30 @@ public class DeviceDAOImpl extends AbstractDAO<Device> implements DeviceDAO {
 
 	@Override
 	public Device find(int id, boolean retired) {
+		LOG.debug(String.format("Device.findByIdRetired, parameters: %s, %s", id, retired));
 		Device device = null;
-		try{
-			device = entityManager.createNamedQuery("Device.findByIdRetired", Device.class).setParameter("id", id).setParameter("retired", retired)
-					.getSingleResult();
+		try {
+			device = entityManager.createNamedQuery("Device.findByIdRetired", Device.class).setParameter("id", id).setParameter("retired", retired).getSingleResult();
 		} catch (NoResultException ex) {
-			String errMsg = String.format("%s with ID %s does not exist in database or is not %s.", "Device", id, retired ? "retired" : "active");
+			String errMsg = String.format("%s with ID %s does not exist in database or is %s.", "Device", id, retired ? "not retired" : "retired");
 			LOG.info(errMsg);
 			throw new NoResultException(errMsg);
 		}
 		return device;
 	}
+
+	@Override
+	public Device find(String serial, boolean retired) {
+		LOG.debug(String.format("Device.findBySerialRetired, parameters: %s, %s", serial, retired));
+		Device device = null;
+		try {
+			device = entityManager.createNamedQuery("Device.findBySerialRetired", Device.class).setParameter("serial", serial.trim()).setParameter("retired", retired).getSingleResult();
+		} catch (NoResultException ex) {
+			String errMsg = String.format("%s with Serial %s does not exist in database or is %s.", "Device", serial, retired ? "not retired" : "retired");
+			LOG.info(errMsg);
+			throw new NoResultException(errMsg);
+		}
+		return device;
+	}
+
 }

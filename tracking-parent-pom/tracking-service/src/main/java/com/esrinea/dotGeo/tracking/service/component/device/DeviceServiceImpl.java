@@ -18,4 +18,9 @@ public class DeviceServiceImpl extends AbstractService<Device> implements Device
 		return deviceDAO.find(id, retired);
 	}
 
+	@Override
+	public Device find(String serial, boolean retired) {
+		return deviceDAO.find(serial, retired);
+	}
+
 }

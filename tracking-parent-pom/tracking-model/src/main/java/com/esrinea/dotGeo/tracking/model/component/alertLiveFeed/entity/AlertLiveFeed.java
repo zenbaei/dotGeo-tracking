@@ -36,7 +36,7 @@ public class AlertLiveFeed implements Serializable {
 	@Id
 	@TableGenerator(name = "alertLiveFeed", table = "SEQUENCE_STORE", pkColumnName = "SEQ_NAME", pkColumnValue = "ALERT_LIVE_FEEDS", valueColumnName = "SEQ_VALUE", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "alertLiveFeed")
-	@Column(name = "ALERT_LIVEFEEDS_ID", unique = true, nullable = false)
+	@Column(name = "Alert_LiveFeeds_DBID", unique = true, nullable = false)
 	private int id;
 
 	@Column(name = "Alert_DateTime", nullable = false)
