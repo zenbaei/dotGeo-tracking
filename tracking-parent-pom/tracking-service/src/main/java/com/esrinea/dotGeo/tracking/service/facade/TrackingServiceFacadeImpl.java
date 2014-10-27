@@ -86,11 +86,14 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 
 			// add deviceType to cached Map
 			deviceTypesCache.put(deviceType.getId(), deviceType);
-			LOG.info("Device's Types has been retireved and cached.");
 		}
+
+		LOG.info("Device's Types has been retireved and cached.");
+		LOG.info("Retrieved Device Types: " + deviceTypesCache);
 	}
 
 	public void deviceFeedReceived(EventData eventData) {
+		LOG.debug("\n--------------------------------------------------------------------------\n" + "PROCESSING DEVICE WITH SERIAL " + eventData.getSerial() + "\n--------------------------------------------------------------------------");
 		LOG.debug(String.format("Event Data Received: %s ", eventData));
 
 		/**
@@ -111,7 +114,7 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 
 		// if this device's deviceType has no sensors then the deviceType won't exist in the deviceTypeMap
 		if (deviceTypesCache.get(device.getDeviceType().getId()) == null) {
-			LOG.debug(String.format("Device Type for Device %s has no sensors, the Device data has been added to Resource Live Feeds and no further checks will happen.", device));
+			LOG.debug(String.format("Device Type for Device %s has no sensors, the Device data has been added to Resource Live Feeds and no further checks will exist.", device));
 			return;
 		}
 
@@ -180,6 +183,7 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 			}
 		}
 
+		LOG.debug("\n--------------------------------------------------------------------------\n" + "PROCESSING DEVICE COMPLETED\n" + "--------------------------------------------------------------------------");
 	}
 
 	public void setDeviceService(DeviceService deviceService) {

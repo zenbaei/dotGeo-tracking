@@ -8,36 +8,30 @@ import com.esrinea.dotGeo.tracking.model.component.sensorConfiguration.dao.Senso
 import com.esrinea.dotGeo.tracking.model.component.sensorConfiguration.entity.SensorConfiguration;
 import com.esrinea.dotGeo.tracking.service.common.service.AbstractService;
 
-public class SensorConfigurationServiceImpl extends AbstractService<SensorConfiguration> implements
-		SensorConfigurationService {
+public class SensorConfigurationServiceImpl extends AbstractService<SensorConfiguration> implements SensorConfigurationService {
 
 	private SensorConfigurationDAO sensorConfigurationDAO;
-	
-	
+
 	public SensorConfigurationServiceImpl(SensorConfigurationDAO sensorConfigurationDAO) {
 		super(sensorConfigurationDAO);
 		this.sensorConfigurationDAO = sensorConfigurationDAO;
 	}
 
-	private static Logger LOG = Logger
-			.getLogger(SensorConfigurationServiceImpl.class);
+	private static Logger LOG = Logger.getLogger(SensorConfigurationServiceImpl.class);
 
 	@Override
-	public boolean isBusinessRuleSatisfied(
-			SensorConfiguration sensorConfiguration, double receivedSensorValue) {
+	public boolean isBusinessRuleSatisfied(SensorConfiguration sensorConfiguration, double receivedSensorValue) {
 
 		if (!commonCheck(sensorConfiguration, receivedSensorValue)) {
 			return false;
 		}
 
-		if (sensorConfiguration.getConfigText() == null
-				|| sensorConfiguration.getConfigText().trim().isEmpty()) {
+		if (sensorConfiguration.getConfigText() == null || sensorConfiguration.getConfigText().trim().isEmpty()) {
 			LOG.warn("ConfigText is empty");
 			return false;
 		}
 
-		if (sensorConfiguration.getMinValue() < receivedSensorValue
-				&& receivedSensorValue < sensorConfiguration.getMaxValue()) {
+		if (sensorConfiguration.getMinValue() <= receivedSensorValue && receivedSensorValue <= sensorConfiguration.getMaxValue()) {
 			return true;
 		}
 
@@ -46,8 +40,7 @@ public class SensorConfigurationServiceImpl extends AbstractService<SensorConfig
 	}
 
 	@Override
-	public boolean isBusinessRuleSatisfied(
-			SensorConfiguration sensorConfiguration, String receivedSensorValue) {
+	public boolean isBusinessRuleSatisfied(SensorConfiguration sensorConfiguration, String receivedSensorValue) {
 
 		if (!commonCheck(sensorConfiguration, receivedSensorValue)) {
 			return false;
@@ -58,14 +51,12 @@ public class SensorConfigurationServiceImpl extends AbstractService<SensorConfig
 			return false;
 		}
 
-		if (sensorConfiguration.getTextValue() == null
-				|| sensorConfiguration.getTextValue().trim().isEmpty()) {
+		if (sensorConfiguration.getTextValue() == null || sensorConfiguration.getTextValue().trim().isEmpty()) {
 			LOG.warn("TextValue is empty");
 			return false;
 		}
 
-		if (sensorConfiguration.getTextValue().trim()
-				.equalsIgnoreCase(receivedSensorValue.trim())) {
+		if (sensorConfiguration.getTextValue().trim().equalsIgnoreCase(receivedSensorValue.trim())) {
 			return true;
 		}
 
@@ -76,17 +67,16 @@ public class SensorConfigurationServiceImpl extends AbstractService<SensorConfig
 	@Override
 	public boolean isBusinessRuleSatisfiedDelegate(SensorConfiguration sensorConfiguration, Object receivedSensorValue) {
 		String val = String.valueOf(receivedSensorValue);
-		try{
-			Double d =  Double.valueOf(val);
+		try {
+			Double d = Double.valueOf(val);
 			return isBusinessRuleSatisfied(sensorConfiguration, d);
-		}catch(NumberFormatException | ClassCastException ex){
+		} catch (NumberFormatException | ClassCastException ex) {
 			return isBusinessRuleSatisfied(sensorConfiguration, val);
 		}
 	}
-	
+
 	// Common check done on overloaded isBusinessRuleSatisfied() method
-	private boolean commonCheck(SensorConfiguration sensorConfiguration,
-			Object receivedSensorValue) {
+	private boolean commonCheck(SensorConfiguration sensorConfiguration, Object receivedSensorValue) {
 
 		if (sensorConfiguration == null) {
 			LOG.warn("SensorConfiguration is Null.");
@@ -97,13 +87,13 @@ public class SensorConfigurationServiceImpl extends AbstractService<SensorConfig
 			LOG.debug("Retired Sensor Configuration.");
 			return false;
 		}
-		
-		LOG.debug(String.format("Check if received value (%s) falls under the rule configured on %s Sensor." ,receivedSensorValue , sensorConfiguration.getSensor().getNameEn().toUpperCase()));
-		LOG.trace(sensorConfiguration);
+
+		LOG.debug(String.format("Check if received value (%s) falls under the rule configured on %s Sensor.", receivedSensorValue, sensorConfiguration.getSensor().getNameEn().toUpperCase()));
+		LOG.debug(sensorConfiguration);
 
 		return true;
 	}
-	
+
 	@Override
 	public List<SensorConfiguration> find(int sensorId, boolean retired) {
 		return sensorConfigurationDAO.find(sensorId, retired);

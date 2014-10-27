@@ -53,7 +53,7 @@ public class TrackingProcessor extends GeoEventProcessorBase {
 			// tempSensor = geoEvent.getField("TEMP");
 			// oilSenosr = geoEvent.getField("OIL");
 		} catch (Exception ex) {
-			LOG.error("Unable to extract fields from received tracking geo event data, make sure the Geo Data Definition corresponds to the right field names along with their data types definied in our custom EventData object.");
+			LOG.error("Unable to extract fields from received tracking geo event data, make sure the Geo Data Definition corresponds to the right field names along with their data types definied in our custom EventData object,Also make sure that none of the received values is null.");
 			throw ex;
 		}
 		// initialize EventData with the received values
@@ -65,7 +65,7 @@ public class TrackingProcessor extends GeoEventProcessorBase {
 		if (seatBelt != null) {
 			eventData.addSensorValue("SEAT BELT", seatBelt);
 		}
-		
+
 		// eventData.addSensorValue("TEMP", tempSensor);
 		// eventData.addSensorValue("OIL", oilSenosr);
 
