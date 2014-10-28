@@ -23,6 +23,7 @@ public class TrackingProcessor extends GeoEventProcessorBase {
 
 	@Override
 	public GeoEvent process(GeoEvent geoEvent) throws Exception {
+		LOG.debug("\n--------------------------------------------------------------------------------------------------------------------\nGEO EVENT DATA RECEIVED\n--------------------------------------------------------------------------------------------------------------------");
 		String serial = null;
 		double xCoord = 0;
 		double yCoord = 0;
@@ -30,41 +31,78 @@ public class TrackingProcessor extends GeoEventProcessorBase {
 		double heading = 0;
 		Object speedSensor = null;
 		Object seatBelt = null;
+		final String ERROR_MSG = "Unable to extract data from field name %s, please make sure it is not null and is defined with the right data type in GeoEvent Data Definition.";
+		final String VALUE_MSG = "\n%s value= %s";
 		// Object tempSensor = null;
 		// Object oilSenosr = null;
 
+		// get values from GeoEvent based on the data definition of the fields
+		LOG.debug("\nGeoEvent Data Received, Data extraction will happened based on the fields' name and type defined in the GeoEvent Data Definition:");
+
 		try {
-			// get values from GeoEvent based on the data definition of the fields
 			serial = (String) geoEvent.getField("serial");
-			xCoord = (Double) geoEvent.getField("xCoord");
-			yCoord = (Double) geoEvent.getField("yCoord");
-			speed = (Integer) geoEvent.getField("speed");
-			heading = (Double) geoEvent.getField("heading");
-			try {
-				speedSensor = geoEvent.getField("speedSensor");
-			} catch (Exception ex) {
-				LOG.debug("No field with name speedSensor exist in the received data definition.");
-			}
-			try {
-				seatBelt = geoEvent.getField("seatBelt");
-			} catch (Exception ex) {
-				LOG.debug("No field with name seatBelt exist in the received data definition.");
-			}
-			// tempSensor = geoEvent.getField("TEMP");
-			// oilSenosr = geoEvent.getField("OIL");
+			LOG.debug(String.format(VALUE_MSG, "serial", serial));
 		} catch (Exception ex) {
-			LOG.error("Unable to extract fields from received tracking geo event data, make sure the Geo Data Definition corresponds to the right field names along with their data types definied in our custom EventData object,Also make sure that none of the received values is null.");
+			LOG.error(String.format(ERROR_MSG, "serial"));
 			throw ex;
 		}
+
+		try {
+			xCoord = (Double) geoEvent.getField("xCoord");
+			LOG.debug(String.format(VALUE_MSG, "xCoord", xCoord));
+		} catch (Exception ex) {
+			LOG.error(String.format(ERROR_MSG, "xCoord"));
+			throw ex;
+		}
+
+		try {
+			yCoord = (Double) geoEvent.getField("yCoord");
+			LOG.debug(String.format(VALUE_MSG, "yCoord", yCoord));
+		} catch (Exception ex) {
+			LOG.error(String.format(ERROR_MSG, "yCoord"));
+			throw ex;
+		}
+
+		try {
+			speed = (Integer) geoEvent.getField("speed");
+			LOG.debug(String.format(VALUE_MSG, "speed", speed));
+		} catch (Exception ex) {
+			LOG.error(String.format(ERROR_MSG, "speed"));
+			throw ex;
+		}
+
+		try {
+			heading = (Double) geoEvent.getField("heading");
+			LOG.debug(String.format(VALUE_MSG, "heading", heading));
+		} catch (Exception ex) {
+			LOG.error(String.format(ERROR_MSG, "heading"));
+			throw ex;
+		}
+
+		try {
+			speedSensor = geoEvent.getField("speedSensor");
+			LOG.debug(String.format(VALUE_MSG, "speedSensor", speedSensor));
+		} catch (Exception ex) {
+			LOG.debug("No field with name speedSensor exist in the received data definition.");
+		}
+
+		/*
+		 * try { seatBelt = geoEvent.getField("seatBelt"); LOG.debug(String.format(VALUE_MSG, "seatBelt", seatBelt)); } catch (Exception ex) { LOG.debug("No field with name seatBelt exist in the received data definition."); }
+		 */
+		// tempSensor = geoEvent.getField("TEMP");
+		// oilSenosr = geoEvent.getField("OIL");
+
 		// initialize EventData with the received values
 		EventData eventData = new EventData(serial, xCoord, yCoord, speed, heading);
 
+		// add sensor with same name defined in the DB
 		if (speedSensor != null) {
 			eventData.addSensorValue("SPEED", speedSensor);
 		}
-		if (seatBelt != null) {
-			eventData.addSensorValue("SEAT BELT", seatBelt);
-		}
+
+		/*
+		 * if (seatBelt != null) { eventData.addSensorValue("SEAT BELT", seatBelt); }
+		 */
 
 		// eventData.addSensorValue("TEMP", tempSensor);
 		// eventData.addSensorValue("OIL", oilSenosr);

@@ -49,6 +49,7 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 	// TODO: refresh on intervals
 	public void buildDeviceType() {
 		LOG.info("buildDeviceType method is called to find all device types along with their sensors, sensor configurations, alerts and alert configurations.");
+
 		// get all device types
 		for (DeviceType deviceType : deviceTypeService.findAll(false)) {
 			// find and set non retired sensors
@@ -118,6 +119,7 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 			return;
 		}
 
+		LOG.debug("\n---------------------------\nPROCESSING SENSORS BEGINS\n---------------------------");
 		// check if deviceType's sensors are not excluded from that device
 		OUTER: for (Sensor sensor : deviceTypesCache.get(device.getDeviceType().getId()).getSensors()) {// loop on deviceType's sensors, for instance TEMP sensor
 			if (!execludedSensors.containsKey(sensor)) {// ex; TEMP sensor is active on that device,
@@ -128,7 +130,7 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 
 				Object sensorValue = eventData.getSensorValues().get(sensor.getNameEn().toUpperCase());// get receivedSensorValue from EventData's sensorValues Map using cached deviceType sensors' name, it should be saved as TEMP key and the received value
 				if (sensorValue == null) { // count for an input stream that was configured to send some of the deviceType's sensors
-					LOG.warn(String.format("Device Type of %s didn't send data for sensor %s", device.getDeviceType().getDesc(), sensor.getNameEn().toUpperCase()));
+					LOG.warn(String.format("Device Type with ID %s defined to has a Sensor with the name of %s, but no data was received for this Sensor.", device.getDeviceType().getId(), sensor.getNameEn().toUpperCase()));
 					continue;
 				}
 
@@ -142,9 +144,14 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 				}
 			}
 		}
+		LOG.debug("\n---------------------------\nPROCESSING SENSORS ENDS\n---------------------------");
+		
+		
 
+		LOG.debug("\n---------------------------\nPROCESSING ALERTS BEGINS\n---------------------------");
 		if (deviceTypesCache.get(device.getDeviceType().getId()).getAlerts() == null) {
-			LOG.debug(String.format("Device Type for Device %s has no alerts, the Device data has been added to Resource Live Feeds and Sensor Live Feeds and no further checks will happen.", device));
+			LOG.debug(String.format("Device Type for Device %s has no alerts, the Device data has been added to Resource Live Feeds and Sensor Live Feeds and no further checks will exist.", device));
+			LOG.debug("\n---------------------------\nPROCESSING ALERTS ENDS\n---------------------------");
 			return;
 		}
 
@@ -175,13 +182,12 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 				// if this line is reached then all alertConfiguration in an alert had their rules satisfied
 				AlertLiveFeed alertLiveFeed = new AlertLiveFeed(device, alert, eventData.getFeedDateTime(), eventData.getZone());// insert AlertLiveFeed only if all rules in an alert is satisfied
 				alertLiveFeedService.create(alertLiveFeed);
-
 				// create AlertSensorLiveFeed
 				// TODO:check this with manal
 				// AlertSensorLiveFeed alertSensorLiveFeed = new AlertSensorLiveFeed(new AlertSensorLiveFeedId(alertLiveFeed.getId(), 1));
-
 			}
 		}
+		LOG.debug("\n---------------------------\nPROCESSING ALERTS ENDS\n---------------------------");
 
 		LOG.debug("\n--------------------------------------------------------------------------\n" + "PROCESSING DEVICE COMPLETED\n" + "--------------------------------------------------------------------------");
 	}
