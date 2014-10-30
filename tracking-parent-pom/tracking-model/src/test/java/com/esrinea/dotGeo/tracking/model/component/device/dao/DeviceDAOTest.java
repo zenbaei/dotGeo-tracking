@@ -96,7 +96,7 @@ public class DeviceDAOTest {
 	
 	@Test
 	public void testFindBySerialRetired(){
-		deviceDAO.find("1", false);
+		deviceDAO.find("9", false);
 	}
 	
 

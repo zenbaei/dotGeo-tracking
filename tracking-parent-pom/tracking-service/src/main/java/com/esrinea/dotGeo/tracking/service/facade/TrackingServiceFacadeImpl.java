@@ -108,6 +108,13 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 		// insert into resource live feed
 		resourceLiveFeedService.create(new ResourceLiveFeed(device, eventData.getFeedDateTime(), eventData.getxCoord(), eventData.getyCoord(), eventData.getSpeed(), eventData.getHeading(), eventData.getZone()));
 
+		//count for device that doesn't have deviceType (error)
+		if(device.getDeviceType() == null){
+			LOG.error(String.format("Device with ID %s does not have a Device Type. It has been inserted into Resource Live Feeds and no further processing will occur.", device.getId()));
+			return;
+		}
+			
+		
 		// excluded sensors are eagerly fetched while querying the device
 		Map<Sensor, ExecludedSensor> execludedSensors = device.getResource().getExecludedSensors();
 		// excluded alerts are eagerly fetched while querying the device
@@ -115,7 +122,7 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 
 		// if this device's deviceType has no sensors then the deviceType won't exist in the deviceTypeMap
 		if (deviceTypesCache.get(device.getDeviceType().getId()) == null) {
-			LOG.debug(String.format("Device Type for Device %s has no sensors, the Device data has been added to Resource Live Feeds and no further checks will exist.", device));
+			LOG.debug(String.format("Device Type for Device %s has no sensors, the Device data has been added to Resource Live Feeds and no further checks will occur.", device));
 			return;
 		}
 
@@ -150,7 +157,7 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 
 		LOG.debug("\n---------------------------\nPROCESSING ALERTS BEGINS\n---------------------------");
 		if (deviceTypesCache.get(device.getDeviceType().getId()).getAlerts() == null) {
-			LOG.debug(String.format("Device Type for Device %s has no alerts, the Device data has been added to Resource Live Feeds and Sensor Live Feeds and no further checks will exist.", device));
+			LOG.debug(String.format("Device Type for Device %s has no alerts, the Device data has been added to Resource Live Feeds and Sensor Live Feeds and no further checks will occur.", device));
 			LOG.debug("\n---------------------------\nPROCESSING ALERTS ENDS\n---------------------------");
 			return;
 		}

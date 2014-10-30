@@ -3,6 +3,7 @@ package com.esrinea.dotGeo.tracking.model.component.device.dao;
 import java.util.List;
 
 import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 
 import org.apache.log4j.Logger;
 
@@ -46,6 +47,9 @@ public class DeviceDAOImpl extends AbstractDAO<Device> implements DeviceDAO {
 			String errMsg = String.format("%s with Serial %s does not exist in database or is %s.", "Device", serial, retired ? "not retired" : "retired");
 			LOG.info(errMsg);
 			throw new NoResultException(errMsg);
+		} catch (NonUniqueResultException ex) {
+			LOG.error(String.format("Device with Serial %s is duplicated or the one to one realtion it is joining with is refering it more than once by mistake.", device.getSerial()));
+			throw ex;
 		}
 		return device;
 	}
