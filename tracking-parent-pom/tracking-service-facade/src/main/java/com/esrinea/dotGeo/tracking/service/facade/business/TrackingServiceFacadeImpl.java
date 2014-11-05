@@ -53,11 +53,9 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 	 */
 	// TODO: refresh on intervals
 	public void buildDeviceType() {
-
-		// DeviceTypes have been already loaded
-		if (!deviceTypesCache.isEmpty()) {
-			return;
-		}
+		/*
+		 * // DeviceTypes have been already loaded if (!deviceTypesCache.isEmpty()) { return; }
+		 */
 
 		LOG.info("All Device Types will be retrieved and cached.");
 		LOG.debug("buildDeviceType method is called to find all device types along with their sensors, sensor configurations, alerts and alert configurations.");
@@ -109,6 +107,8 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 		buildDeviceType();
 		EventData eventData = geoEventDataExtractor.extract(geoEvent);
 
+		LOG.trace("Retrieved Device Types: " + deviceTypesCache);
+
 		LOG.debug("\n--------------------------------------------------------------------------\n" + "PROCESSING DEVICE WITH SERIAL " + eventData.getSerial() + "\n--------------------------------------------------------------------------");
 
 		// TODO: simplify definition
@@ -143,8 +143,9 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 		LOG.debug("\n---------------------------\nPROCESSING SENSORS BEGINS\n---------------------------");
 		// check if deviceType's sensors are not excluded from that device
 		OUTER: for (Sensor sensor : deviceTypesCache.get(device.getDeviceType().getId()).getSensors()) {// loop on deviceType's sensors, for instance TEMP sensor
+			LOG.debug(String.format("\n---------------------------\nCHECKING %s SENSOR\n---------------------------", sensor.getNameEn().toUpperCase()));
 			if (!execludedSensors.containsKey(sensor)) {// ex; TEMP sensor is active on that device,
-				if (sensor.getSensorConfigurations() == null) {
+				if (sensor.getSensorConfigurations() == null || sensor.getSensorConfigurations().isEmpty()) {
 					LOG.warn(String.format("The Sensor %s has no Sensor Configurations. This sensor will be escaped.", sensor));
 					continue;
 				}
@@ -163,6 +164,8 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 						continue OUTER; // if reached then one sensor configuration of a specific sensor has succeed then move to the next sensor (ex; Temp sensor has 3 configurations: High, Medium and Low. Definity Temp sensor value with be either be High, Medium or Low
 					}
 				}
+			} else {
+				LOG.warn(String.format("The Sensor %s is excluded.", sensor.getNameEn().toUpperCase()));
 			}
 		}
 		LOG.debug("\n---------------------------\nPROCESSING SENSORS ENDS\n---------------------------");
@@ -176,10 +179,8 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 
 		// check if deviceType's alerts are not excluded from that device
 		OUTER: for (Alert alert : deviceTypesCache.get(device.getDeviceType().getId()).getAlerts()) {// loop on deviceType's alerts
+			LOG.debug(String.format("\n---------------------------\nCHECKING %s ALERT\n---------------------------", alert.getNameEn().toUpperCase()));
 			if (!execludedAlerts.containsKey(alert)) {// alert is active on that device
-
-				LOG.debug(String.format("Checking Alert: %s", alert.getNameEn().toUpperCase()));
-
 				if (alert.getAlertConfigurations() == null || alert.getAlertConfigurations().isEmpty()) {
 					LOG.warn(String.format("The %s has no Alert Configurations. This alert will be escaped.", alert));
 					continue;
@@ -209,6 +210,8 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 					AlertSensorLiveFeed alertSensorLiveFeed = new AlertSensorLiveFeed(new AlertSensorLiveFeedId(alertLiveFeed.getId(), sensorConfigurationsAssociatedWithNewSensorLiveFeeds.get(alertConfiguration.getSensorConfiguration()).getId()));
 					alertSensorLiveFeedService.create(alertSensorLiveFeed);
 				}
+			} else {
+				LOG.warn(String.format("The Alert %s is excluded.", alert.getNameEn().toUpperCase()));
 			}
 		}
 		LOG.debug("\n---------------------------\nPROCESSING ALERTS ENDS\n---------------------------");
