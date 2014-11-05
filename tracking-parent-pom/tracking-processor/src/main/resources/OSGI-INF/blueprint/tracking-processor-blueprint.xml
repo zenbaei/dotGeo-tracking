@@ -13,7 +13,7 @@
                         http://cxf.apache.org/blueprint/core http://cxf.apache.org/schemas/blueprint/core.xsd">
 
 	<reference id="trackingServiceFacade"
-		interface="com.esrinea.dotGeo.tracking.service.facade.TrackingServiceFacade"
+		interface="com.esrinea.dotGeo.tracking.service.facade.business.TrackingServiceFacade"
 		availability="mandatory" />
 
 	<bean id="trackingProcessorServiceBean"

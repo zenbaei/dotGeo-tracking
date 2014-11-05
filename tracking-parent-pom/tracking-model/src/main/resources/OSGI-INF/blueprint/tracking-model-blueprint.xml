@@ -136,6 +136,15 @@
 		ref="alertLiveFeedDAO" />
 	<!-- AlertLiveFeed-End -->
 
-
+	<!-- AlertSensorLiveFeed-Start -->
+	<bean id="alertSensorLiveFeedDAO"
+		class="com.esrinea.dotGeo.tracking.model.component.alertSensorLiveFeed.dao.AlertSensorLiveFeedDAOImpl">
+		<jpa:context property="entityManager" unitname="tracking" />
+		<tx:transaction method="*" value="Required" />
+	</bean>
+	<service
+		interface="com.esrinea.dotGeo.tracking.model.component.alertSensorLiveFeed.dao.AlertSensorLiveFeedDAO"
+		ref="alertSensorLiveFeedDAO" />
+	<!-- AlertSensorLiveFeed-End -->
 
 </blueprint>

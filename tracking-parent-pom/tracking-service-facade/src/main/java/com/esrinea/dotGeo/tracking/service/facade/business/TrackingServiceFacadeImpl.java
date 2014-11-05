@@ -1,15 +1,16 @@
-package com.esrinea.dotGeo.tracking.service.facade;
+package com.esrinea.dotGeo.tracking.service.facade.business;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import com.esri.ges.core.geoevent.GeoEvent;
 import com.esrinea.dotGeo.tracking.model.component.alert.entity.Alert;
 import com.esrinea.dotGeo.tracking.model.component.alertConfiguration.entity.AlertConfiguration;
 import com.esrinea.dotGeo.tracking.model.component.alertLiveFeed.entity.AlertLiveFeed;
+import com.esrinea.dotGeo.tracking.model.component.alertSensorLiveFeed.entity.AlertSensorLiveFeed;
+import com.esrinea.dotGeo.tracking.model.component.alertSensorLiveFeed.entity.AlertSensorLiveFeedId;
 import com.esrinea.dotGeo.tracking.model.component.device.entity.Device;
 import com.esrinea.dotGeo.tracking.model.component.deviceType.entity.DeviceType;
 import com.esrinea.dotGeo.tracking.model.component.execludedAlert.entity.ExecludedAlert;
@@ -18,16 +19,18 @@ import com.esrinea.dotGeo.tracking.model.component.resourceLiveFeed.entity.Resou
 import com.esrinea.dotGeo.tracking.model.component.sensor.entity.Sensor;
 import com.esrinea.dotGeo.tracking.model.component.sensorConfiguration.entity.SensorConfiguration;
 import com.esrinea.dotGeo.tracking.model.component.sensorLiveFeed.entity.SensorLiveFeed;
-import com.esrinea.dotGeo.tracking.service.common.dto.EventData;
 import com.esrinea.dotGeo.tracking.service.component.alert.AlertService;
 import com.esrinea.dotGeo.tracking.service.component.alertConfiguration.AlertConfigurationService;
 import com.esrinea.dotGeo.tracking.service.component.alertLiveFeed.AlertLiveFeedService;
+import com.esrinea.dotGeo.tracking.service.component.alertSensorLiveFeed.AlertSensorLiveFeedService;
 import com.esrinea.dotGeo.tracking.service.component.device.DeviceService;
 import com.esrinea.dotGeo.tracking.service.component.deviceType.DeviceTypeService;
 import com.esrinea.dotGeo.tracking.service.component.resourceLiveFeed.ResourceLiveFeedService;
 import com.esrinea.dotGeo.tracking.service.component.sensor.SensorService;
 import com.esrinea.dotGeo.tracking.service.component.sensorConfiguration.SensorConfigurationService;
 import com.esrinea.dotGeo.tracking.service.component.sensorLiveFeed.SensorLiveFeedService;
+import com.esrinea.dotGeo.tracking.service.facade.dataMapper.GeoEventDataExtractor;
+import com.esrinea.dotGeo.tracking.service.facade.dto.EventData;
 
 public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 
@@ -40,7 +43,9 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 	private AlertService alertService;
 	private AlertLiveFeedService alertLiveFeedService;
 	private AlertConfigurationService alertConfigurationService;
+	private AlertSensorLiveFeedService alertSensorLiveFeedService;
 	private SensorLiveFeedService sensorLiveFeedService;
+	private GeoEventDataExtractor geoEventDataExtractor;
 	private Map<Integer, DeviceType> deviceTypesCache = new HashMap<Integer, DeviceType>();// this Map will act as cache of device types
 
 	/**
@@ -48,7 +53,14 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 	 */
 	// TODO: refresh on intervals
 	public void buildDeviceType() {
-		LOG.info("buildDeviceType method is called to find all device types along with their sensors, sensor configurations, alerts and alert configurations.");
+
+		// DeviceTypes have been already loaded
+		if (!deviceTypesCache.isEmpty()) {
+			return;
+		}
+
+		LOG.info("All Device Types will be retrieved and cached.");
+		LOG.debug("buildDeviceType method is called to find all device types along with their sensors, sensor configurations, alerts and alert configurations.");
 
 		// get all device types
 		for (DeviceType deviceType : deviceTypeService.findAll(false)) {
@@ -93,28 +105,30 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 		LOG.info("Retrieved Device Types: " + deviceTypesCache);
 	}
 
-	public void deviceFeedReceived(EventData eventData) {
-		LOG.debug("\n--------------------------------------------------------------------------\n" + "PROCESSING DEVICE WITH SERIAL " + eventData.getSerial() + "\n--------------------------------------------------------------------------");
-		LOG.debug(String.format("Event Data Received: %s ", eventData));
+	public void deviceFeedReceived(GeoEvent geoEvent) {
+		buildDeviceType();
+		EventData eventData = geoEventDataExtractor.extract(geoEvent);
 
+		LOG.debug("\n--------------------------------------------------------------------------\n" + "PROCESSING DEVICE WITH SERIAL " + eventData.getSerial() + "\n--------------------------------------------------------------------------");
+
+		// TODO: simplify definition
 		/**
-		 * a set to hold sensor configurations along with their associated new sensorLiveFeeds for a specific device's value that passed the configured business rule on that device's type. this set will be used to check against alerts configuration the newly created sensorLiveFeed is required when
-		 * inserting into AlertSensorLiveFeed
+		 * a set to hold sensor configurations along with their associated newly created sensorLiveFeeds for a specific device's value that passed the configured business rule on that device's type.<br>
+		 * This set will be used to check against alerts configuration the newly created sensorLiveFeed is required when inserting into AlertSensorLiveFeed
 		 */
-		Set<SensorConfiguration> sensorConfigurationsAssociatedWithCreatedSensorLiveFeeds = new HashSet<SensorConfiguration>();
+		Map<SensorConfiguration, SensorLiveFeed> sensorConfigurationsAssociatedWithNewSensorLiveFeeds = new HashMap<SensorConfiguration, SensorLiveFeed>();
 
 		// find the device with received deviceId
 		Device device = deviceService.find(eventData.getSerial(), false);
 		// insert into resource live feed
 		resourceLiveFeedService.create(new ResourceLiveFeed(device, eventData.getFeedDateTime(), eventData.getxCoord(), eventData.getyCoord(), eventData.getSpeed(), eventData.getHeading(), eventData.getZone()));
 
-		//count for device that doesn't have deviceType (error)
-		if(device.getDeviceType() == null){
+		// count for device that doesn't have deviceType (error)
+		if (device.getDeviceType() == null) {
 			LOG.error(String.format("Device with ID %s does not have a Device Type. It has been inserted into Resource Live Feeds and no further processing will occur.", device.getId()));
 			return;
 		}
-			
-		
+
 		// excluded sensors are eagerly fetched while querying the device
 		Map<Sensor, ExecludedSensor> execludedSensors = device.getResource().getExecludedSensors();
 		// excluded alerts are eagerly fetched while querying the device
@@ -135,7 +149,7 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 					continue;
 				}
 
-				Object sensorValue = eventData.getSensorValues().get(sensor.getNameEn().toUpperCase());// get receivedSensorValue from EventData's sensorValues Map using cached deviceType sensors' name, it should be saved as TEMP key and the received value
+				Object sensorValue = eventData.getSensorValuesCapitalized().get(sensor.getNameEn().toUpperCase());// get receivedSensorValue from EventData's sensorValues Map using cached deviceType sensors' name, it should be saved as TEMP key and the received value
 				if (sensorValue == null) { // count for an input stream that was configured to send some of the deviceType's sensors
 					LOG.warn(String.format("Device Type with ID %s defined to has a Sensor with the name of %s, but no data was received for this Sensor.", device.getDeviceType().getId(), sensor.getNameEn().toUpperCase()));
 					continue;
@@ -145,15 +159,13 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 					if (sensorConfigurationService.isBusinessRuleSatisfiedDelegate(sensorConfiguration, sensorValue)) {// received sensor value fall under the business rule, the 3 TEMP sensor configurations will be checked against the received value
 						SensorLiveFeed sensorLiveFeed = new SensorLiveFeed(device, sensorConfiguration, String.valueOf(sensorValue), eventData.getFeedDateTime()); // insert SensorLiveFeed into Database
 						sensorLiveFeedService.create(sensorLiveFeed);
-						sensorConfigurationsAssociatedWithCreatedSensorLiveFeeds.add(sensorLiveFeed.getSensorConfiguration()); // keep sensor configurations that fall under the business rule
-						continue OUTER; // if reached then one sensor configuration has succeed then move to the next sensor
+						sensorConfigurationsAssociatedWithNewSensorLiveFeeds.put(sensorLiveFeed.getSensorConfiguration(), sensorLiveFeed); // keep sensor configurations that fall under the business rule
+						continue OUTER; // if reached then one sensor configuration of a specific sensor has succeed then move to the next sensor (ex; Temp sensor has 3 configurations: High, Medium and Low. Definity Temp sensor value with be either be High, Medium or Low
 					}
 				}
 			}
 		}
 		LOG.debug("\n---------------------------\nPROCESSING SENSORS ENDS\n---------------------------");
-		
-		
 
 		LOG.debug("\n---------------------------\nPROCESSING ALERTS BEGINS\n---------------------------");
 		if (deviceTypesCache.get(device.getDeviceType().getId()).getAlerts() == null) {
@@ -168,15 +180,15 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 
 				LOG.debug(String.format("Checking Alert: %s", alert.getNameEn().toUpperCase()));
 
-				if (alert.getAlertConfigurations() == null) {
-					LOG.warn(String.format("The Alert %s has no Alert Configurations. This alert will be escaped.", alert));
+				if (alert.getAlertConfigurations() == null || alert.getAlertConfigurations().isEmpty()) {
+					LOG.warn(String.format("The %s has no Alert Configurations. This alert will be escaped.", alert));
 					continue;
 				}
 
 				for (AlertConfiguration alertConfiguration : alert.getAlertConfigurations()) {// loop on deviceType alert's alertConfiguration, compound alerts will have more than configuration that group sensor configurations together, for instance OIL level is low and TEMP is 50
 					LOG.debug("Checking " + alertConfiguration.getSensorConfiguration());
 					// check if the Alert Configuration configured on the device's DeviceType has its sensorConfiguration //TODO: complete description
-					if (sensorConfigurationsAssociatedWithCreatedSensorLiveFeeds.contains(alertConfiguration.getSensorConfiguration())) {// an alert could be compound(hold more than a rule) if one rule is not satisfied then move to next alert
+					if (sensorConfigurationsAssociatedWithNewSensorLiveFeeds.containsKey(alertConfiguration.getSensorConfiguration())) {// an alert could be compound(hold more than a rule) if one rule is not satisfied then move to next alert
 						LOG.debug(String.format("Alert configuration passed on Alert %s.", alert.getNameEn().toUpperCase()));
 						continue;// as long as rules are included in the current alert then continue checking
 					} else {
@@ -189,9 +201,14 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 				// if this line is reached then all alertConfiguration in an alert had their rules satisfied
 				AlertLiveFeed alertLiveFeed = new AlertLiveFeed(device, alert, eventData.getFeedDateTime(), eventData.getZone());// insert AlertLiveFeed only if all rules in an alert is satisfied
 				alertLiveFeedService.create(alertLiveFeed);
-				// create AlertSensorLiveFeed
-				// TODO:check this with manal
-				// AlertSensorLiveFeed alertSensorLiveFeed = new AlertSensorLiveFeed(new AlertSensorLiveFeedId(alertLiveFeed.getId(), 1));
+				LOG.debug(String.format("\n----------------------------------------------\nALERT %s HAS SUCCEEDED\n----------------------------------------------", alert.getNameEn().toUpperCase()));
+
+				// TODO:simply definition + re check whether to use alertLiveFeed or use Alert directly or other
+				// create AlertSensorLiveFeed, use the newly created alertLiveFeed to get its Alert and then its AlertConfiguration and then its SensorConfigurations
+				for (AlertConfiguration alertConfiguration : alert.getAlertConfigurations()) {
+					AlertSensorLiveFeed alertSensorLiveFeed = new AlertSensorLiveFeed(new AlertSensorLiveFeedId(alertLiveFeed.getId(), sensorConfigurationsAssociatedWithNewSensorLiveFeeds.get(alertConfiguration.getSensorConfiguration()).getId()));
+					alertSensorLiveFeedService.create(alertSensorLiveFeed);
+				}
 			}
 		}
 		LOG.debug("\n---------------------------\nPROCESSING ALERTS ENDS\n---------------------------");
@@ -233,5 +250,13 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 
 	public void setAlertLiveFeedService(AlertLiveFeedService alertLiveFeedService) {
 		this.alertLiveFeedService = alertLiveFeedService;
+	}
+
+	public void setAlertSensorLiveFeedService(AlertSensorLiveFeedService alertSensorLiveFeedService) {
+		this.alertSensorLiveFeedService = alertSensorLiveFeedService;
+	}
+
+	public void setGeoEventDataExtractor(GeoEventDataExtractor geoEventDataExtractor) {
+		this.geoEventDataExtractor = geoEventDataExtractor;
 	}
 }

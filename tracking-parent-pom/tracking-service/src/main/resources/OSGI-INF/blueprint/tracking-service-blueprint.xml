@@ -25,6 +25,8 @@
 		class="com.esrinea.dotGeo.tracking.service.component.device.DeviceServiceImpl">
 		<argument ref="deviceDAO" />
 	</bean>
+	<service ref="deviceService"
+		interface="com.esrinea.dotGeo.tracking.service.component.device.DeviceService" />
 	<!-- Devices-End -->
 
 
@@ -38,6 +40,8 @@
 		class="com.esrinea.dotGeo.tracking.service.component.resourceLiveFeed.ResourceLiveFeedServiceImpl">
 		<argument ref="resourceLiveFeedDAO" />
 	</bean>
+	<service ref="resourceLiveFeedService"
+		interface="com.esrinea.dotGeo.tracking.service.component.resourceLiveFeed.ResourceLiveFeedService" />
 	<!-- ResourceLiveFeed-End -->
 
 
@@ -51,6 +55,8 @@
 		class="com.esrinea.dotGeo.tracking.service.component.sensorLiveFeed.SensorLiveFeedServiceImpl">
 		<argument ref="sensorLiveFeedDAO" />
 	</bean>
+	<service ref="sensorLiveFeedService"
+		interface="com.esrinea.dotGeo.tracking.service.component.sensorLiveFeed.SensorLiveFeedService" />
 	<!-- SensorLiveFeed-End -->
 
 
@@ -63,6 +69,8 @@
 		class="com.esrinea.dotGeo.tracking.service.component.sensor.SensorServiceImpl">
 		<argument ref="sensorDAO" />
 	</bean>
+	<service ref="sensorService"
+		interface="com.esrinea.dotGeo.tracking.service.component.sensor.SensorService" />
 	<!-- Sensor-End -->
 
 
@@ -75,6 +83,8 @@
 		class="com.esrinea.dotGeo.tracking.service.component.sensorConfiguration.SensorConfigurationServiceImpl">
 		<argument ref="sensorConfigurationDAO" />
 	</bean>
+	<service ref="sensorConfigurationService"
+		interface="com.esrinea.dotGeo.tracking.service.component.sensorConfiguration.SensorConfigurationService" />
 	<!-- SensorConfiguration-End -->
 
 
@@ -88,6 +98,8 @@
 		class="com.esrinea.dotGeo.tracking.service.component.alert.AlertServiceImpl">
 		<argument ref="alertDAO" />
 	</bean>
+	<service ref="alertService"
+		interface="com.esrinea.dotGeo.tracking.service.component.alert.AlertService" />
 	<!-- Alert-End -->
 
 
@@ -100,6 +112,8 @@
 		class="com.esrinea.dotGeo.tracking.service.component.alertConfiguration.AlertConfigurationServiceImpl">
 		<argument ref="alertConfigurationDAO" />
 	</bean>
+	<service ref="alertConfigurationService"
+		interface="com.esrinea.dotGeo.tracking.service.component.alertConfiguration.AlertConfigurationService" />
 	<!-- AlertConfiguration-End -->
 
 
@@ -111,6 +125,8 @@
 		class="com.esrinea.dotGeo.tracking.service.component.deviceType.DeviceTypeServiceImpl">
 		<argument ref="deviceTypeDAO" />
 	</bean>
+	<service ref="deviceTypeService"
+		interface="com.esrinea.dotGeo.tracking.service.component.deviceType.DeviceTypeService" />
 	<!-- DeviceType-End -->
 
 
@@ -122,26 +138,22 @@
 		class="com.esrinea.dotGeo.tracking.service.component.alertLiveFeed.AlertLiveFeedServiceImpl">
 		<argument ref="alertLiveFeedDAO" />
 	</bean>
+	<service ref="alertLiveFeedService"
+		interface="com.esrinea.dotGeo.tracking.service.component.alertLiveFeed.AlertLiveFeedService" />
 	<!-- AlertLiveFeed-End -->
 
 
-
-	<!-- ServiceFacade-Start -->
-	<bean id="trackingServiceFacade"
-		class="com.esrinea.dotGeo.tracking.service.facade.TrackingServiceFacadeImpl">
-		<property name="deviceService" ref="deviceService" />
-		<property name="sensorService" ref="sensorService" />
-		<property name="sensorConfigurationService" ref="sensorConfigurationService" />
-		<property name="alertService" ref="alertService" />
-		<property name="alertConfigurationService" ref="alertConfigurationService" />
-		<property name="deviceTypeService" ref="deviceTypeService" />
-		<property name="resourceLiveFeedService" ref="resourceLiveFeedService" />
-		<property name="sensorLiveFeedService" ref="sensorLiveFeedService" />
-		<property name="alertLiveFeedService" ref="alertLiveFeedService" />
-		<tx:transaction method="*" value="Required" />
+	<!-- AlertSensorLiveFeed-Start -->
+	<reference id="alertSensorLiveFeedDAO"
+		interface="com.esrinea.dotGeo.tracking.model.component.alertSensorLiveFeed.dao.AlertSensorLiveFeedDAO"
+		availability="mandatory" />
+	<bean id="alertSensorLiveFeedService"
+		class="com.esrinea.dotGeo.tracking.service.component.alertSensorLiveFeed.AlertSensorLiveFeedServiceImpl">
+		<argument ref="alertSensorLiveFeedDAO" />
 	</bean>
-	<service ref="trackingServiceFacade"
-		interface="com.esrinea.dotGeo.tracking.service.facade.TrackingServiceFacade" />
-	<!-- ServiceFacade-End -->
+	<service
+		interface="com.esrinea.dotGeo.tracking.service.component.alertSensorLiveFeed.AlertSensorLiveFeedService"
+		ref="alertSensorLiveFeedService" />
+	<!-- AlertSensorLiveFeed-End -->
 
 </blueprint>

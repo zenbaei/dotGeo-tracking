@@ -3,7 +3,7 @@ package com.esrinea.dotGeo.tracking.processor.component.tracking;
 import com.esri.ges.core.component.ComponentException;
 import com.esri.ges.processor.GeoEventProcessor;
 import com.esri.ges.processor.GeoEventProcessorServiceBase;
-import com.esrinea.dotGeo.tracking.service.facade.TrackingServiceFacade;
+import com.esrinea.dotGeo.tracking.service.facade.business.TrackingServiceFacade;
 
 public class TrackingProcessorService extends GeoEventProcessorServiceBase {
 	

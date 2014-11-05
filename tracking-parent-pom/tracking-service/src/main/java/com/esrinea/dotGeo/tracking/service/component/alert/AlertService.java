@@ -5,7 +5,7 @@ import java.util.List;
 import com.esrinea.dotGeo.tracking.model.component.alert.entity.Alert;
 import com.esrinea.dotGeo.tracking.service.common.service.GenericService;
 
-public interface AlertService  extends GenericService<Alert>{
+public interface AlertService extends GenericService<Alert>{
 
 	List<Alert> find(int deviceTypeId, boolean retired);
 

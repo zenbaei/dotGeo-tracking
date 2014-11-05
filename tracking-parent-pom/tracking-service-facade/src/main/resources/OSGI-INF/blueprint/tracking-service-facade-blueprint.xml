@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jpa="http://aries.apache.org/xmlns/jpa/v1.1.0"
+	xmlns:tx="http://aries.apache.org/xmlns/transactions/v1.0.0"
+	xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+                        http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint-2.8.0.xsd
+                        http://aries.apache.org/xmlns/transactions/v1.0.0 http://aries.apache.org/schemas/transaction/transactionv10.xsd">
+
+	<!-- test bean-Start -->
+	<bean id="trackingServiceFacadeKarafTest" class="com.esrinea.dotGeo.tracking.service.facade.business.TrackingServiceFacadeKarafTest" 
+		init-method="test"> <property name="trackingServiceFacade" ref="trackingServiceFacade" /> 
+		</bean>
+	<!-- test bean-End -->
+
+	<!-- GeoEventDataExtractor-Start -->
+	<bean id="geoEventDataExtractor"
+		class="com.esrinea.dotGeo.tracking.service.facade.dataMapper.GeoEventDataExtractorStaticImpl" />
+	<!-- GeoEventDataExtractor-End -->
+
+
+	<!-- Devices-Start -->
+	<reference id="deviceService"
+		interface="com.esrinea.dotGeo.tracking.service.component.device.DeviceService" />
+	<!-- Devices-End -->
+
+
+
+
+	<!-- ResourceLiveFeed-Start -->
+	<reference id="resourceLiveFeedService"
+		interface="com.esrinea.dotGeo.tracking.service.component.resourceLiveFeed.ResourceLiveFeedService" />
+	<!-- ResourceLiveFeed-End -->
+
+
+
+
+	<!-- SensorLiveFeed-Start -->
+	<reference id="sensorLiveFeedService"
+		interface="com.esrinea.dotGeo.tracking.service.component.sensorLiveFeed.SensorLiveFeedService" />
+	<!-- SensorLiveFeed-End -->
+
+
+
+	<!-- Sensor-Start -->
+	<reference id="sensorService"
+		interface="com.esrinea.dotGeo.tracking.service.component.sensor.SensorService" />
+	<!-- Sensor-End -->
+
+
+
+	<!-- SensorConfiguration-Start -->
+	<reference id="sensorConfigurationService"
+		interface="com.esrinea.dotGeo.tracking.service.component.sensorConfiguration.SensorConfigurationService" />
+	<!-- SensorConfiguration-End -->
+
+
+
+
+	<!-- Alert-Start -->
+	<reference id="alertService"
+		interface="com.esrinea.dotGeo.tracking.service.component.alert.AlertService" />
+	<!-- Alert-End -->
+
+
+
+	<!-- AlertConfiguration-Start -->
+	<reference id="alertConfigurationService"
+		interface="com.esrinea.dotGeo.tracking.service.component.alertConfiguration.AlertConfigurationService" />
+	<!-- AlertConfiguration-End -->
+
+
+	<!-- DeviceType-Start -->
+	<reference id="deviceTypeService"
+		interface="com.esrinea.dotGeo.tracking.service.component.deviceType.DeviceTypeService" />
+	<!-- DeviceType-End -->
+
+
+	<!-- AlertLiveFeed-Start -->
+	<reference id="alertLiveFeedService"
+		interface="com.esrinea.dotGeo.tracking.service.component.alertLiveFeed.AlertLiveFeedService" />
+	<!-- AlertLiveFeed-End -->
+
+	<!-- AlertSensorLiveFeed-Start -->
+	<reference id="alertSensorLiveFeedService"
+		interface="com.esrinea.dotGeo.tracking.service.component.alertSensorLiveFeed.AlertSensorLiveFeedService" />
+	<!-- AlertSensorLiveFeed-End -->
+
+	<!-- ServiceFacade-Start -->
+	<bean id="trackingServiceFacade"
+		class="com.esrinea.dotGeo.tracking.service.facade.business.TrackingServiceFacadeImpl">
+		<property name="deviceService" ref="deviceService" />
+		<property name="sensorService" ref="sensorService" />
+		<property name="sensorConfigurationService" ref="sensorConfigurationService" />
+		<property name="alertService" ref="alertService" />
+		<property name="alertConfigurationService" ref="alertConfigurationService" />
+		<property name="deviceTypeService" ref="deviceTypeService" />
+		<property name="resourceLiveFeedService" ref="resourceLiveFeedService" />
+		<property name="sensorLiveFeedService" ref="sensorLiveFeedService" />
+		<property name="alertLiveFeedService" ref="alertLiveFeedService" />
+		<property name="alertSensorLiveFeedService" ref="alertSensorLiveFeedService" />
+		<property name="geoEventDataExtractor" ref="geoEventDataExtractor" />
+		<tx:transaction method="*" value="Required" />
+	</bean>
+	<service ref="trackingServiceFacade"
+		interface="com.esrinea.dotGeo.tracking.service.facade.business.TrackingServiceFacade" />
+	<!-- ServiceFacade-End -->
+
+</blueprint>

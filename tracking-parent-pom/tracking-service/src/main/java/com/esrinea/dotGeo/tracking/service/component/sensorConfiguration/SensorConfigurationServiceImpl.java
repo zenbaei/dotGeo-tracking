@@ -26,16 +26,13 @@ public class SensorConfigurationServiceImpl extends AbstractService<SensorConfig
 			return false;
 		}
 
-		if (sensorConfiguration.getConfigText() == null || sensorConfiguration.getConfigText().trim().isEmpty()) {
-			LOG.warn("ConfigText is empty");
-			return false;
-		}
-
-		if (sensorConfiguration.getMinValue() <= receivedSensorValue && receivedSensorValue <= sensorConfiguration.getMaxValue()) {
+		if (sensorConfiguration.getMinValue() <= receivedSensorValue && receivedSensorValue < sensorConfiguration.getMaxValue()) {
+			LOG.debug(String.format("\n----------------------------------------------\nSENSOR CONFIGURATION %s HAS SUCCEEDED\n----------------------------------------------", sensorConfiguration.getConfigText() == null ? "NO DESCRIPTION IN DB"
+					: sensorConfiguration.getConfigText().toUpperCase()));
 			return true;
 		}
 
-		LOG.debug("Business Rule logic is not satisfied.");
+		LOG.debug(String.format("Sensor Configuration's %s Rule has failed.", sensorConfiguration.getConfigText()));
 		return false;
 	}
 
@@ -57,10 +54,12 @@ public class SensorConfigurationServiceImpl extends AbstractService<SensorConfig
 		}
 
 		if (sensorConfiguration.getTextValue().trim().equalsIgnoreCase(receivedSensorValue.trim())) {
+			LOG.debug(String.format("\n----------------------------------------------\nSENSOR CONFIGURATION %s HAS SUCCEEDED\n----------------------------------------------", sensorConfiguration.getConfigText() == null ? "NO DESCRIPTION IN DB"
+					: sensorConfiguration.getConfigText().toUpperCase()));
 			return true;
 		}
 
-		LOG.debug("Business Rule logic is not satisfied.");
+		LOG.debug(String.format("Sensor Configuration's %s Rule has failed.", sensorConfiguration.getConfigText()));
 		return false;
 	}
 

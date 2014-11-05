@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- When testing, the tracking-service-spring-test-context.xml which 
+		contains the tracking services definition is needed as well as tracking-model-spring-test-context.xml 
+		which contains DAOs injected in service, I copy it on generate-test-resources 
+		phase with Maven -->
+
+	<!-- GeoEventDataExtractor-Start -->
+	<bean id="geoEventDataExtractor"
+		class="com.esrinea.dotGeo.tracking.service.facade.dataMapper.GeoEventDataExtractorStaticImpl" />
+	<!-- GeoEventDataExtractor-End -->
+
+
+	<!-- all ref here come from tracking-service-spring-test-context.xml -->
+	<bean id="trackingServiceFacadeImpl"
+		class="com.esrinea.dotGeo.tracking.service.facade.business.TrackingServiceFacadeImpl">
+		<property name="deviceService" ref="deviceService" />
+		<property name="sensorService" ref="sensorService" />
+		<property name="sensorConfigurationService" ref="sensorConfigurationService" />
+		<property name="alertService" ref="alertService" />
+		<property name="alertConfigurationService" ref="alertConfigurationService" />
+		<property name="deviceTypeService" ref="deviceTypeService" />
+		<property name="resourceLiveFeedService" ref="resourceLiveFeedService" />
+		<property name="sensorLiveFeedService" ref="sensorLiveFeedService" />
+		<property name="alertLiveFeedService" ref="alertLiveFeedService" />
+		<property name="geoEventDataExtractor" ref="geoEventDataExtractor" />
+		<property name="alertSensorLiveFeedService" ref="alertSensorLiveFeedService" />
+	</bean>
+
+
+</beans>
+
+

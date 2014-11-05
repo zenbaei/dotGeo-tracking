@@ -8,12 +8,25 @@
 
 
 		<!-- feature dependencies -->
-		<feature>openjpa</feature>
+		<feature>jpa</feature>
+		<feature>jndi</feature>
+		<feature>transaction</feature>
 
+		<!--openjpa library dependencies -->
+		<bundle>mvn:commons-collections/commons-collections/3.2.1</bundle>
+		<bundle>mvn:commons-pool/commons-pool/1.5</bundle>
+		<bundle>mvn:commons-dbcp/commons-dbcp/1.4</bundle>
+		<bundle>mvn:commons-lang/commons-lang/2.5</bundle>
+		<bundle>mvn:net.sourceforge.serp/com.springsource.serp/1.13.1</bundle>
+		<bundle>mvn:org.osgi/org.osgi.enterprise/5.0.0</bundle>
+		<bundle>mvn:org.osgi/org.osgi.compendium/4.3.0</bundle>
+		<bundle>mvn:org.apache.openjpa/openjpa/2.2.0</bundle>
+		
 		<!-- application bundles -->
 		<bundle>mvn:com.esrinea.dotGeo/tracking-datasource/1.0.0</bundle>
 		<bundle>mvn:com.esrinea.dotGeo/tracking-model/1.0.0</bundle>
 		<bundle>mvn:com.esrinea.dotGeo/tracking-service/1.0.0</bundle>
+		<bundle>mvn:com.esrinea.dotGeo/tracking-service-facade/1.0.0</bundle>
 		<bundle>mvn:com.esrinea.dotGeo/tracking-processor/1.0.0</bundle>
 	</feature>
 </features>

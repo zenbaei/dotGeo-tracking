@@ -1,4 +1,4 @@
-package com.esrinea.dotGeo.tracking.service.common.dto;
+package com.esrinea.dotGeo.tracking.service.facade.dto;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -103,10 +103,19 @@ public class EventData {
 	}
 
 	/**
-	 * The key represents the Device Type's sensor name while the value represents the real sensor value received from a certain device the key is added after retrieving data from GeoEvent Data Definition in the processor implementation. It is configured to hold double or String.
+	 * The key represents the Device Type's sensor name while the value represents the real sensor value received from a certain device the key is added after retrieving data from GeoEvent Data Definition in the processor implementation. It is configured to hold double or String.<br>
+	 * All keys are converted to upper case.
 	 */
-	public Map<String, Object> getSensorValues() {
-		return sensorValues;
+	public Map<String, Object> getSensorValuesCapitalized() {
+		Map<String, Object> capitalizedSensorValues = new HashMap<String, Object>();
+		for (String sensorName : sensorValues.keySet()) {
+			capitalizedSensorValues.put(sensorName.toUpperCase(), sensorValues.get(sensorName));
+		}
+		return capitalizedSensorValues;
+	}
+
+	public void setSensorValues(Map<String, Object> sensorValues) {
+		this.sensorValues = sensorValues;
 	}
 
 	/**
