@@ -77,4 +77,7 @@
 	<bean id="alertSensorLiveFeedDAO"
 		class="com.esrinea.dotGeo.tracking.model.component.alertSensorLiveFeed.dao.AlertSensorLiveFeedDAOImpl">
 	</bean>
+	<bean id="SensorConfigurationDAO"
+		class="com.esrinea.dotGeo.tracking.model.component.sensorConfiguration.dao.SensorConfigurationDAOImpl">
+	</bean>
 </beans>

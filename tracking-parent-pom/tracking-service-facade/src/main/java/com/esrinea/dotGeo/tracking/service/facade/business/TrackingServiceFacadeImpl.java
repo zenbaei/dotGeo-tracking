@@ -48,14 +48,15 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 	private GeoEventDataExtractor geoEventDataExtractor;
 	private Map<Integer, DeviceType> deviceTypesCache = new HashMap<Integer, DeviceType>();// this Map will act as cache of device types
 
+	public TrackingServiceFacadeImpl() {
+		buildDeviceType();
+	}
+
 	/**
 	 * Retrieve all active device types from database along with their active (not retired) sensors, sensors configurations, alerts and alerts configurations then add them to map that will act as a cache for device types .
 	 */
 	// TODO: refresh on intervals
-	public void buildDeviceType() {
-		/*
-		 * // DeviceTypes have been already loaded if (!deviceTypesCache.isEmpty()) { return; }
-		 */
+	public synchronized void buildDeviceType() {
 
 		LOG.info("All Device Types will be retrieved and cached.");
 		LOG.debug("buildDeviceType method is called to find all device types along with their sensors, sensor configurations, alerts and alert configurations.");
@@ -104,7 +105,6 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 	}
 
 	public void deviceFeedReceived(GeoEvent geoEvent) {
-		buildDeviceType();
 		EventData eventData = geoEventDataExtractor.extract(geoEvent);
 
 		LOG.trace("Retrieved Device Types: " + deviceTypesCache);
