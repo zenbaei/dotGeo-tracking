@@ -48,7 +48,7 @@ public class DeviceDAOImpl extends AbstractDAO<Device> implements DeviceDAO {
 			LOG.info(errMsg);
 			throw new NoResultException(errMsg);
 		} catch (NonUniqueResultException ex) {
-			LOG.error(String.format("Device with Serial %s is duplicated or the one to one realtion it is joining with is refering it more than once by mistake.", device.getSerial()));
+			LOG.error(String.format("Device with Serial %s is duplicated or the one to one realtion it is joining with is refering it, more than once by mistake.", serial));
 			throw ex;
 		}
 		return device;
