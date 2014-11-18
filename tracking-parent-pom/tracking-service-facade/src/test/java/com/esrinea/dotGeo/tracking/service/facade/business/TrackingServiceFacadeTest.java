@@ -47,7 +47,7 @@ public class TrackingServiceFacadeTest {
 
 	@Before
 	public void init() {
-		serviceFacade.buildDeviceType();
+		serviceFacade.queryDeviceType();
 		Map<String, Object> sensorValues = new HashMap<String, Object>();
 		sensorValues.put("OIL", "in");
 		sensorValues.put("HEAT", 95);// HEAT sensor is configured as retired in DB.

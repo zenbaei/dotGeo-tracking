@@ -11,7 +11,7 @@ import com.esri.ges.core.geoevent.GeoEvent;
  */
 public interface TrackingServiceFacade {
 
-	public void buildDeviceType();
+	public void queryDeviceType();
 
 	public void deviceFeedReceived(GeoEvent geoEvent);
 }

@@ -53,15 +53,23 @@ public class AlertLiveFeed implements Serializable {
 
 	@Column(name="Zone")
 	private String zone;
+	
+	@Column(name = "X_Coord", precision = 53)
+	private double xCoord;
+
+	@Column(name = "Y_Coord", precision = 53)
+	private double yCoord;
 
 	public AlertLiveFeed() {
 	}
 
-	public AlertLiveFeed(Device device, Alert alert, Date feedDateTime, String zone) {
+	public AlertLiveFeed(Device device, Alert alert, Date feedDateTime, String zone, double xCoord, double yCoord) {
 		this.device = device;
 		this.alert = alert;
 		this.feedDateTime = feedDateTime;
 		this.zone = zone;
+		this.xCoord = xCoord;
+		this.yCoord = yCoord;
 	}
 	
 	public int getId() {
@@ -71,7 +79,8 @@ public class AlertLiveFeed implements Serializable {
 	public Alert getAlert() {
 		return alert;
 	}
-
+	
+	
 	@Override
 	public String toString() {
 		return "AlertLiveFeed [id=" + id + ", feedDateTime=" + feedDateTime + ", alert=" + alert + ", device=" + device + ", zone=" + zone + "]";

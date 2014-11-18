@@ -48,18 +48,16 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 	private GeoEventDataExtractor geoEventDataExtractor;
 	private Map<Integer, DeviceType> deviceTypesCache = new HashMap<Integer, DeviceType>();// this Map will act as cache of device types
 
-	public TrackingServiceFacadeImpl() {
-		buildDeviceType();
-	}
 
 	/**
 	 * Retrieve all active device types from database along with their active (not retired) sensors, sensors configurations, alerts and alerts configurations then add them to map that will act as a cache for device types .
 	 */
 	// TODO: refresh on intervals
-	public synchronized void buildDeviceType() {
+	//call by init-method in blueprint.xml
+	public void queryDeviceType() { //TODO:add synchronized
 
 		LOG.info("All Device Types will be retrieved and cached.");
-		LOG.debug("buildDeviceType method is called to find all device types along with their sensors, sensor configurations, alerts and alert configurations.");
+		LOG.debug("queryDeviceType method is called to find all device types along with their sensors, sensor configurations, alerts and alert configurations.");
 
 		// get all device types
 		for (DeviceType deviceType : deviceTypeService.findAll(false)) {
@@ -105,6 +103,9 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 	}
 
 	public void deviceFeedReceived(GeoEvent geoEvent) {
+		//TODO:remove call from here
+		queryDeviceType();
+		
 		EventData eventData = geoEventDataExtractor.extract(geoEvent);
 
 		LOG.trace("Retrieved Device Types: " + deviceTypesCache);
@@ -200,7 +201,7 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 				}
 
 				// if this line is reached then all alertConfiguration in an alert had their rules satisfied
-				AlertLiveFeed alertLiveFeed = new AlertLiveFeed(device, alert, eventData.getFeedDateTime(), eventData.getZone());// insert AlertLiveFeed only if all rules in an alert is satisfied
+				AlertLiveFeed alertLiveFeed = new AlertLiveFeed(device, alert, eventData.getFeedDateTime(), eventData.getZone(), eventData.getxCoord(), eventData.getyCoord());// insert AlertLiveFeed only if all rules in an alert is satisfied
 				alertLiveFeedService.create(alertLiveFeed);
 				LOG.debug(String.format("\n----------------------------------------------\nALERT %s HAS SUCCEEDED\n----------------------------------------------", alert.getNameEn().toUpperCase()));
 

@@ -87,7 +87,7 @@
 	<!-- AlertSensorLiveFeed-End -->
 
 	<!-- ServiceFacade-Start -->
-	<bean id="trackingServiceFacade"
+	<bean id="trackingServiceFacade" 
 		class="com.esrinea.dotGeo.tracking.service.facade.business.TrackingServiceFacadeImpl">
 		<property name="deviceService" ref="deviceService" />
 		<property name="sensorService" ref="sensorService" />
