@@ -5,6 +5,7 @@ import java.util.Date;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 
 import com.esrinea.dotGeo.tracking.model.component.alert.dao.AlertDAO;
 import com.esrinea.dotGeo.tracking.model.component.alert.entity.Alert;
@@ -19,7 +20,9 @@ public class AlertLiveFeedDAOTest extends DeviceDAOTest {
 	@Autowired
 	private AlertLiveFeedDAO alertLiveFeedDAO;
 
+	
 	@Test
+	@Rollback(value=false)
 	public void testCreateAlertLiveFeed() {
 		Alert alert = alertDAO.find(1);
 		AlertLiveFeed alertLiveFeed = new AlertLiveFeed(device, alert, new Date(), "zone", 234.234, 22.343);
