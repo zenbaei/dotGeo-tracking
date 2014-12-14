@@ -45,13 +45,22 @@ public class DeviceDAOImpl extends AbstractDAO<Device> implements DeviceDAO {
 			device = entityManager.createNamedQuery("Device.findBySerialRetired", Device.class).setParameter("serial", serial.trim()).setParameter("retired", retired).getSingleResult();
 		} catch (NoResultException ex) {
 			String errMsg = String.format("%s with Serial %s does not exist in database or is %s.", "Device", serial, retired ? "not retired" : "retired");
-			LOG.info(errMsg);
 			throw new NoResultException(errMsg);
 		} catch (NonUniqueResultException ex) {
-			LOG.error(String.format("Device with Serial %s is duplicated or the one to one realtion it is joining with is refering it, more than once by mistake.", serial));
-			throw ex;
+			String errMsg = String.format("Device with Serial %s is duplicated or the one to one realtion it is joining with is refering it, more than once by mistake.", serial);
+			throw new NonUniqueResultException(errMsg);
 		}
 		return device;
+	}
+
+	@Override
+	public List<Device> find(boolean retired) {
+		LOG.debug(String.format("Device.findByRetired, parameters: %s", retired));
+		List<Device> devices = entityManager.createNamedQuery("Device.findByRetired", Device.class).setParameter("retired", retired).getResultList();
+		if(devices == null || devices.isEmpty()){
+			LOG.info(String.format("No Records were found in Tracking_Resources table, with criteria of RETIRED is %s.", retired));
+		}
+		return devices;
 	}
 
 }

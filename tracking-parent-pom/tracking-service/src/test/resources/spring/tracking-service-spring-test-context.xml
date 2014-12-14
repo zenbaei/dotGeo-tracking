@@ -98,6 +98,15 @@
 	</bean>
 	<!-- AlertSensorLiveFeed-End -->
 
+	<bean id="groupService"
+		class="com.esrinea.dotGeo.tracking.service.component.group.GroupServiceImpl">
+		<constructor-arg ref="groupDAO" />
+	</bean>
+	
+	<bean id="fenceService"
+		class="com.esrinea.dotGeo.tracking.service.component.fence.FenceServiceImpl">
+		<constructor-arg ref="fenceDAO" />
+	</bean>
 </beans>
 
 

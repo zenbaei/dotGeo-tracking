@@ -16,6 +16,7 @@ import javax.persistence.Table;
 
 import com.esrinea.dotGeo.tracking.model.component.deviceType.entity.DeviceType;
 import com.esrinea.dotGeo.tracking.model.component.sensorConfiguration.entity.SensorConfiguration;
+import com.esrinea.dotGeo.tracking.model.component.sensorType.entity.SensorType;
 
 /**
  * The persistent class for the Sensors database table.
@@ -45,9 +46,11 @@ public class Sensor implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "DeviceType_DBID")
 	private DeviceType deviceType;
+	
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="Sensor_Type_DBID")
+	private SensorType sensorType;
 
-	public Sensor() {
-	}
 	
 	public int getId() {
 		return id;
@@ -73,6 +76,9 @@ public class Sensor implements Serializable {
 		return deviceType;
 	}
 
+	public SensorType getSensorType() {
+		return sensorType;
+	}
 
 	@Override
 	public int hashCode() {
@@ -104,7 +110,8 @@ public class Sensor implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Sensor [id=" + id + ", retired=" + retired + ", nameEn=" + nameEn + "]";
+		return "Sensor [id=" + id + ", retired=" + retired + ", nameEn=" + nameEn + ", sensorType=" + sensorType + "]";
 	}
+
 
 }

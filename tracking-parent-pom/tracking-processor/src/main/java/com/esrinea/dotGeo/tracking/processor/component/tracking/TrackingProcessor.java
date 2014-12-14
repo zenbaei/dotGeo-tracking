@@ -22,7 +22,7 @@ public class TrackingProcessor extends GeoEventProcessorBase {
 	@Override
 	public GeoEvent process(GeoEvent geoEvent) throws Exception {
 		LOG.debug("\n--------------------------------------------------------------------------------------------------------------------\nGEO EVENT DATA RECEIVED\n--------------------------------------------------------------------------------------------------------------------");
-		trackingServiceFacade.deviceFeedReceived(geoEvent);
+		trackingServiceFacade.process(geoEvent);
 		return geoEvent;
 	}
 

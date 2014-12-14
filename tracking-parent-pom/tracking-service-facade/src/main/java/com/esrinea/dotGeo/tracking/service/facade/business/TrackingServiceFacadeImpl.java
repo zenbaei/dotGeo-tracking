@@ -1,6 +1,7 @@
 package com.esrinea.dotGeo.tracking.service.facade.business;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -15,16 +16,23 @@ import com.esrinea.dotGeo.tracking.model.component.device.entity.Device;
 import com.esrinea.dotGeo.tracking.model.component.deviceType.entity.DeviceType;
 import com.esrinea.dotGeo.tracking.model.component.execludedAlert.entity.ExecludedAlert;
 import com.esrinea.dotGeo.tracking.model.component.execludedSensor.entity.ExecludedSensor;
+import com.esrinea.dotGeo.tracking.model.component.group.entity.Group;
+import com.esrinea.dotGeo.tracking.model.component.resource.entity.Resource;
+import com.esrinea.dotGeo.tracking.model.component.resourceGroup.entity.ResourceGroup;
 import com.esrinea.dotGeo.tracking.model.component.resourceLiveFeed.entity.ResourceLiveFeed;
 import com.esrinea.dotGeo.tracking.model.component.sensor.entity.Sensor;
 import com.esrinea.dotGeo.tracking.model.component.sensorConfiguration.entity.SensorConfiguration;
 import com.esrinea.dotGeo.tracking.model.component.sensorLiveFeed.entity.SensorLiveFeed;
+import com.esrinea.dotGeo.tracking.model.component.sensorType.entity.SensorType;
 import com.esrinea.dotGeo.tracking.service.component.alert.AlertService;
 import com.esrinea.dotGeo.tracking.service.component.alertConfiguration.AlertConfigurationService;
 import com.esrinea.dotGeo.tracking.service.component.alertLiveFeed.AlertLiveFeedService;
 import com.esrinea.dotGeo.tracking.service.component.alertSensorLiveFeed.AlertSensorLiveFeedService;
 import com.esrinea.dotGeo.tracking.service.component.device.DeviceService;
 import com.esrinea.dotGeo.tracking.service.component.deviceType.DeviceTypeService;
+import com.esrinea.dotGeo.tracking.service.component.group.GroupService;
+import com.esrinea.dotGeo.tracking.service.component.resource.ResourceService;
+import com.esrinea.dotGeo.tracking.service.component.resourceGroup.ResourceGroupService;
 import com.esrinea.dotGeo.tracking.service.component.resourceLiveFeed.ResourceLiveFeedService;
 import com.esrinea.dotGeo.tracking.service.component.sensor.SensorService;
 import com.esrinea.dotGeo.tracking.service.component.sensorConfiguration.SensorConfigurationService;
@@ -45,25 +53,41 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 	private AlertConfigurationService alertConfigurationService;
 	private AlertSensorLiveFeedService alertSensorLiveFeedService;
 	private SensorLiveFeedService sensorLiveFeedService;
+	private GroupService groupService;
+	private ResourceService resourceService;
+	private ResourceGroupService resourceGroupService;
 	private GeoEventDataExtractor geoEventDataExtractor;
 	private Map<Integer, DeviceType> deviceTypesCache = new HashMap<Integer, DeviceType>();// this Map will act as cache of device types
+	private Map<Integer, Group> groups;
 
+	@Override
+	public void process(GeoEvent geoEvent) {
+		deviceFeedReceived(geoEventDataExtractor.extract(geoEvent));
+	}
+
+	/*
+	 * private void cacheResourcesEffectiveGroups() { List<Resource> resources = resourceService.find(false); for (Resource resource : resources) { List<ResourceGroup> resourceGroups = resourceGroupService.find(resource.getId(), false); if(resourceGroups == null){
+	 * 
+	 * } resource.setResourceGroups(); if (resresourceGroups == null) {
+	 * 
+	 * } } }
+	 */
 
 	/**
 	 * Retrieve all active device types from database along with their active (not retired) sensors, sensors configurations, alerts and alerts configurations then add them to map that will act as a cache for device types .
 	 */
 	// TODO: refresh on intervals
-	//call by init-method in blueprint.xml
-	public void queryDeviceType() { //TODO:add synchronized
-
+	// call by init-method in blueprint.xml
+	// TODO:add synchronized
+	public void cacheDeviceTypesEffectiveConfigurations() {
 		LOG.info("All Device Types will be retrieved and cached.");
 		LOG.debug("queryDeviceType method is called to find all device types along with their sensors, sensor configurations, alerts and alert configurations.");
 
 		// get all device types
-		for (DeviceType deviceType : deviceTypeService.findAll(false)) {
+		for (DeviceType deviceType : deviceTypeService.find(false)) {
+
 			// find and set non retired sensors
 			deviceType.setSensors(sensorService.find(deviceType.getId(), false));
-
 			if (deviceType.getSensors() == null) {
 				LOG.warn(String.format("Device Type %s has no Sensors. This device type will be escaped.", deviceType));
 				continue;// the current deviceType won't be added to deviceTypesCache
@@ -79,19 +103,21 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 			}
 
 			// find non retired alerts
-			deviceType.setAlerts(alertService.find(deviceType.getId(), false));
-
-			if (deviceType.getAlerts() == null) {
+			List<Alert> alerts = alertService.find(deviceType.getId(), false);
+			if (alerts == null) {
 				LOG.warn(String.format("Device Type %s has no Alerts.", deviceType));
+			} else {
+				deviceType.setAlerts(alerts);
 			}
 
 			// find non retired alerts configurations
 			for (Alert alert : deviceType.getAlerts()) {
-				alert.setAlertConfigurations(alertConfigurationService.find(alert.getId(), false));
-				if (alert.getAlertConfigurations() == null) {
+				List<AlertConfiguration> alertConfigurations = alertConfigurationService.find(alert.getId(), false);
+				if (alertConfigurations == null) {
 					LOG.warn(String.format("The Alert %s has no Alert Configurations. This alert will be escaped.", alert));
 					continue;
 				}
+				alert.setAlertConfigurations(alertConfigurations);
 			}
 
 			// add deviceType to cached Map
@@ -102,13 +128,36 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 		LOG.info("Retrieved Device Types: " + deviceTypesCache);
 	}
 
-	public void deviceFeedReceived(GeoEvent geoEvent) {
-		//TODO:remove call from here
-		queryDeviceType();
+	/**
+	 * Steps are:
+	 * 1- Retrieve Resoures (non retired, excluded sensors and alerts are eagrly fetched as they have no retired flag).
+	 * 2- Retrieve ResouceGroups(non retired) by Resource ID.
+	 * 3- Retrieve Groups(non retired, not null fenceLayer as it's the main reason for caching the Resource) by Group ID. 
+	 */
+	public void cacheResourcesByDevice(){
 		
-		EventData eventData = geoEventDataExtractor.extract(geoEvent);
+		List<Device> devices = deviceService.find(false);
+		
+		List<Resource> resources = resourceService.find(false);
+		if(resources == null || resources.isEmpty()){
+			return;
+		}
+		for(Resource resource : resources){
+			resource.setResourceGroups(resourceGroupService.find(resource.getId(), false));
+			if(resource.getResourceGroups() == null || resource.getResourceGroups().isEmpty()){
+				continue;
+			}
+			for(ResourceGroup resourceGroup : resource.getResourceGroups()){
+				resourceGroup.setGroup(groupService.findByNotNullFenceLayer(resourceGroup.getGroup().getId(), false));
+			}
+		}
+	}
 
-		LOG.trace("Retrieved Device Types: " + deviceTypesCache);
+	public void deviceFeedReceived(EventData eventData) {
+		// TODO:remove call from here
+		cacheDeviceTypesEffectiveConfigurations();
+
+		LOG.debug("Retrieved Device Types: " + deviceTypesCache);
 
 		LOG.debug("\n--------------------------------------------------------------------------\n" + "PROCESSING DEVICE WITH SERIAL " + eventData.getSerial() + "\n--------------------------------------------------------------------------");
 
@@ -119,8 +168,9 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 		 */
 		Map<SensorConfiguration, SensorLiveFeed> sensorConfigurationsAssociatedWithNewSensorLiveFeeds = new HashMap<SensorConfiguration, SensorLiveFeed>();
 
-		// find the device with received deviceId
+		// find the device with received deviceId, if not found exception will be thrown
 		Device device = deviceService.find(eventData.getSerial(), false);
+
 		// insert into resource live feed
 		resourceLiveFeedService.create(new ResourceLiveFeed(device, eventData.getFeedDateTime(), eventData.getxCoord(), eventData.getyCoord(), eventData.getSpeed(), eventData.getHeading(), eventData.getZone()));
 
@@ -151,7 +201,12 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 					continue;
 				}
 
-				Object sensorValue = eventData.getSensorValuesCapitalized().get(sensor.getNameEn().toUpperCase());// get receivedSensorValue from EventData's sensorValues Map using cached deviceType sensors' name, it should be saved as TEMP key and the received value
+				// fences will have sensors with type GeoFence and its value is stored in DB rather that comes from the input stream
+				if (sensor.getSensorType().equals(SensorType.Type.GeoFence.toString())) {
+					// get the current resource group
+				}
+
+				Object sensorValue = eventData.getSensorValuesCapitalized().get(sensor.getNameEn().toUpperCase());// get received sensor value from EventData's sensorValues Map using cached deviceType sensors' name, it should be saved as TEMP key and the received value
 				if (sensorValue == null) { // count for an input stream that was configured to send some of the deviceType's sensors
 					LOG.warn(String.format("Device Type with ID %s defined to has a Sensor with the name of %s, but no data was received for this Sensor.", device.getDeviceType().getId(), sensor.getNameEn().toUpperCase()));
 					continue;
@@ -262,5 +317,17 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 
 	public void setGeoEventDataExtractor(GeoEventDataExtractor geoEventDataExtractor) {
 		this.geoEventDataExtractor = geoEventDataExtractor;
+	}
+
+	public void setGroupService(GroupService groupService) {
+		this.groupService = groupService;
+	}
+
+	public void setResourceService(ResourceService resourceService) {
+		this.resourceService = resourceService;
+	}
+
+	public void setResourceGroupService(ResourceGroupService resourceGroupService) {
+		this.resourceGroupService = resourceGroupService;
 	}
 }

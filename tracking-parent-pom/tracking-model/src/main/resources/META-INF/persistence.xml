@@ -2,11 +2,11 @@
 <persistence version="2.0"
 	xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
-	<persistence-unit name="tracking" transaction-type="JTA">
+	<persistence-unit name="tracking" transaction-type="RESOURCE_LOCAL">
 
 		<provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider> 
 
-		<jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=jdbc/tracking)</jta-data-source>
+		<!-- <jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=jdbc/tracking)</jta-data-source> -->
 
 		<class>com.esrinea.dotGeo.tracking.model.component.alertConfiguration.entity.AlertConfiguration</class>
 		<class>com.esrinea.dotGeo.tracking.model.component.alertLiveFeed.entity.AlertLiveFeed</class>
@@ -21,6 +21,11 @@
 		<class>com.esrinea.dotGeo.tracking.model.component.execludedAlert.entity.ExecludedAlert</class>
 		<class>com.esrinea.dotGeo.tracking.model.component.execludedSensor.entity.ExecludedSensor</class>
 		<class>com.esrinea.dotGeo.tracking.model.component.alertSensorLiveFeed.entity.AlertSensorLiveFeed</class>
+		<class>com.esrinea.dotGeo.tracking.model.component.resourceGroup.entity.ResourceGroup</class>
+		<class>com.esrinea.dotGeo.tracking.model.component.group.entity.Group</class>
+		<class>com.esrinea.dotGeo.tracking.model.component.fenceLayer.entity.FenceLayer</class>
+		<class>com.esrinea.dotGeo.tracking.model.component.fence.entity.Fence</class>
+		<class>com.esrinea.dotGeo.tracking.model.component.sensorType.entity.SensorType</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 
 		<properties>
@@ -32,24 +37,4 @@
 		</properties>
 		
 	</persistence-unit>
-
-	<!-- <persistence-unit name="tracking-test" transaction-type="RESOURCE_LOCAL"> 
-		<provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider> 
-		<class>com.esrinea.dotGeo.tracking.model.component.alertConfiguration.entity.AlertConfiguration</class> 
-		<class>com.esrinea.dotGeo.tracking.model.component.alertLiveFeed.entity.AlertLiveFeed</class> 
-		<class>com.esrinea.dotGeo.tracking.model.component.alert.entity.Alert</class> 
-		<class>com.esrinea.dotGeo.tracking.model.component.sensorConfiguration.entity.SensorConfiguration</class> 
-		<class>com.esrinea.dotGeo.tracking.model.component.sensor.entity.Sensor</class> 
-		<class>com.esrinea.dotGeo.tracking.model.component.sensorLiveFeed.entity.SensorLiveFeed</class> 
-		<class>com.esrinea.dotGeo.tracking.model.component.deviceType.entity.DeviceType</class> 
-		<class>com.esrinea.dotGeo.tracking.model.component.device.entity.Device</class> 
-		<class>com.esrinea.dotGeo.tracking.model.component.resourceLiveFeed.entity.ResourceLiveFeed</class> 
-		<class>com.esrinea.dotGeo.tracking.model.component.resource.entity.Resource</class> 
-		<class>com.esrinea.dotGeo.tracking.model.component.execludedAlert.entity.ExecludedAlert</class> 
-		<class>com.esrinea.dotGeo.tracking.model.component.execludedSensor.entity.ExecludedSensor</class> 
-		<class>com.esrinea.dotGeo.tracking.model.component.alertSensorLiveFeed.entity.AlertSensorLiveFeed</class> 
-		<exclude-unlisted-classes>true</exclude-unlisted-classes> <properties> <property 
-		name="openjpa.Log" value="DefaultLevel=INFO, Tool=INFO, Runtime=INFO" /> 
-		<property name="openjpa.jdbc.DBDictionary" value="sqlserver" /> <property 
-		name="DynamicEnhancementAgent " value="false" /> </properties> </persistence-unit> -->
 </persistence>

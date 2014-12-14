@@ -63,7 +63,9 @@ INSERT INTO dbo.Alert_Configuration  (alert_dbid, sensorconfig_dbid, ISRETIRED )
 --INSERT INTO dbo.RESOURCE_EXECLUDED_ALERTS(RESOURCE_DBID, ALERT_DBID) VALUES (1, 1);
 
 
-/*
+
+
+
 SELECT * FROM TRACKINGFINALV1.dbo.alert_configuration;
 SELECT * FROM dbo.Alerts;
 SELECT * FROM dbo.Alert_Configuration;
@@ -74,4 +76,20 @@ SELECT * FROM TrackingFinalV1.dbo.sensor_configuration;
 SELECT * FROM sensor_configuration;
 SELECT * FROM TrackingFinalV1.dbo.sensors_liveFeeds;
 SELECT * FROM dbo.Resource_Execluded_Alerts;
-*/
+
+select * from tracking_resources;
+
+select * from Tracking_Resource_ResGroup_Ass;
+
+select * from Tracking_Resource_Groups;
+
+select * from Tracking_Fence_Layers;
+
+select * from Tracking_ResGroup_Fences_Ass;
+
+select s.* from Sensors s;
+
+
+select * from Sensor_Configuration sc where sc.Sensor_DBID =(select s.Sensor_DBID from Sensors s where s.Sensor_Type_DBID = (select st.Sensor_Type_DBID from Sensor_Types st where st.SensorType_Description = 'GeoFence'));
+
+select g.* from Tracking_Resource_Groups g where g.isretired = 0 and fencelayer_dbid is not null; 

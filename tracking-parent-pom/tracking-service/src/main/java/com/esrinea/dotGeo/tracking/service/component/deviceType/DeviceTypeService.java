@@ -7,7 +7,7 @@ import com.esrinea.dotGeo.tracking.service.common.service.GenericService;
 
 public interface DeviceTypeService extends GenericService<DeviceType> {
 
-	List<DeviceType> findAll(boolean retired);
+	List<DeviceType> find(boolean retired);
 
 
 }

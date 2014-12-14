@@ -16,8 +16,8 @@ public class DeviceTypeServiceImpl extends AbstractService<DeviceType> implement
 	}
 	
 	@Override
-	public List<DeviceType> findAll(boolean retired) {
-		return deviceTypeDAO.findAll(retired);
+	public List<DeviceType> find(boolean retired) {
+		return deviceTypeDAO.find(retired);
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.esrinea.dotGeo.tracking.model.component.resource.entity;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.Column;
@@ -8,7 +9,9 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyJoinColumn;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -17,6 +20,7 @@ import com.esrinea.dotGeo.tracking.model.component.alert.entity.Alert;
 import com.esrinea.dotGeo.tracking.model.component.device.entity.Device;
 import com.esrinea.dotGeo.tracking.model.component.execludedAlert.entity.ExecludedAlert;
 import com.esrinea.dotGeo.tracking.model.component.execludedSensor.entity.ExecludedSensor;
+import com.esrinea.dotGeo.tracking.model.component.resourceGroup.entity.ResourceGroup;
 import com.esrinea.dotGeo.tracking.model.component.sensor.entity.Sensor;
 
 /**
@@ -25,6 +29,7 @@ import com.esrinea.dotGeo.tracking.model.component.sensor.entity.Sensor;
  */
 @Entity
 @Table(name = "Tracking_Resources")
+@NamedQuery(name="Resource.findByRetired",query="SELECT r FROM Resource r WHERE r.retired = :retired")
 public class Resource implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -40,12 +45,15 @@ public class Resource implements Serializable {
 	@MapKeyJoinColumn(name = "Sensor_DBID")
 	private Map<Sensor, ExecludedSensor> execludedSensors;
 
-	@OneToOne
-	@JoinColumn(name="Device_DBID")
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name = "Device_DBID")
 	private Device device;
 
-	public Resource() {
-	}
+	@OneToMany(mappedBy = "resource", fetch = FetchType.LAZY)
+	private List<ResourceGroup> resourceGroups;
+
+	@Column(name = "IsRetired")
+	private boolean retired;
 
 	public int getId() {
 		return id;
@@ -59,9 +67,21 @@ public class Resource implements Serializable {
 		return execludedAlerts;
 	}
 
+	public List<ResourceGroup> getResourceGroups() {
+		return resourceGroups;
+	}
+
+	public boolean isRetired() {
+		return retired;
+	}
+	
+	public void setResourceGroups(List<ResourceGroup> resourceGroups) {
+		this.resourceGroups = resourceGroups;
+	}
+
 	@Override
 	public String toString() {
-		return "Resource [id=" + id + "]";
+		return "Resource [id=" + id + ", resourceGroups=" + resourceGroups + ", retired=" + retired + "]";
 	}
 
 }

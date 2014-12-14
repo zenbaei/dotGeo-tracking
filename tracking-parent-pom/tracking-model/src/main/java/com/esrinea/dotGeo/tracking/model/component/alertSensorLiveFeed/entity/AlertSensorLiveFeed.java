@@ -16,7 +16,7 @@ import javax.persistence.Table;
  */
 @Entity
 @IdClass(value=AlertSensorLiveFeedId.class)
-@Table(name="Tracking_Alert_Sensor_LiveFeeds")
+@Table(name="Alert_Sensor_LiveFeeds")
 @NamedQuery(name="Tracking_Alert_Sensor_LiveFeed.findAll", query="SELECT t FROM AlertSensorLiveFeed t")
 public class AlertSensorLiveFeed implements Serializable {
 	private static final long serialVersionUID = 1L;

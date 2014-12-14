@@ -12,6 +12,7 @@
 		class="com.esrinea.dotGeo.tracking.service.component.device.DeviceServiceKarafTest"
 		init-method="test">
 		<property name="deviceService" ref="deviceService" />
+		<property name="deviceTypeService" ref="deviceTypeService" />
 	</bean>
 	<!-- test bean-End -->
 
@@ -155,5 +156,53 @@
 		interface="com.esrinea.dotGeo.tracking.service.component.alertSensorLiveFeed.AlertSensorLiveFeedService"
 		ref="alertSensorLiveFeedService" />
 	<!-- AlertSensorLiveFeed-End -->
+
+	<!-- Fence-Start -->
+	<reference id="fenceDAO"
+		interface="com.esrinea.dotGeo.tracking.model.component.fence.dao.FenceDAO" />
+	<bean id="fenceService"
+		class="com.esrinea.dotGeo.tracking.service.component.fence.FenceServiceImpl">
+		<argument ref="fenceDAO" />
+	</bean>
+	<service
+		interface="com.esrinea.dotGeo.tracking.service.component.fence.FenceService"
+		ref="fenceService" />
+	<!-- Fence-End -->
+
+	<!-- Group-Start -->
+	<reference id="groupDAO"
+		interface="com.esrinea.dotGeo.tracking.model.component.group.dao.GroupDAO" />
+	<bean id="groupService"
+		class="com.esrinea.dotGeo.tracking.service.component.group.GroupServiceImpl">
+		<argument ref="groupDAO" />
+	</bean>
+	<service
+		interface="com.esrinea.dotGeo.tracking.service.component.group.GroupService"
+		ref="groupService" />
+	<!-- Group-End -->
+
+	<!-- Resource-Start -->
+	<reference id="resourceDAO"
+		interface="com.esrinea.dotGeo.tracking.model.component.resource.dao.ResourceDAO" />
+	<bean id="resourceService"
+		class="com.esrinea.dotGeo.tracking.service.component.resource.ResourceServiceImpl">
+		<argument ref="resourceDAO" />
+	</bean>
+	<service
+		interface="com.esrinea.dotGeo.tracking.service.component.resource.ResourceService"
+		ref="resourceService" />
+	<!-- Resource-End -->
+
+	<!-- Resource-Start -->
+	<reference id="resourceGroupDAO"
+		interface="com.esrinea.dotGeo.tracking.model.component.resourceGroup.dao.ResourceGroupDAO" />
+	<bean id="resourceGroupService"
+		class="com.esrinea.dotGeo.tracking.service.component.resourceGroup.ResourceGroupServiceImpl">
+		<argument ref="resourceGroupDAO" />
+	</bean>
+	<service
+		interface="com.esrinea.dotGeo.tracking.service.component.resourceGroup.ResourceGroupService"
+		ref="resourceGroupService" />
+	<!-- Resource-End -->
 
 </blueprint>

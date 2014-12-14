@@ -41,7 +41,7 @@ public class GeoEventDataExtractorStaticImpl extends AbstractGeoEventDataExtract
 		temperatureSensorValue = geoEvent.getField(TEMP_SENSOR);
 		if (temperatureSensorValue != null) {
 			// use same sensor name as defined in SENSORS' Name_En column in DB
-			sensorValues.put("Temperature", temperatureSensorValue);
+			sensorValues.put("TEMPERATURE", temperatureSensorValue);
 			LOG.debug(String.format(VALUE_MSG, TEMP_SENSOR, temperatureSensorValue));
 		} else {
 			LOG.debug(String.format("No field value for sensor with name %s exist in the received data definition.", TEMP_SENSOR));
@@ -50,7 +50,7 @@ public class GeoEventDataExtractorStaticImpl extends AbstractGeoEventDataExtract
 		seatBeltSensorValue = geoEvent.getField(SEAT_BLET_SENSOR);
 		if (seatBeltSensorValue != null) {
 			// use same sensor name as defined in SENSORS' Name_En column in DB
-			sensorValues.put("Seat Belt", seatBeltSensorValue);
+			sensorValues.put("SEAT BELT", seatBeltSensorValue);
 			LOG.debug(String.format(VALUE_MSG, SEAT_BLET_SENSOR, seatBeltSensorValue));
 		} else {
 			LOG.debug(String.format("No field value for sensor with name %s exist in the received data definition.", SEAT_BLET_SENSOR));

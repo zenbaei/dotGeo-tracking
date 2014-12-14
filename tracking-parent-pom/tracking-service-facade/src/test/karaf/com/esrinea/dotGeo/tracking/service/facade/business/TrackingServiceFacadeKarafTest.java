@@ -2,6 +2,8 @@ package com.esrinea.dotGeo.tracking.service.facade.business;
 
 import org.apache.log4j.Logger;
 
+import com.esrinea.dotGeo.tracking.service.facade.dto.EventData;
+
 public class TrackingServiceFacadeKarafTest {
 
 	private TrackingServiceFacade trackingServiceFacade;
@@ -12,9 +14,12 @@ public class TrackingServiceFacadeKarafTest {
 	}
 
 	public void test() {
-		if (trackingServiceFacade != null)
+		if (trackingServiceFacade != null) {
 			log.info("TrackingServiceFacade Service has been initialized successfully.");
-		else
+			log.info("Calling trackingServiceFacade.initCache.");
+			trackingServiceFacade.deviceFeedReceived(EventData.createWithDummyData());
+		} else
 			log.error("TrackingServiceFacade Service initialization failed.");
 	}
+
 }

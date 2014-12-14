@@ -1,6 +1,7 @@
 package com.esrinea.dotGeo.tracking.service.facade.business;
 
 import com.esri.ges.core.geoevent.GeoEvent;
+import com.esrinea.dotGeo.tracking.service.facade.dto.EventData;
 
 /**
  * A facade that combines different tracking services together to fill the database with the data received from the GeoEvent based on the given scenario.<br>
@@ -11,7 +12,7 @@ import com.esri.ges.core.geoevent.GeoEvent;
  */
 public interface TrackingServiceFacade {
 
-	public void queryDeviceType();
+	void process(GeoEvent geoEvent);
 
-	public void deviceFeedReceived(GeoEvent geoEvent);
+	void deviceFeedReceived(EventData eventData);
 }

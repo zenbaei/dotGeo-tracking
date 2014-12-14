@@ -18,6 +18,7 @@
 		class="com.esrinea.dotGeo.tracking.model.component.device.dao.DeviceDAOKarafTest"
 		init-method="test">
 		<property name="deviceDAO" ref="deviceDAO" />
+		<property name="id" value="20" />
 	</bean>
 	<!-- TestBean-End -->
 
@@ -146,5 +147,44 @@
 		interface="com.esrinea.dotGeo.tracking.model.component.alertSensorLiveFeed.dao.AlertSensorLiveFeedDAO"
 		ref="alertSensorLiveFeedDAO" />
 	<!-- AlertSensorLiveFeed-End -->
+
+	<!-- ResourceGroup-Start -->
+	<bean id="resourceGroupDAO"
+		class="com.esrinea.dotGeo.tracking.model.component.resourceGroup.dao.ResourceGroupDAOImpl">
+		<jpa:context property="entityManager" unitname="tracking" />
+		<tx:transaction method="*" value="Required" />
+	</bean>
+	<service
+		interface="com.esrinea.dotGeo.tracking.model.component.resourceGroup.dao.ResourceGroupDAO"
+		ref="resourceGroupDAO" />
+	<!-- ResourceGroup-End -->
+
+	<!-- Group-Start -->
+	<bean id="groupDAO"
+		class="com.esrinea.dotGeo.tracking.model.component.group.dao.GroupDAOImpl">
+	</bean>
+	<service
+		interface="com.esrinea.dotGeo.tracking.model.component.group.dao.GroupDAO"
+		ref="groupDAO" />
+	<!-- Group-End -->
+
+	<!-- Fence-Start -->
+	<bean id="fenceDAO"
+		class="com.esrinea.dotGeo.tracking.model.component.fence.dao.FenceDAOImpl">
+	</bean>
+	<service
+		interface="com.esrinea.dotGeo.tracking.model.component.fence.dao.FenceDAO"
+		ref="fenceDAO" />
+	<!-- Fence-End -->
+
+	<!-- Resource-Start -->
+	<bean id="resourceDAO"
+		class="com.esrinea.dotGeo.tracking.model.component.resource.dao.ResourceDAOImpl">
+	</bean>
+	<service
+		interface="com.esrinea.dotGeo.tracking.model.component.resource.dao.ResourceDAO"
+		ref="resourceDAO" />
+	<!-- Resource-End -->
+
 
 </blueprint>

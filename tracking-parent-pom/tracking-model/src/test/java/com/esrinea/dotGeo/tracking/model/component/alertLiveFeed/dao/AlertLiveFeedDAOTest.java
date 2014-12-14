@@ -1,4 +1,4 @@
-package com.esrinea.dotGeo.tracking.model.component.alertLiveFeed;
+package com.esrinea.dotGeo.tracking.model.component.alertLiveFeed.dao;
 
 import java.util.Date;
 
@@ -22,9 +22,9 @@ public class AlertLiveFeedDAOTest extends DeviceDAOTest {
 
 	
 	@Test
-	@Rollback(value=false)
+	@Rollback(value=true)
 	public void testCreateAlertLiveFeed() {
-		Alert alert = alertDAO.find(1);
+		Alert alert = alertDAO.find(6);
 		AlertLiveFeed alertLiveFeed = new AlertLiveFeed(device, alert, new Date(), "zone", 234.234, 22.343);
 		alertLiveFeedDAO.create(alertLiveFeed);
 		Assert.assertTrue(alertLiveFeed.getId() != 0);

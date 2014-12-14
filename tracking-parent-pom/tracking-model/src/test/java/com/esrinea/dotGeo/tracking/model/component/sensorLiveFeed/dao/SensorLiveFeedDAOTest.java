@@ -24,7 +24,7 @@ public class SensorLiveFeedDAOTest extends DeviceDAOTest {
 	@Rollback(value = true)
 	@Test
 	public void testCreateSensorLiveFeed() {
-		SensorConfiguration sensorConfiguration = sensorConfigurationDAO.find(1);
+		SensorConfiguration sensorConfiguration = sensorConfigurationDAO.find(15);
 		SensorLiveFeed sensorLiveFeed = new SensorLiveFeed(device, sensorConfiguration, "50.0", new Date());
 		sensorLiveFeedDAO.create(sensorLiveFeed);
 		Assert.assertTrue(sensorLiveFeed.getId() != 0);

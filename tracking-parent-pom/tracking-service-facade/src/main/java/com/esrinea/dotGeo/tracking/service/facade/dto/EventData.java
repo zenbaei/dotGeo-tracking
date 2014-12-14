@@ -125,6 +125,22 @@ public class EventData {
 		this.sensorValues.put(sensorName, value);
 	}
 
+	
+	/**
+	 * For test purposes.
+	 * @return
+	 */
+	public static EventData createWithDummyData() {
+		// 1, -118.266208, 34.23029981, 185, 30, 30, 20, Off
+		EventData eventData = new EventData("1", -118.266208, 34.23029981, 185, 30);
+		Map<String, Object> sensorValues = new HashMap<String, Object>();
+		sensorValues.put("SPEED", 30);
+		sensorValues.put("TEMPERATURE", 20);
+		sensorValues.put("SEAT BELT", "off");
+		eventData.setSensorValues(sensorValues);
+		return eventData;
+	}
+
 	@Override
 	public String toString() {
 		return "EventData [serial=" + serial + ", feedDateTime=" + feedDateTime + ", xCoord=" + xCoord + ", yCoord=" + yCoord + ", speed=" + speed + ", heading=" + heading + ", zone=" + zone + ", sensorValues=" + sensorValues + "]";

@@ -8,9 +8,11 @@
                         http://aries.apache.org/xmlns/transactions/v1.0.0 http://aries.apache.org/schemas/transaction/transactionv10.xsd">
 
 	<!-- test bean-Start -->
-	<bean id="trackingServiceFacadeKarafTest" class="com.esrinea.dotGeo.tracking.service.facade.business.TrackingServiceFacadeKarafTest" 
-		init-method="test"> <property name="trackingServiceFacade" ref="trackingServiceFacade" /> 
-		</bean>
+	<bean id="trackingServiceFacadeKarafTest"
+		class="com.esrinea.dotGeo.tracking.service.facade.business.TrackingServiceFacadeKarafTest"
+		init-method="test">
+		<property name="trackingServiceFacade" ref="trackingServiceFacade" />
+	</bean>
 	<!-- test bean-End -->
 
 	<!-- GeoEventDataExtractor-Start -->
@@ -86,8 +88,19 @@
 		interface="com.esrinea.dotGeo.tracking.service.component.alertSensorLiveFeed.AlertSensorLiveFeedService" />
 	<!-- AlertSensorLiveFeed-End -->
 
+	<!-- Resource-Start -->
+	<reference id="resourceService"
+		interface="com.esrinea.dotGeo.tracking.service.component.resource.ResourceService" />
+	<!-- Resource-End -->
+
+	<!-- ResourceGroup-Start -->
+	<reference id="resourceGroupService"
+		interface="com.esrinea.dotGeo.tracking.service.component.resourceGroup.ResourceGroupService" />
+	<!-- ResourceGroup-End -->
+
+
 	<!-- ServiceFacade-Start -->
-	<bean id="trackingServiceFacade" 
+	<bean id="trackingServiceFacade"
 		class="com.esrinea.dotGeo.tracking.service.facade.business.TrackingServiceFacadeImpl">
 		<property name="deviceService" ref="deviceService" />
 		<property name="sensorService" ref="sensorService" />
@@ -100,6 +113,8 @@
 		<property name="alertLiveFeedService" ref="alertLiveFeedService" />
 		<property name="alertSensorLiveFeedService" ref="alertSensorLiveFeedService" />
 		<property name="geoEventDataExtractor" ref="geoEventDataExtractor" />
+		<property name="resourceService" ref="resourceService" />
+		<property name="resourceGroupService" ref="resourceGroupService" />
 		<tx:transaction method="*" value="Required" />
 	</bean>
 	<service ref="trackingServiceFacade"

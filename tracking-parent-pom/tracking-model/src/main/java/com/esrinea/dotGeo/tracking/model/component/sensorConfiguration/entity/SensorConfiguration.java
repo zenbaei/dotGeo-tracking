@@ -41,7 +41,6 @@ public class SensorConfiguration implements Serializable {
 	@Column(name = "TextValue")
 	private String textValue;
 
-
 	@ManyToOne
 	@JoinColumn(name = "Sensor_DBID")
 	private Sensor sensor;

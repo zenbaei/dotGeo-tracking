@@ -7,6 +7,8 @@ import com.esrinea.dotGeo.tracking.model.component.deviceType.entity.DeviceType;
 
 public interface DeviceTypeDAO extends GenericDAO<DeviceType>{
 
-	List<DeviceType> findAll(boolean retired);
+	List<DeviceType> find(boolean retired);
+	
+	DeviceType find(int id, boolean retired);
 
 }

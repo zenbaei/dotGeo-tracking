@@ -28,6 +28,7 @@
 		<property name="alertLiveFeedService" ref="alertLiveFeedService" />
 		<property name="geoEventDataExtractor" ref="geoEventDataExtractor" />
 		<property name="alertSensorLiveFeedService" ref="alertSensorLiveFeedService" />
+	<!-- 	<property name="fenceService" ref="fenceService" /> -->
 	</bean>
 
 

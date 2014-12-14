@@ -17,7 +17,6 @@
 		<property name="jpaVendorAdapter">
 			<bean class="org.springframework.orm.jpa.vendor.OpenJpaVendorAdapter">
 				<property name="showSql" value="true" />
-				<!-- <property name="formatSql" value="true" /> -->
 				<!-- <property name="useSqlComments" value="true"/> -->
 			</bean>
 		</property>
@@ -27,16 +26,17 @@
 	<bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource"
 		destroy-method="close">
 		<!-- <property name="driverClass"> <value>oracle.jdbc.pool.OracleDataSource</value> 
-			</property> <property name="jdbcUrl"> <value>jdbc:oracle:thin:@localhost:1521:xe</value> 
-			</property> -->
+			</property> <property name="jdbcUrl"> <value>jdbc:oracle:thin:@192.168.9.120:1521:dotGeo</value> 
+			</property> <property name="username"> <value>tracking</value> </property> 
+			<property name="password"> <value>tracking</value> </property> -->
 		<property name="driverClass">
 			<value>com.microsoft.sqlserver.jdbc.SQLServerDataSource</value>
 		</property>
-		<!-- BetaTrackingDBV501 -->
 		<property name="jdbcUrl">
-			<value>jdbc:sqlserver://192.168.9.33:1433;databaseName=GeoEventsTracking1;selectMethod=cursor;sendStringParametersAsUnicode=false
+			<value>jdbc:sqlserver://192.168.9.33:1433;databaseName=BetaTrackingDBV501;selectMethod=cursor;sendStringParametersAsUnicode=false
 			</value>
-			<!-- <value>jdbc:sqlserver://ISLAM-ZENBAEI:1433;databaseName=TrackingFinalV1;selectMethod=cursor;sendStringParametersAsUnicode=false</value> -->
+			<!-- <value>jdbc:sqlserver://ISLAM-ZENBAEI:1433;databaseName=TrackingFinalV1;selectMethod=cursor;sendStringParametersAsUnicode=false 
+				</value> -->
 		</property>
 		<property name="username">
 			<!-- <value>tracking</value> -->
@@ -66,7 +66,7 @@
 	<bean id="sensorLiveFeedDAO"
 		class="com.esrinea.dotGeo.tracking.model.component.sensorLiveFeed.dao.SensorLiveFeedDAOImpl">
 	</bean>
-	<bean id="deviceTypeDAOImpl"
+	<bean id="deviceTypeDAO"
 		class="com.esrinea.dotGeo.tracking.model.component.deviceType.dao.DeviceTypeDAOImpl">
 	</bean>
 	<bean id="alertDAO"
@@ -78,7 +78,25 @@
 	<bean id="alertSensorLiveFeedDAO"
 		class="com.esrinea.dotGeo.tracking.model.component.alertSensorLiveFeed.dao.AlertSensorLiveFeedDAOImpl">
 	</bean>
-	<bean id="SensorConfigurationDAO"
+	<bean id="sensorConfigurationDAO"
 		class="com.esrinea.dotGeo.tracking.model.component.sensorConfiguration.dao.SensorConfigurationDAOImpl">
+	</bean>
+	<bean id="resourceGroupDAO"
+		class="com.esrinea.dotGeo.tracking.model.component.resourceGroup.dao.ResourceGroupDAOImpl">
+	</bean>
+	<bean id="groupDAO"
+		class="com.esrinea.dotGeo.tracking.model.component.group.dao.GroupDAOImpl">
+	</bean>
+	<bean id="fenceDAO"
+		class="com.esrinea.dotGeo.tracking.model.component.fence.dao.FenceDAOImpl">
+	</bean>
+	<bean id="sensorDAO"
+		class="com.esrinea.dotGeo.tracking.model.component.sensor.dao.SensorDAOImpl">
+	</bean>
+	<bean id="alertConfigurationDAO"
+		class="com.esrinea.dotGeo.tracking.model.component.alertConfiguration.dao.AlertConfigurationDAOImpl">
+	</bean>
+	<bean id="resourceDAO"
+		class="com.esrinea.dotGeo.tracking.model.component.resource.dao.ResourceDAOImpl">
 	</bean>
 </beans>

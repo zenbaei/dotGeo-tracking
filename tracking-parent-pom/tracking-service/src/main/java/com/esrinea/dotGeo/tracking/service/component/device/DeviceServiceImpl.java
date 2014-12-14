@@ -1,5 +1,7 @@
 package com.esrinea.dotGeo.tracking.service.component.device;
 
+import java.util.List;
+
 import com.esrinea.dotGeo.tracking.model.component.device.dao.DeviceDAO;
 import com.esrinea.dotGeo.tracking.model.component.device.entity.Device;
 import com.esrinea.dotGeo.tracking.service.common.service.AbstractService;
@@ -21,6 +23,11 @@ public class DeviceServiceImpl extends AbstractService<Device> implements Device
 	@Override
 	public Device find(String serial, boolean retired) {
 		return deviceDAO.find(serial, retired);
+	}
+
+	@Override
+	public List<Device> find(boolean retired) {
+		return deviceDAO.find(retired);
 	}
 
 }
