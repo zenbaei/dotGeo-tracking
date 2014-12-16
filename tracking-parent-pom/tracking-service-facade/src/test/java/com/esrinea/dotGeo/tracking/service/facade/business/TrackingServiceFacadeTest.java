@@ -33,7 +33,7 @@ import com.esrinea.dotGeo.tracking.service.facade.dto.EventData;
 public class TrackingServiceFacadeTest {
 
 	@Autowired
-	private TrackingServiceFacadeImpl trackingServiceFacade;
+	private TrackingServiceFacadeImpl_ trackingServiceFacade;
 	private EventData eventData;
 	@Autowired
 	private SensorService sensorService;
@@ -83,9 +83,9 @@ public class TrackingServiceFacadeTest {
 		// serviceFacade.deviceFeedReceived(eventData);
 	}
 
-	@Test
+	/*@Test
 	public void testCacheResourcesByDevice() {
 		trackingServiceFacade.cacheResourcesByDevice();
-	}
+	}*/
 
 }

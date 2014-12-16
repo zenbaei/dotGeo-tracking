@@ -2,9 +2,13 @@ package com.esrinea.dotGeo.tracking.model.component.resource.dao;
 
 import java.util.List;
 
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
+
 import org.apache.log4j.Logger;
 
 import com.esrinea.dotGeo.tracking.model.common.dao.AbstractDAO;
+import com.esrinea.dotGeo.tracking.model.component.device.entity.Device;
 import com.esrinea.dotGeo.tracking.model.component.resource.entity.Resource;
 
 public class ResourceDAOImpl extends AbstractDAO<Resource> implements ResourceDAO {
@@ -24,6 +28,20 @@ public class ResourceDAOImpl extends AbstractDAO<Resource> implements ResourceDA
 			return null;
 		}
 		return resources;
+	}
+
+	@Override
+	public Resource find(int deviceId, boolean retired) {
+		LOG.debug(String.format("Resouce.findByDeviceIdRetired, parameters: %s, %s", deviceId, retired));
+		Resource resource = null;
+		try {
+			resource = entityManager.createNamedQuery("Resource.findByDeviceIdRetired", Resource.class).setParameter("deviceId", deviceId).setParameter("retired", retired).getSingleResult();
+		} catch (NoResultException ex) {
+			throw new NoResultException(String.format("%s with Device ID %s does not exist in database or is %s.", "Resource", deviceId, retired ? "not retired" : "retired"));
+		} catch (NonUniqueResultException ex) {
+			throw new NonUniqueResultException(String.format("%s for Device ID of %s is duplicated or the one to one realtion it is joining with is refering it, more than once by mistake.", "Resource", deviceId));
+		}
+		return resource;
 	}
 
 }

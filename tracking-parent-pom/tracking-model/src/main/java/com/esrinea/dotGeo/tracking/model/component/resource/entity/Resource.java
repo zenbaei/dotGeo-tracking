@@ -1,6 +1,7 @@
 package com.esrinea.dotGeo.tracking.model.component.resource.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -45,7 +46,7 @@ public class Resource implements Serializable {
 	@MapKeyJoinColumn(name = "Sensor_DBID")
 	private Map<Sensor, ExecludedSensor> execludedSensors;
 
-	@OneToOne(fetch=FetchType.EAGER)
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name = "Device_DBID")
 	private Device device;
 
@@ -78,10 +79,19 @@ public class Resource implements Serializable {
 	public void setResourceGroups(List<ResourceGroup> resourceGroups) {
 		this.resourceGroups = resourceGroups;
 	}
+	
+	public void addResourceGroup(ResourceGroup resourceGroup) {
+		if(resourceGroups == null){
+			resourceGroups = new ArrayList<ResourceGroup>();
+		}
+		resourceGroups.add(resourceGroup);
+	}
 
 	@Override
 	public String toString() {
 		return "Resource [id=" + id + ", resourceGroups=" + resourceGroups + ", retired=" + retired + "]";
 	}
+
+	
 
 }

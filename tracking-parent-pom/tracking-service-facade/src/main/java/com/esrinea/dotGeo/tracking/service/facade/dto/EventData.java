@@ -106,7 +106,7 @@ public class EventData {
 	 * The key represents the Device Type's sensor name while the value represents the real sensor value received from a certain device the key is added after retrieving data from GeoEvent Data Definition in the processor implementation. It is configured to hold double or String.<br>
 	 * All keys are converted to upper case.
 	 */
-	public Map<String, Object> getSensorValuesCapitalized() {
+	public Map<String, Object> getSensorValuesWithKeyCapitalized() {
 		Map<String, Object> capitalizedSensorValues = new HashMap<String, Object>();
 		for (String sensorName : sensorValues.keySet()) {
 			capitalizedSensorValues.put(sensorName.toUpperCase(), sensorValues.get(sensorName));

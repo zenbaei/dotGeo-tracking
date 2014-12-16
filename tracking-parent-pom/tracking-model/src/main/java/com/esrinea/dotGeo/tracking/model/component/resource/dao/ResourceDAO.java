@@ -9,4 +9,6 @@ public interface ResourceDAO extends GenericDAO<Resource> {
 	
 	List<Resource> find(boolean retired); 
 	
+	Resource find(int deviceId, boolean retired);
+	
 }

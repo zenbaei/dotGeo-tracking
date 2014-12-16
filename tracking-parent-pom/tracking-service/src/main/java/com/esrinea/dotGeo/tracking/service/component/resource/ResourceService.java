@@ -8,5 +8,7 @@ import com.esrinea.dotGeo.tracking.service.common.service.GenericService;
 public interface ResourceService extends GenericService<Resource> {
 
 	List<Resource> find(boolean retired);
+	
+	public Resource find(int deviceId, boolean retired);
 
 }

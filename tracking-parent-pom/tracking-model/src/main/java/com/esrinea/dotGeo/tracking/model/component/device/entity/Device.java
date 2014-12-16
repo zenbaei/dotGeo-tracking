@@ -27,7 +27,8 @@ import com.esrinea.dotGeo.tracking.model.component.resource.entity.Resource;
 		+ "LEFT JOIN Sensors sens ON devType.DeviceType_DBID = sens.DeviceType_DBID " + "WHERE dev.Device_DBID = ? AND dev.isRetired = 0 AND sens.isRetired = 1")
 @NamedQueries({ @NamedQuery(name = "Device.findByIdRetired", query = "SELECT d FROM Device d WHERE d.id = :id AND d.retired = :retired"),
 		@NamedQuery(name = "Device.findBySerialRetired", query = "SELECT d FROM Device d WHERE d.serial = :serial AND d.retired = :retired"),
-		@NamedQuery(name = "Device.findByRetired", query = "SELECT d FROM Device d WHERE d.retired = :retired")})
+		@NamedQuery(name = "Device.findByRetired", query = "SELECT d FROM Device d WHERE d.retired = :retired"), 
+		@NamedQuery(name="Device.findByRetiredFetchDeviceType", query="SELECT d FROM Device d JOIN FETCH d.deviceType WHERE d.retired = :retired")})
 public class Device implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -41,15 +42,12 @@ public class Device implements Serializable {
 	@Column(name = "IsRetired")
 	private boolean retired;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "DeviceType_DBID")
 	private DeviceType deviceType;
 
 	@OneToOne(fetch = FetchType.LAZY, mappedBy="device")
 	private Resource resource;
-
-	public Device() {
-	}
 
 	public int getId() {
 		return id;
@@ -83,6 +81,10 @@ public class Device implements Serializable {
 		return resource;
 	}
 
+	public void setResource(Resource resource) {
+		this.resource = resource;
+	}
+	
 	@Override
 	public String toString() {
 		return "Device [id=" + id + ", serial=" + serial + ", retired=" + retired + ", deviceType=" + deviceType + ", resource=" + resource + "]";

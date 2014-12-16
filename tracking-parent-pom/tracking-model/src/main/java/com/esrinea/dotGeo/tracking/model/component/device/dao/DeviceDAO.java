@@ -14,4 +14,6 @@ public interface DeviceDAO extends GenericDAO<Device> {
 	Device find(String serial, boolean retired);
 	
 	List<Device> find(boolean retired);
+	
+	List<Device> findAndFetchDeviceType(boolean retired);
 }

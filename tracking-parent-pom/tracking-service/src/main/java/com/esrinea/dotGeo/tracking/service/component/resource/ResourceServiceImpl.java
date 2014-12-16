@@ -20,4 +20,11 @@ public class ResourceServiceImpl extends AbstractService<Resource> implements Re
 		return resourceDAO.find(retired);
 	}
 
+	@Override
+	public Resource find(int deviceId, boolean retired) {
+		return resourceDAO.find(deviceId, retired);
+	}
+	
+	
+
 }

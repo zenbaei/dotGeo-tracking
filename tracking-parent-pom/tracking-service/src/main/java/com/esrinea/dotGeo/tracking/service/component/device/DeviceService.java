@@ -13,4 +13,7 @@ public interface DeviceService extends GenericService<Device> {
 	
 	List<Device> find(boolean retired);
 
+	public List<Device> findAndFetchDeviceType(boolean retired);
+	
+
 }

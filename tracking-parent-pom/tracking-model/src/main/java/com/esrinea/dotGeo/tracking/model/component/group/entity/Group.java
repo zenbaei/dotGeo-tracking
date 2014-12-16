@@ -44,6 +44,9 @@ public class Group implements Serializable {
 	@Column(name = "IsRetired")
 	private boolean retired;
 	
+	@Column(name="Description_En")
+	private String descEn;
+	
 	public int getId() {
 		return id;
 	}
@@ -58,6 +61,10 @@ public class Group implements Serializable {
 
 	public List<Fence> getFences() {
 		return fences;
+	}
+	
+	public String getDescEn() {
+		return descEn;
 	}
 
 	@Override

@@ -10,7 +10,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.esrinea.dotGeo.tracking.model.component.device.dao.DeviceDAOTest;
 import com.esrinea.dotGeo.tracking.model.component.deviceType.entity.DeviceType;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -34,5 +33,6 @@ public class DeviceTypeDAOTest {
 		Assert.assertNotNull(deviceTypes);
 		Assert.assertTrue(deviceTypes.isEmpty());
 	}
+	
 
 }

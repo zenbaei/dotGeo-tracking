@@ -9,11 +9,9 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.AssertThrows;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +20,6 @@ import com.esrinea.dotGeo.tracking.model.component.alert.entity.Alert;
 import com.esrinea.dotGeo.tracking.model.component.alertConfiguration.entity.AlertConfiguration;
 import com.esrinea.dotGeo.tracking.model.component.device.entity.Device;
 import com.esrinea.dotGeo.tracking.model.component.deviceType.entity.DeviceType;
-import com.esrinea.dotGeo.tracking.model.component.resourceGroup.entity.ResourceGroup;
 import com.esrinea.dotGeo.tracking.model.component.sensor.entity.Sensor;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -77,7 +74,6 @@ public class DeviceDAOTest {
 	}
 
 	@Test
-	@Ignore
 	public void testFindByIdQuery() {
 		List<Device> devices = deviceDAO.findByIdNativeQuery(1);
 		// HEAT sensor should not be fetched
@@ -105,8 +101,16 @@ public class DeviceDAOTest {
 	}
 
 	@Test
-	public void testFindbyRetired(){
+	public void testFindbyRetired() {
 		List<Device> devices = deviceDAO.find(false);
 		Assert.assertTrue(devices.size() > 1);
+	}
+
+	@Test
+	public void testFindByRetiredFetchDeviceType() {
+		List<Device> devices = deviceDAO.findAndFetchDeviceType(false);
+		Assert.assertNotNull(devices);
+		Assert.assertTrue(devices.size() > 1);
+		Assert.assertNotNull(devices.get(0).getDeviceType());
 	}
 }
