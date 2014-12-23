@@ -25,7 +25,7 @@ public class AlertLiveFeedDAOTest extends DeviceDAOTest {
 	@Rollback(value=true)
 	public void testCreateAlertLiveFeed() {
 		Alert alert = alertDAO.find(6);
-		AlertLiveFeed alertLiveFeed = new AlertLiveFeed(device, alert, new Date(), "zone", 234.234, 22.343);
+		AlertLiveFeed alertLiveFeed = new AlertLiveFeed(device, alert, new Date(), "zone", 234.234, 22.343, null,null);
 		alertLiveFeedDAO.create(alertLiveFeed);
 		Assert.assertTrue(alertLiveFeed.getId() != 0);
 	}

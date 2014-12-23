@@ -24,9 +24,12 @@ public class Fence implements Serializable {
 	@Column(name = "ResourceGroup_FenceLayer_DBID")
 	private int id;
 
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ResourceGroup_DBID")
 	private Group group;
+
+	@Column(name = "Fence_ID")
+	private int fenceId;
 
 	@Column(name = "GeoFenceRule")
 	private String rule;
@@ -36,6 +39,14 @@ public class Fence implements Serializable {
 
 	public boolean isRetired() {
 		return retired;
+	}
+
+	public int getFenceId() {
+		return fenceId;
+	}
+
+	public String getRule() {
+		return rule;
 	}
 
 	@Override

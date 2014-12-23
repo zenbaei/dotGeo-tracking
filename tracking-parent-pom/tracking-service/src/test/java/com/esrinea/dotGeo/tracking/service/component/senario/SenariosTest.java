@@ -32,7 +32,7 @@ public class SenariosTest extends DeviceServiceTest {
 	@Autowired
 	private SensorLiveFeedService sensorLiveFeedService;
 	@Autowired
-	private SensorService sensorService; 
+	private SensorService sensorService;
 
 	private int deviceId;
 	private String feedDateTimeString;
@@ -122,9 +122,7 @@ public class SenariosTest extends DeviceServiceTest {
 			}
 
 			/*
-			 * // check if sensor is excluded from the resource using that device if (execludedSensors != null &&
-			 * !execludedSensors.isEmpty()) { if (execludedSensors.containsKey(sensor)) {
-			 * LOG.trace("Sensor is execluded, it will be discarded."); continue; } }
+			 * // check if sensor is excluded from the resource using that device if (execludedSensors != null && !execludedSensors.isEmpty()) { if (execludedSensors.containsKey(sensor)) { LOG.trace("Sensor is execluded, it will be discarded."); continue; } }
 			 */
 
 			// check if sensor's configuration is retired
@@ -136,7 +134,7 @@ public class SenariosTest extends DeviceServiceTest {
 				}
 
 				// Sensor Configuration is on,then insert into SensorLiveFeed
-				SensorLiveFeed sensorLiveFeed = new SensorLiveFeed(device, sensorConfiguration, String.valueOf(sensorValue), feedDateTime);
+				SensorLiveFeed sensorLiveFeed = new SensorLiveFeed(device, sensorConfiguration, String.valueOf(sensorValue), feedDateTime, null);
 				sensorLiveFeedService.create(sensorLiveFeed);
 
 				// Check if an alert is set on that sensor
@@ -174,9 +172,7 @@ public class SenariosTest extends DeviceServiceTest {
 				continue;
 			}
 			/*
-			 * // check if alert is excluded on the resource using that device if (execludedAlerts != null &&
-			 * !execludedAlerts.isEmpty()) { if (execludedAlerts.containsKey(alert)) {
-			 * LOG.trace("Alert is execluded, it will be discarded."); continue; } }
+			 * // check if alert is excluded on the resource using that device if (execludedAlerts != null && !execludedAlerts.isEmpty()) { if (execludedAlerts.containsKey(alert)) { LOG.trace("Alert is execluded, it will be discarded."); continue; } }
 			 */
 
 			// check if alert configuration is retired
@@ -195,5 +191,5 @@ public class SenariosTest extends DeviceServiceTest {
 		}
 
 	}
-	
+
 }

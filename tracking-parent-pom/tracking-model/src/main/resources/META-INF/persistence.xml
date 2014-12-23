@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
 	<persistence-unit name="tracking" transaction-type="RESOURCE_LOCAL">
 
-		<!-- <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider> --> 
+		<provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider> 
 
 		<jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=jdbc/tracking)</jta-data-source>
 
@@ -30,9 +30,9 @@
 
 		<properties>
 			<property name="openjpa.Log"
-				value="DefaultLevel=INFO, Tool=INFO, 
+				value="DefaultLevel=TRACE, Tool=INFO,
 				Runtime=INFO" />
-			<property name="openjpa.jdbc.DBDictionary" value="sqlserver" />
+			<property name="openjpa.jdbc.DBDictionary" value="oracle" />
 			<property name="DynamicEnhancementAgent " value="false" />
 		</properties>
 		

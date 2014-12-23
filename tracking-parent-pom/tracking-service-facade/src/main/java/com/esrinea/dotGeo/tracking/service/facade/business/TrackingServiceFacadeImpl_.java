@@ -17,19 +17,17 @@ import com.esrinea.dotGeo.tracking.model.component.deviceType.entity.DeviceType;
 import com.esrinea.dotGeo.tracking.model.component.execludedAlert.entity.ExecludedAlert;
 import com.esrinea.dotGeo.tracking.model.component.execludedSensor.entity.ExecludedSensor;
 import com.esrinea.dotGeo.tracking.model.component.group.entity.Group;
-import com.esrinea.dotGeo.tracking.model.component.resource.entity.Resource;
-import com.esrinea.dotGeo.tracking.model.component.resourceGroup.entity.ResourceGroup;
 import com.esrinea.dotGeo.tracking.model.component.resourceLiveFeed.entity.ResourceLiveFeed;
 import com.esrinea.dotGeo.tracking.model.component.sensor.entity.Sensor;
 import com.esrinea.dotGeo.tracking.model.component.sensorConfiguration.entity.SensorConfiguration;
 import com.esrinea.dotGeo.tracking.model.component.sensorLiveFeed.entity.SensorLiveFeed;
-import com.esrinea.dotGeo.tracking.model.component.sensorType.entity.SensorType;
 import com.esrinea.dotGeo.tracking.service.component.alert.AlertService;
 import com.esrinea.dotGeo.tracking.service.component.alertConfiguration.AlertConfigurationService;
 import com.esrinea.dotGeo.tracking.service.component.alertLiveFeed.AlertLiveFeedService;
 import com.esrinea.dotGeo.tracking.service.component.alertSensorLiveFeed.AlertSensorLiveFeedService;
 import com.esrinea.dotGeo.tracking.service.component.device.DeviceService;
 import com.esrinea.dotGeo.tracking.service.component.deviceType.DeviceTypeService;
+import com.esrinea.dotGeo.tracking.service.component.fence.FenceService;
 import com.esrinea.dotGeo.tracking.service.component.group.GroupService;
 import com.esrinea.dotGeo.tracking.service.component.resource.ResourceService;
 import com.esrinea.dotGeo.tracking.service.component.resourceGroup.ResourceGroupService;
@@ -57,6 +55,7 @@ public class TrackingServiceFacadeImpl_ implements TrackingServiceFacade {
 	private ResourceService resourceService;
 	private ResourceGroupService resourceGroupService;
 	private GeoEventDataExtractor geoEventDataExtractor;
+	private FenceService fenceService;
 	private Map<Integer, DeviceType> deviceTypesCache = new HashMap<Integer, DeviceType>();// this Map will act as cache of device types
 	private Map<Integer, Group> groups;
 
@@ -79,13 +78,12 @@ public class TrackingServiceFacadeImpl_ implements TrackingServiceFacade {
 	// TODO: refresh on intervals
 	// call by init-method in blueprint.xml
 	// TODO:add synchronized
-	public void cacheDeviceTypesEffectiveConfigurations() {		
+	public void cacheDeviceTypesEffectiveConfigurations() {
 		LOG.info("All Device Types will be retrieved and cached.");
 		LOG.debug("queryDeviceType method is called to find all device types along with their sensors, sensor configurations, alerts and alert configurations.");
 
 		// get all device types
 		for (DeviceType deviceType : deviceTypeService.find(false)) {
-
 			// find and set non retired sensors
 			deviceType.setSensors(sensorService.find(deviceType.getId(), false));
 			if (deviceType.getSensors() == null) {
@@ -127,7 +125,6 @@ public class TrackingServiceFacadeImpl_ implements TrackingServiceFacade {
 		LOG.info("Device's Types has been retireved and cached.");
 		LOG.info("Retrieved Device Types: " + deviceTypesCache);
 	}
-
 
 	public void deviceFeedReceived(EventData eventData) {
 		// TODO:remove call from here
@@ -185,7 +182,7 @@ public class TrackingServiceFacadeImpl_ implements TrackingServiceFacade {
 
 				for (SensorConfiguration sensorConfiguration : sensor.getSensorConfigurations()) { // loop on deviceType sensor's sensorConfiguration, TEMP sensor configuration has 3 configurations (LOW,MED,HIGH)
 					if (sensorConfigurationService.isBusinessRuleSatisfiedDelegate(sensorConfiguration, sensorValue)) {// received sensor value fall under the business rule, the 3 TEMP sensor configurations will be checked against the received value
-						SensorLiveFeed sensorLiveFeed = new SensorLiveFeed(device, sensorConfiguration, String.valueOf(sensorValue), eventData.getFeedDateTime()); // insert SensorLiveFeed into Database
+						SensorLiveFeed sensorLiveFeed = new SensorLiveFeed(device, sensorConfiguration, String.valueOf(sensorValue), eventData.getFeedDateTime(), null); // insert SensorLiveFeed into Database
 						sensorLiveFeedService.create(sensorLiveFeed);
 						sensorConfigurationsAssociatedWithNewSensorLiveFeeds.put(sensorLiveFeed.getSensorConfiguration(), sensorLiveFeed); // keep sensor configurations that fall under the business rule
 						continue OUTER; // if reached then one sensor configuration of a specific sensor has succeed then move to the next sensor (ex; Temp sensor has 3 configurations: High, Medium and Low. Definity Temp sensor value with be either be High, Medium or Low
@@ -227,7 +224,7 @@ public class TrackingServiceFacadeImpl_ implements TrackingServiceFacade {
 				}
 
 				// if this line is reached then all alertConfiguration in an alert had their rules satisfied
-				AlertLiveFeed alertLiveFeed = new AlertLiveFeed(device, alert, eventData.getFeedDateTime(), eventData.getZone(), eventData.getxCoord(), eventData.getyCoord());// insert AlertLiveFeed only if all rules in an alert is satisfied
+				AlertLiveFeed alertLiveFeed = new AlertLiveFeed(device, alert, eventData.getFeedDateTime(), eventData.getZone(), eventData.getxCoord(), eventData.getyCoord(), null, null);// insert AlertLiveFeed only if all rules in an alert is satisfied
 				alertLiveFeedService.create(alertLiveFeed);
 				LOG.debug(String.format("\n----------------------------------------------\nALERT %s HAS SUCCEEDED\n----------------------------------------------", alert.getNameEn().toUpperCase()));
 
@@ -300,5 +297,9 @@ public class TrackingServiceFacadeImpl_ implements TrackingServiceFacade {
 
 	public void setResourceGroupService(ResourceGroupService resourceGroupService) {
 		this.resourceGroupService = resourceGroupService;
+	}
+
+	public void setFenceService(FenceService fenceService) {
+		this.fenceService = fenceService;
 	}
 }

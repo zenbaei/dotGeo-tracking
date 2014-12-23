@@ -20,6 +20,10 @@ public class FenceLayer implements Serializable {
 	@Column(name="Layer_URL")
 	private String url;
 	
+	public int getId() {
+		return id;
+	}
+	
 	public String getURL() {
 		return url;
 	}

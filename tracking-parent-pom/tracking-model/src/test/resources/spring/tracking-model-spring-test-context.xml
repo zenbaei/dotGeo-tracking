@@ -17,6 +17,8 @@
 		<property name="jpaVendorAdapter">
 			<bean class="org.springframework.orm.jpa.vendor.OpenJpaVendorAdapter">
 				<property name="showSql" value="true" />
+				<property name="openjpa.Log"
+					value="DefaultLevel=TRACE, Runtime=TRACE, Tool=TRACE, SQL=TRACE" />
 				<!-- <property name="useSqlComments" value="true"/> -->
 			</bean>
 		</property>
@@ -25,27 +27,22 @@
 	<!-- BoneCP configuration -->
 	<bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource"
 		destroy-method="close">
-		<!-- <property name="driverClass"> <value>oracle.jdbc.pool.OracleDataSource</value> 
-			</property> <property name="jdbcUrl"> <value>jdbc:oracle:thin:@192.168.9.120:1521:dotGeo</value> 
-			</property> <property name="username"> <value>tracking</value> </property> 
-			<property name="password"> <value>tracking</value> </property> -->
 		<property name="driverClass">
-			<value>com.microsoft.sqlserver.jdbc.SQLServerDataSource</value>
+			<value>oracle.jdbc.pool.OracleDataSource</value>
 		</property>
 		<property name="jdbcUrl">
-			<value>jdbc:sqlserver://192.168.9.33:1433;databaseName=BetaTrackingDBV501;selectMethod=cursor;sendStringParametersAsUnicode=false
-			</value>
-			<!-- <value>jdbc:sqlserver://ISLAM-ZENBAEI:1433;databaseName=TrackingFinalV1;selectMethod=cursor;sendStringParametersAsUnicode=false 
-				</value> -->
+			<value>jdbc:oracle:thin:@192.168.9.120:1521:dotGeo</value>
 		</property>
 		<property name="username">
-			<!-- <value>tracking</value> -->
-			<value>sa</value>
+			<value>tracking</value>
 		</property>
 		<property name="password">
-			<!-- <value>tracking</value> -->
-			<value>P@ssw0rd</value>
+			<value>tracking</value>
 		</property>
+		<!-- <property name="driverClass"> <value>com.microsoft.sqlserver.jdbc.SQLServerDataSource</value> 
+			</property> <property name="jdbcUrl"> <value>jdbc:sqlserver://192.168.9.33:1433;databaseName=BetaTrackingDBV501;selectMethod=cursor;sendStringParametersAsUnicode=false 
+			</value> </property> <property name="username"> <value>sa</value> </property> 
+			<property name="password"> <value>P@ssw0rd</value> </property> -->
 		<property name="idleConnectionTestPeriodInMinutes" value="60" />
 		<property name="idleMaxAgeInMinutes" value="240" />
 		<property name="maxConnectionsPerPartition" value="5" />

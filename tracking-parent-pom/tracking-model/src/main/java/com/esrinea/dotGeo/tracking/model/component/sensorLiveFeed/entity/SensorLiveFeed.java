@@ -51,15 +51,19 @@ public class SensorLiveFeed implements Serializable {
 	@Column(name = "Sensor_DateTime")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateTime;
+	
+	@Column(name="Sensor_value")
+	private String geoFenceLayerIdAndFenceId;
 
 	public SensorLiveFeed() {
 	}
 
-	public SensorLiveFeed(Device device, SensorConfiguration sensorConfiguration, String sensorValue, Date dateTime) {
+	public SensorLiveFeed(Device device, SensorConfiguration sensorConfiguration, String sensorValue, Date dateTime, String geoFenceLayerIdAndFenceId) {
 		this.sensorConfiguration = sensorConfiguration;
 		this.device = device;
 		this.sensorValue = sensorValue;
 		this.dateTime = dateTime;
+		this.geoFenceLayerIdAndFenceId = geoFenceLayerIdAndFenceId;
 	}
 
 	public Device getDevice() {
@@ -98,9 +102,13 @@ public class SensorLiveFeed implements Serializable {
 		return id;
 	}
 
+	public String getGeoFenceLayerIdAndFenceId() {
+		return geoFenceLayerIdAndFenceId;
+	}
+	
 	@Override
 	public String toString() {
-		return "SensorLiveFeed [id=" + id + ", device=" + device + ", sensorValue=" + sensorValue + ", sensorConfiguration=" + sensorConfiguration + ", dateTime=" + dateTime + "]";
+		return "SensorLiveFeed [id=" + id + ", device=" + device + ", sensorValue=" + sensorValue + ", sensorConfiguration=" + sensorConfiguration + ", dateTime=" + dateTime + ", geoFenceLayerIdAndFenceId="+ geoFenceLayerIdAndFenceId + "]";
 	}
 
 	

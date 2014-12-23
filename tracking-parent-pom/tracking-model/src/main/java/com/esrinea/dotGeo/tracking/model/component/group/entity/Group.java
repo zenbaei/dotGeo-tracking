@@ -63,6 +63,10 @@ public class Group implements Serializable {
 		return fences;
 	}
 	
+	public void setFences(List<Fence> fences) {
+		this.fences = fences;
+	}
+	
 	public String getDescEn() {
 		return descEn;
 	}

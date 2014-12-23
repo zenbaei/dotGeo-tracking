@@ -26,6 +26,10 @@ public class SensorType implements Serializable {
 		return description;
 	}
 	
+	public int getId() {
+		return id;
+	}
+	
 	@Override
 	public String toString() {
 		return "SensorType [id=" + id + ", description=" + description + "]";

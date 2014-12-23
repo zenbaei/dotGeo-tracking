@@ -98,6 +98,11 @@
 		interface="com.esrinea.dotGeo.tracking.service.component.resourceGroup.ResourceGroupService" />
 	<!-- ResourceGroup-End -->
 
+	<!-- Fence-Strat -->
+	<reference id="fenceService"
+		interface="com.esrinea.dotGeo.tracking.service.component.fence.FenceService" />
+	<!-- Fence-End -->
+
 
 	<!-- ServiceFacade-Start -->
 	<bean id="trackingServiceFacade"
@@ -115,6 +120,9 @@
 		<property name="geoEventDataExtractor" ref="geoEventDataExtractor" />
 		<property name="resourceService" ref="resourceService" />
 		<property name="resourceGroupService" ref="resourceGroupService" />
+		<property name="fenceService" ref="fenceService" />
+		<property name="gdbDatasource" value="D:/LA_Zones.gdb" />
+		<property name="featureFieldName" value="ID" />
 		<tx:transaction method="*" value="Required" />
 	</bean>
 	<service ref="trackingServiceFacade"

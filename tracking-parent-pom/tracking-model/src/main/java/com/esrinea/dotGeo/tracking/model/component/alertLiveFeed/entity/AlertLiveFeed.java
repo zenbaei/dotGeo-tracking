@@ -26,10 +26,7 @@ import com.esrinea.dotGeo.tracking.model.component.device.entity.Device;
  */
 @Entity
 @Table(name = "Alert_LiveFeeds")
-@NamedQueries({
-@NamedQuery(name = "AlertLiveFeed.findAll", query = "SELECT a FROM AlertLiveFeed a"),
-@NamedQuery(name = "AlertLiveFeed.findByAlert", query = "SELECT a FROM AlertLiveFeed a WHERE a.alert.id = :alertId"),
-}) 
+@NamedQueries({ @NamedQuery(name = "AlertLiveFeed.findAll", query = "SELECT a FROM AlertLiveFeed a"), @NamedQuery(name = "AlertLiveFeed.findByAlert", query = "SELECT a FROM AlertLiveFeed a WHERE a.alert.id = :alertId"), })
 public class AlertLiveFeed implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -51,41 +48,46 @@ public class AlertLiveFeed implements Serializable {
 	@JoinColumn(name = "Device_DBID", nullable = false)
 	private Device device;
 
-	@Column(name="Zone")
+	@Column(name = "Zone")
 	private String zone;
-	
+
 	@Column(name = "X_Coord", precision = 53)
 	private double xCoord;
 
 	@Column(name = "Y_Coord", precision = 53)
 	private double yCoord;
 
+	@Column(name = "SenosrType")
+	private String sensorTypeId;
+
+	@Column(name = "SensorValue")
+	private String geoFenceLayerIdAndFenceId;
+
 	public AlertLiveFeed() {
 	}
 
-	public AlertLiveFeed(Device device, Alert alert, Date feedDateTime, String zone, double xCoord, double yCoord) {
+	public AlertLiveFeed(Device device, Alert alert, Date feedDateTime, String zone, double xCoord, double yCoord, String sensorTypeId, String geoFenceLayerIdAndFenceId) {
 		this.device = device;
 		this.alert = alert;
 		this.feedDateTime = feedDateTime;
 		this.zone = zone;
 		this.xCoord = xCoord;
 		this.yCoord = yCoord;
+		this.sensorTypeId = sensorTypeId;
+		this.geoFenceLayerIdAndFenceId = geoFenceLayerIdAndFenceId;
 	}
-	
+
 	public int getId() {
 		return id;
 	}
-	
+
 	public Alert getAlert() {
 		return alert;
 	}
-	
-	
+
 	@Override
 	public String toString() {
 		return "AlertLiveFeed [id=" + id + ", feedDateTime=" + feedDateTime + ", alert=" + alert + ", device=" + device + ", zone=" + zone + "]";
 	}
-	
-	
 
 }

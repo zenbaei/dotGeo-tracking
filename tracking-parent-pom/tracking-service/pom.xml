@@ -21,6 +21,17 @@
 			<version>${project.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.esri.geometry</groupId>
+			<artifactId>esri-geometry-api</artifactId>
+			<version>1.2</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.esri.arcgis</groupId>
+			<artifactId>arcobjects</artifactId>
+			<version>10.2.2</version>
+		</dependency>
 	</dependencies>
 
 	<build>

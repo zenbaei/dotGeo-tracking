@@ -1,10 +1,12 @@
 package com.esrinea.dotGeo.tracking.service.facade.business;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.persistence.NoResultException;
 
+import org.apache.commons.collections.functors.FalsePredicate;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +35,7 @@ import com.esrinea.dotGeo.tracking.service.facade.dto.EventData;
 public class TrackingServiceFacadeTest {
 
 	@Autowired
-	private TrackingServiceFacadeImpl_ trackingServiceFacade;
+	private TrackingServiceFacade trackingServiceFacade;
 	private EventData eventData;
 	@Autowired
 	private SensorService sensorService;
@@ -61,9 +63,10 @@ public class TrackingServiceFacadeTest {
 
 	}
 
+	
 	@Test
-	@Rollback
-	public void testDeviceFeedReceived() {
+	@Rollback(value=false)
+	public void testDeviceFeedReceived() throws NumberFormatException, IOException {
 		trackingServiceFacade.deviceFeedReceived(EventData.createWithDummyData()); // Check if sensorConfigurations inserted right in sensorLiveFeed
 		/*
 		 * // find sensorLiveFeed by sensor value SensorLiveFeed oilSensorLiveFeed = sensorLiveFeedService.find("in"); Assert.assertNotNull(oilSensorLiveFeed); Assert.assertEquals("OIL", oilSensorLiveFeed.getSensorConfiguration().getSensor().getNameEn());

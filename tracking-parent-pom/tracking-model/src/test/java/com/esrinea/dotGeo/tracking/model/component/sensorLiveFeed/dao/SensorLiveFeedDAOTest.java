@@ -25,7 +25,7 @@ public class SensorLiveFeedDAOTest extends DeviceDAOTest {
 	@Test
 	public void testCreateSensorLiveFeed() {
 		SensorConfiguration sensorConfiguration = sensorConfigurationDAO.find(15);
-		SensorLiveFeed sensorLiveFeed = new SensorLiveFeed(device, sensorConfiguration, "50.0", new Date());
+		SensorLiveFeed sensorLiveFeed = new SensorLiveFeed(device, sensorConfiguration, "50.0", new Date(), null);
 		sensorLiveFeedDAO.create(sensorLiveFeed);
 		Assert.assertTrue(sensorLiveFeed.getId() != 0);
 	}
