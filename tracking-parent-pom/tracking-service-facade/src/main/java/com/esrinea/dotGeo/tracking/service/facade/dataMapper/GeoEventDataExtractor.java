@@ -17,6 +17,6 @@ public interface GeoEventDataExtractor {
 	 * @param geoEvent
 	 * @return
 	 */
-	public EventData extract(GeoEvent geoEvent);
+	public EventData extract(GeoEvent geoEvent)throws Exception;
 
 }

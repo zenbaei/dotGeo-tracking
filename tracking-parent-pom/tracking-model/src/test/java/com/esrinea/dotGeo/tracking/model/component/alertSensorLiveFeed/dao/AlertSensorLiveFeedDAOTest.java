@@ -20,7 +20,7 @@ public class AlertSensorLiveFeedDAOTest  {
 	private AlertSensorLiveFeedDAO alertSensorLiveFeedDAO;
 	
 	@Test
-	public void testCreateAlertSensorLiveFeed(){
+	public void testCreateAlertSensorLiveFeed() throws Exception{
 		AlertSensorLiveFeedId alertSensorLiveFeedId = new AlertSensorLiveFeedId(1, 1);
 		AlertSensorLiveFeed alertSensorLiveFeed = new AlertSensorLiveFeed(alertSensorLiveFeedId);
 		alertSensorLiveFeedDAO.create(alertSensorLiveFeed);

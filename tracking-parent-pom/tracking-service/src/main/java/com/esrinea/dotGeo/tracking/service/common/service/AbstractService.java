@@ -16,7 +16,7 @@ public abstract class AbstractService<T> implements GenericService<T> {
 	}
 	
 	@Override
-	public void create(T entity) {
+	public void create(T entity) throws Exception {
 		genericDAO.create(entity);
 	}
 

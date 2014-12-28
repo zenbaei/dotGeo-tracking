@@ -47,9 +47,6 @@ public class Alert implements Serializable {
 	@JoinColumn(name = "DeviceType_DBID", nullable = false)
 	private DeviceType deviceType;
 
-	public Alert() {
-	}
-
 	public int getId() {
 		return id;
 	}

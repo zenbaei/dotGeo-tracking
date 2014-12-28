@@ -17,7 +17,8 @@ public class SensorDAOImpl extends AbstractDAO<Sensor> implements SensorDAO {
 
 	@Override
 	public List<Sensor> find(int deviceTypeId, boolean retired) {
-		List<Sensor> sensors = entityManager.createNamedQuery("Sensor.findByDeviceTypeRetired", Sensor.class).setParameter("id", deviceTypeId)
+		LOG.debug(String.format("Sensor.findByDeviceTypeIdRetired is called, parameters: %s, %s", deviceTypeId, retired));
+		List<Sensor> sensors = entityManager.createNamedQuery("Sensor.findByDeviceTypeIdRetired", Sensor.class).setParameter("id", deviceTypeId)
 				.setParameter("retired", retired).getResultList();
 
 		if (sensors.isEmpty()) {

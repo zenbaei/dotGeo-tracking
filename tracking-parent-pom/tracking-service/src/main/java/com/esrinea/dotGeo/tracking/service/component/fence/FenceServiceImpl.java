@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.List;
 
+import javax.jms.IllegalStateException;
+
 import org.apache.log4j.Logger;
 
 import com.esrinea.dotGeo.tracking.model.component.fence.dao.FenceDAO;
@@ -18,6 +20,7 @@ public class FenceServiceImpl extends AbstractService<Fence> implements FenceSer
 
 	public FenceServiceImpl(FenceDAO fenceDAO) {
 		super(fenceDAO);
+		this.fenceDAO = fenceDAO;
 	}
 
 	@Override
@@ -26,7 +29,7 @@ public class FenceServiceImpl extends AbstractService<Fence> implements FenceSer
 	}
 
 	@Override
-	public boolean intersect(Fence fence, String gdbDatasource, String featureFieldName, double xCoord, double yCoord) throws UnknownHostException, IOException {
+	public boolean intersect(Fence fence, String gdbDatasource, String featureFieldName, double xCoord, double yCoord) throws UnknownHostException, IOException, IllegalStateException {
 		LOG.debug(String.format("Method intersect is called with parameters: Fence ID %s, Fence Rule %s, Xcoord %s and Ycoord %s.", fence.getFenceId(), fence.getRule(), xCoord, yCoord));
 		return GisUtils.isInFence(gdbDatasource, featureFieldName, fence.getFenceId(), xCoord, yCoord);
 	}

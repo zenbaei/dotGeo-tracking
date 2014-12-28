@@ -1,10 +1,6 @@
 package com.esrinea.dotGeo.tracking.service.facade.business;
 
-import java.io.IOException;
-
 import org.apache.log4j.Logger;
-
-import com.esrinea.dotGeo.tracking.service.facade.dto.EventData;
 
 public class TrackingServiceFacadeKarafTest {
 
@@ -15,16 +11,15 @@ public class TrackingServiceFacadeKarafTest {
 		this.trackingServiceFacade = trackingServiceFacade;
 	}
 
-	public void test() {
+	public void test() throws Exception {
 		if (trackingServiceFacade != null) {
 			log.info("TrackingServiceFacade Service has been initialized successfully.");
 			log.info("Calling trackingServiceFacade.initCache.");
 			try {
-				trackingServiceFacade.deviceFeedReceived(EventData.createWithDummyData());
+				// trackingServiceFacade.deviceFeedReceived(EventData.createWithDummyData());
+				if (trackingServiceFacade == null)
+					throw new IllegalStateException("Unable to initialize TrackingServiceFacade.");
 			} catch (NumberFormatException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

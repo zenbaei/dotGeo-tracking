@@ -22,7 +22,7 @@ public abstract class AbstractGeoEventDataExtractorTemplate implements GeoEventD
 
 	// TODO: ignore main fields case for instance; if xCoord wasn't created in same case in the DataDefinition then it won't be retrieved!
 	@Override
-	public EventData extract(GeoEvent geoEvent) {
+	public EventData extract(GeoEvent geoEvent) throws Exception {
 		LOG.debug("\n----------------------------------------------------------------------------------------------------------------------------------------------------\nGeoEvent Data Received, Data extraction will happened based on the fields' name and type defined in the GeoEvent Data Definition:\n----------------------------------------------------------------------------------------------------------------------------------------------------"
 				.toUpperCase());
 

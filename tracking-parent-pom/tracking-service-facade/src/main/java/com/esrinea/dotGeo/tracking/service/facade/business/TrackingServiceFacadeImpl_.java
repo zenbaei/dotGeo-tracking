@@ -60,7 +60,7 @@ public class TrackingServiceFacadeImpl_ implements TrackingServiceFacade {
 	private Map<Integer, Group> groups;
 
 	@Override
-	public void process(GeoEvent geoEvent) {
+	public void process(GeoEvent geoEvent) throws Exception {
 		deviceFeedReceived(geoEventDataExtractor.extract(geoEvent));
 	}
 
@@ -78,7 +78,7 @@ public class TrackingServiceFacadeImpl_ implements TrackingServiceFacade {
 	// TODO: refresh on intervals
 	// call by init-method in blueprint.xml
 	// TODO:add synchronized
-	public void cacheDeviceTypesEffectiveConfigurations() {
+	public void initializeCache() {
 		LOG.info("All Device Types will be retrieved and cached.");
 		LOG.debug("queryDeviceType method is called to find all device types along with their sensors, sensor configurations, alerts and alert configurations.");
 
@@ -126,10 +126,7 @@ public class TrackingServiceFacadeImpl_ implements TrackingServiceFacade {
 		LOG.info("Retrieved Device Types: " + deviceTypesCache);
 	}
 
-	public void deviceFeedReceived(EventData eventData) {
-		// TODO:remove call from here
-		cacheDeviceTypesEffectiveConfigurations();
-
+	public void deviceFeedReceived(EventData eventData) throws Exception {
 		LOG.debug("Retrieved Device Types: " + deviceTypesCache);
 
 		LOG.debug("\n--------------------------------------------------------------------------\n" + "PROCESSING DEVICE WITH SERIAL " + eventData.getSerial() + "\n--------------------------------------------------------------------------");
@@ -182,7 +179,7 @@ public class TrackingServiceFacadeImpl_ implements TrackingServiceFacade {
 
 				for (SensorConfiguration sensorConfiguration : sensor.getSensorConfigurations()) { // loop on deviceType sensor's sensorConfiguration, TEMP sensor configuration has 3 configurations (LOW,MED,HIGH)
 					if (sensorConfigurationService.isBusinessRuleSatisfiedDelegate(sensorConfiguration, sensorValue)) {// received sensor value fall under the business rule, the 3 TEMP sensor configurations will be checked against the received value
-						SensorLiveFeed sensorLiveFeed = new SensorLiveFeed(device, sensorConfiguration, String.valueOf(sensorValue), eventData.getFeedDateTime(), null); // insert SensorLiveFeed into Database
+						SensorLiveFeed sensorLiveFeed = new SensorLiveFeed(device, sensorConfiguration, String.valueOf(sensorValue), eventData.getFeedDateTime()); // insert SensorLiveFeed into Database
 						sensorLiveFeedService.create(sensorLiveFeed);
 						sensorConfigurationsAssociatedWithNewSensorLiveFeeds.put(sensorLiveFeed.getSensorConfiguration(), sensorLiveFeed); // keep sensor configurations that fall under the business rule
 						continue OUTER; // if reached then one sensor configuration of a specific sensor has succeed then move to the next sensor (ex; Temp sensor has 3 configurations: High, Medium and Low. Definity Temp sensor value with be either be High, Medium or Low

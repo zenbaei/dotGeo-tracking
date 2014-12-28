@@ -15,12 +15,10 @@
 		<property name="password" value="tracking" />
 	</bean>
 
-	<!-- <bean id="dataSource" class="com.microsoft.sqlserver.jdbc.SQLServerDataSource">
-	<property name="URL"
-		value="jdbc:sqlserver://192.168.9.33:1433;databaseName=BetaTrackingDBV501;selectMethod=cursor;sendStringParametersAsUnicode=false" />
-	<property name="user" value="sa" />
-	<property name="password" value="P@ssw0rd" />
-</bean> -->
+	<!-- <bean id="dataSource" class="com.microsoft.sqlserver.jdbc.SQLServerDataSource"> 
+		<property name="URL" value="jdbc:sqlserver://192.168.9.33:1433;databaseName=BetaTrackingDBV501;selectMethod=cursor;sendStringParametersAsUnicode=false" 
+		/> <property name="user" value="sa" /> <property name="password" value="P@ssw0rd" 
+		/> </bean> -->
 
 	<!-- register the data source as an osgi service -->
 	<service interface="javax.sql.DataSource" ref="dataSource">

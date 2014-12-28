@@ -27,7 +27,7 @@ public class SensorConfigurationServiceImpl extends AbstractService<SensorConfig
 		}
 
 		if (sensorConfiguration.getMinValue() <= receivedSensorValue && receivedSensorValue < sensorConfiguration.getMaxValue()) {
-			LOG.debug(String.format("\n----------------------------------------------\nSENSOR CONFIGURATION %s HAS SUCCEEDED\n----------------------------------------------", sensorConfiguration.getConfigText() == null ? "NO DESCRIPTION IN DB"
+			LOG.debug(String.format("\n----------------------------------------------\nSENSOR %s HAS SUCCEEDED FOR SENSOR CONFIGURATION OF %s\n----------------------------------------------", sensorConfiguration.getSensor().getNameEn().toUpperCase() ,sensorConfiguration.getConfigText() == null ? "NO DESCRIPTION IN DB"
 					: sensorConfiguration.getConfigText().toUpperCase()));
 			return true;
 		}
@@ -54,7 +54,7 @@ public class SensorConfigurationServiceImpl extends AbstractService<SensorConfig
 		}
 
 		if (sensorConfiguration.getTextValue().trim().equalsIgnoreCase(receivedSensorValue.trim())) {
-			LOG.debug(String.format("\n----------------------------------------------\nSENSOR CONFIGURATION %s HAS SUCCEEDED\n----------------------------------------------", sensorConfiguration.getConfigText() == null ? "NO DESCRIPTION IN DB"
+			LOG.debug(String.format("\n----------------------------------------------\nSENSOR %s HAS SUCCEEDED FOR SENSOR CONFIGURATION OF %s\n----------------------------------------------", sensorConfiguration.getSensor().getNameEn().toUpperCase() ,sensorConfiguration.getConfigText() == null ? "NO DESCRIPTION IN DB"
 					: sensorConfiguration.getConfigText().toUpperCase()));
 			return true;
 		}
@@ -69,7 +69,7 @@ public class SensorConfigurationServiceImpl extends AbstractService<SensorConfig
 		try {
 			Double d = Double.valueOf(val);
 			return isBusinessRuleSatisfied(sensorConfiguration, d);
-		} catch (NumberFormatException | ClassCastException ex) {
+		} catch (Exception ex) { //NumberFormatException | ClassCastException
 			return isBusinessRuleSatisfied(sensorConfiguration, val);
 		}
 	}

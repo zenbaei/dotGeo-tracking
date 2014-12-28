@@ -42,7 +42,7 @@ public class ResourceLiveFeedDAOTest {
 
 	@Test
 	@Rollback(value=false)
-	public void testCreate() {
+	public void testCreate() throws Exception {
 		resourceLiveFeedDAO.create(resourceLiveFeed);
 		List<ResourceLiveFeed> resourceLiveFeeds = resourceLiveFeedDAO
 				.find(device);

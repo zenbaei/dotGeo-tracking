@@ -10,11 +10,15 @@
 	</appender>
 
 	<root>
-		<level value="TRACE" />
+		<level value="INFO" />
 		<appender-ref ref="console" />
 	</root>
 
 	<category name="com.esrinea.dotGeo" additivity="true">
+		<priority value="TRACE" />
+	</category>
+	
+	<category name="org.apache.openjpa" additivity="true">
 		<priority value="TRACE" />
 	</category>
 

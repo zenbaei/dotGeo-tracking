@@ -67,9 +67,10 @@ public class SenariosTest extends DeviceServiceTest {
 
 	/**
 	 * Main senario is that received data should be inserted in ResourceLiveFeed regardless if it has sensors or alerts.
+	 * @throws Exception 
 	 */
 	@Test
-	public void testDeviceLifeFeedSenario() {
+	public void testDeviceLifeFeedSenario() throws Exception {
 
 		// first check if device exist.
 		device = deviceService.find(deviceId);
@@ -95,7 +96,7 @@ public class SenariosTest extends DeviceServiceTest {
 	 * Check sensors assigned to the device type
 	 */
 	@Test
-	public void testSensorSenario() {
+	public void testSensorSenario() throws Exception {
 		device = deviceService.find(deviceId);
 		List<Sensor> sensors = device.getDeviceType().getSensors();
 		// Map<Sensor, ExecludedSensor> execludedSensors = device.getResource().getExecludedSensors();
@@ -134,7 +135,7 @@ public class SenariosTest extends DeviceServiceTest {
 				}
 
 				// Sensor Configuration is on,then insert into SensorLiveFeed
-				SensorLiveFeed sensorLiveFeed = new SensorLiveFeed(device, sensorConfiguration, String.valueOf(sensorValue), feedDateTime, null);
+				SensorLiveFeed sensorLiveFeed = new SensorLiveFeed(device, sensorConfiguration, String.valueOf(sensorValue), feedDateTime);
 				sensorLiveFeedService.create(sensorLiveFeed);
 
 				// Check if an alert is set on that sensor

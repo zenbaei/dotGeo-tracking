@@ -10,8 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyJoinColumn;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -30,7 +30,8 @@ import com.esrinea.dotGeo.tracking.model.component.sensor.entity.Sensor;
  */
 @Entity
 @Table(name = "Tracking_Resources")
-@NamedQuery(name="Resource.findByRetired",query="SELECT r FROM Resource r WHERE r.retired = :retired")
+@NamedQueries(value = { @NamedQuery(name = "Resource.findByDeviceIdRetired", query = "SELECT r FROM Resource r WHERE r.device.id= :deviceId AND r.retired = :retired"),
+		@NamedQuery(name = "Resource.findByRetired", query = "SELECT r FROM Resource r WHERE r.retired = :retired") })
 public class Resource implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -46,12 +47,11 @@ public class Resource implements Serializable {
 	@MapKeyJoinColumn(name = "Sensor_DBID")
 	private Map<Sensor, ExecludedSensor> execludedSensors;
 
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Device_DBID")
 	private Device device;
 
-	@OneToMany(mappedBy = "resource", fetch = FetchType.LAZY)
-	private List<ResourceGroup> resourceGroups;
+	private List<ResourceGroup> resourceGroups = new ArrayList<ResourceGroup>();
 
 	@Column(name = "IsRetired")
 	private boolean retired;
@@ -75,23 +75,21 @@ public class Resource implements Serializable {
 	public boolean isRetired() {
 		return retired;
 	}
-	
+
+	@OneToMany(mappedBy = "resource", fetch = FetchType.LAZY)
 	public void setResourceGroups(List<ResourceGroup> resourceGroups) {
 		this.resourceGroups = resourceGroups;
 	}
-	
+
 	public void addResourceGroup(ResourceGroup resourceGroup) {
-		if(resourceGroups == null){
-			resourceGroups = new ArrayList<ResourceGroup>();
+		if (!resourceGroups.contains(resourceGroup)) {
+			resourceGroups.add(resourceGroup);
 		}
-		resourceGroups.add(resourceGroup);
 	}
 
 	@Override
 	public String toString() {
 		return "Resource [id=" + id + ", resourceGroups=" + resourceGroups + ", retired=" + retired + "]";
 	}
-
-	
 
 }

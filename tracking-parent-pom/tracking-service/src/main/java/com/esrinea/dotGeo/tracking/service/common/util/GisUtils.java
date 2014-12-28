@@ -2,6 +2,7 @@ package com.esrinea.dotGeo.tracking.service.common.util;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import org.apache.log4j.Logger;
 import com.esri.arcgis.datasourcesGDB.AccessWorkspaceFactory;
 import com.esri.arcgis.datasourcesGDB.FileGDBWorkspaceFactory;
 import com.esri.arcgis.datasourcesGDB.SdeWorkspaceFactory;
@@ -33,9 +34,13 @@ import com.esri.arcgis.system.esriLicenseProductCode;
 import com.esri.arcgis.system.esriLicenseStatus;
 
 public class GisUtils {
+	private static final Logger LOG = Logger.getLogger(GisUtils.class);
+	private static Workspace workspace;
+	private static WorkspaceFactory workspaceFactory;
 
 	/**
 	 * For test
+	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {
@@ -322,23 +327,36 @@ public class GisUtils {
 		}
 	}
 
-	public static boolean isInFence(String gdbDatasource, String featureFieldName, int id, double xCoord, double yCoord) throws UnknownHostException, IOException {
-		// Initialize engine console application
-		EngineInitializer.initializeEngine();
+	public static boolean isInFence(String gdbDatasource, String featureFieldName, int id, double xCoord, double yCoord) throws UnknownHostException, IOException, IllegalStateException {
+		if (workspaceFactory == null) {
+			// Initialize engine console application
+			EngineInitializer.initializeEngine();
 
-		// Initialize ArcGIS license
-		AoInitialize aoInit = new AoInitialize();
-		initializeArcGISLicenses(aoInit);
+			// Initialize ArcGIS license
+			AoInitialize aoInit = new AoInitialize();
+			initializeArcGISLicenses(aoInit);
 
-		WorkspaceFactory workspaceFactory = new WorkspaceFactory(new FileGDBWorkspaceFactory());
-		// Get the workspace
-		Workspace workspace = new Workspace(workspaceFactory.openFromFile(gdbDatasource, 0));
+			workspaceFactory = new WorkspaceFactory(new FileGDBWorkspaceFactory());
+			// Get the workspace
+			workspace = new Workspace(workspaceFactory.openFromFile(gdbDatasource, 0));
+		}
 		IEnumDatasetName enumDatasetName = workspace.getDatasetNames(esriDatasetType.esriDTFeatureDataset);
 		IDatasetName datasetName = enumDatasetName.next();
 		IFeatureClass featureClass = workspace.openFeatureClass(datasetName.getName());
 
 		IFeature feature = queryFeature(featureClass, featureFieldName, id);
-		return intersect(feature, xCoord, yCoord);
+		if (feature == null) {
+			String msg = String.format("No Feature found with criteria of %s= %s.", featureFieldName, id);
+			LOG.info(msg);
+			throw new IllegalStateException(msg);
+		}
+		boolean intersected = intersect(feature, xCoord, yCoord);
+		if (intersected) {
+			LOG.debug("Point is within the fence");
+		} else {
+			LOG.debug("Point is out the fence");
+		}
+		return intersected;
 	}
 
 	public static IFeature queryFeature(IFeatureClass featureClass, String fieldName, int id) throws UnknownHostException, IOException {

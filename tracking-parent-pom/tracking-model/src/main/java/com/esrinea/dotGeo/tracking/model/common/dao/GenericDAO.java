@@ -4,6 +4,6 @@ public interface GenericDAO<T> {
 	
 	T find(int id);
 	
-	void create(T entity);
+	void create(T entity) throws Exception;
 
 }

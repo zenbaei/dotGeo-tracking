@@ -102,10 +102,18 @@
 		class="com.esrinea.dotGeo.tracking.service.component.group.GroupServiceImpl">
 		<constructor-arg ref="groupDAO" />
 	</bean>
-	
+
 	<bean id="fenceService"
 		class="com.esrinea.dotGeo.tracking.service.component.fence.FenceServiceImpl">
 		<constructor-arg ref="fenceDAO" />
+	</bean>
+	<bean id="resourceService"
+		class="com.esrinea.dotGeo.tracking.service.component.resource.ResourceServiceImpl">
+		<constructor-arg ref="resourceDAO" />
+	</bean>
+	<bean id="resourceGroupService"
+		class="com.esrinea.dotGeo.tracking.service.component.resourceGroup.ResourceGroupServiceImpl">
+		<constructor-arg ref="resourceGroupDAO" />
 	</bean>
 </beans>
 

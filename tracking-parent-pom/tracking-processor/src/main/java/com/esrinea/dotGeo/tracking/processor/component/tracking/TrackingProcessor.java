@@ -17,6 +17,8 @@ public class TrackingProcessor extends GeoEventProcessorBase {
 	protected TrackingProcessor(GeoEventProcessorDefinition definition, TrackingServiceFacade trackingServiceFacade) throws ComponentException {
 		super(definition);
 		this.trackingServiceFacade = trackingServiceFacade;
+		//TODO:remove
+		trackingServiceFacade.initializeCache();
 	}
 
 	@Override

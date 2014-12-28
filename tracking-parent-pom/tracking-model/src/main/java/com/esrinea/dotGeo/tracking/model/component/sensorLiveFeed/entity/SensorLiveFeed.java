@@ -26,8 +26,7 @@ import com.esrinea.dotGeo.tracking.model.component.sensorConfiguration.entity.Se
  */
 @Entity
 @Table(name = "Sensors_LiveFeeds")
-@NamedQueries({ @NamedQuery(name = "SensorsLiveFeed.findAll", query = "SELECT s FROM SensorLiveFeed s"), 
-	@NamedQuery(name = "SensorLiveFeed.findBySensorValue", query = "SELECT s FROM SensorLiveFeed s WHERE s.sensorValue = :sensorValue") })
+@NamedQueries({ @NamedQuery(name = "SensorsLiveFeed.findAll", query = "SELECT s FROM SensorLiveFeed s"), @NamedQuery(name = "SensorLiveFeed.findBySensorValue", query = "SELECT s FROM SensorLiveFeed s WHERE s.sensorValue = :sensorValue") })
 public class SensorLiveFeed implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -51,19 +50,15 @@ public class SensorLiveFeed implements Serializable {
 	@Column(name = "Sensor_DateTime")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateTime;
-	
-	@Column(name="Sensor_value")
-	private String geoFenceLayerIdAndFenceId;
 
 	public SensorLiveFeed() {
 	}
 
-	public SensorLiveFeed(Device device, SensorConfiguration sensorConfiguration, String sensorValue, Date dateTime, String geoFenceLayerIdAndFenceId) {
+	public SensorLiveFeed(Device device, SensorConfiguration sensorConfiguration, String sensorValue, Date dateTime) {
 		this.sensorConfiguration = sensorConfiguration;
 		this.device = device;
 		this.sensorValue = sensorValue;
 		this.dateTime = dateTime;
-		this.geoFenceLayerIdAndFenceId = geoFenceLayerIdAndFenceId;
 	}
 
 	public Device getDevice() {
@@ -102,14 +97,9 @@ public class SensorLiveFeed implements Serializable {
 		return id;
 	}
 
-	public String getGeoFenceLayerIdAndFenceId() {
-		return geoFenceLayerIdAndFenceId;
-	}
-	
 	@Override
 	public String toString() {
-		return "SensorLiveFeed [id=" + id + ", device=" + device + ", sensorValue=" + sensorValue + ", sensorConfiguration=" + sensorConfiguration + ", dateTime=" + dateTime + ", geoFenceLayerIdAndFenceId="+ geoFenceLayerIdAndFenceId + "]";
+		return "SensorLiveFeed [id=" + id + ", device=" + device + ", sensorValue=" + sensorValue + ", sensorConfiguration=" + sensorConfiguration + ", dateTime=" + dateTime + "]";
 	}
 
-	
 }

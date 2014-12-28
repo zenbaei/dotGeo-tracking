@@ -12,7 +12,9 @@ import com.esrinea.dotGeo.tracking.service.facade.dto.EventData;
  */
 public interface TrackingServiceFacade {
 
-	void process(GeoEvent geoEvent);
+	void process(GeoEvent geoEvent) throws Exception;
+	//TODO:add description
+	void initializeCache();
 
-	void deviceFeedReceived(EventData eventData);
+	void deviceFeedReceived(EventData eventData) throws Exception;
 }

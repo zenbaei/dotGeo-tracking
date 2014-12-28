@@ -5,7 +5,6 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
-import org.eclipse.persistence.internal.sessions.AbstractRecord.NoEntry;
 
 public abstract class AbstractDAO<T> implements GenericDAO<T> {
 
@@ -32,7 +31,7 @@ public abstract class AbstractDAO<T> implements GenericDAO<T> {
 	}
 
 	@Override
-	public void create(T entity) {
+	public void create(T entity) throws Exception {
 		try {
 			entityManager.persist(entity);
 			LOG.debug("Entity " + entity.getClass().getSimpleName() + " has been created.");

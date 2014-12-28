@@ -31,11 +31,9 @@ public class DeviceType implements Serializable {
 	@Column(name = "DeviceType_DBID", unique = true, nullable = false)
 	private int id;
 
-	@OneToMany(mappedBy = "deviceType", fetch = FetchType.LAZY)
-	private List<Sensor> sensors;
+	private List<Sensor> sensors = new ArrayList<Sensor>();
 
-	@OneToMany(mappedBy = "deviceType", fetch = FetchType.LAZY)
-	private List<Alert> alerts;
+	private List<Alert> alerts = new ArrayList<Alert>();
 
 	@Column(name = "IsRetired")
 	private boolean retired;
@@ -58,30 +56,30 @@ public class DeviceType implements Serializable {
 		return sensors;
 	}
 
+	@OneToMany(mappedBy = "deviceType", fetch = FetchType.LAZY)
 	public void setSensors(List<Sensor> sensors) {
 		this.sensors = sensors;
 	}
 
 	public void addSensor(Sensor sensor) {
-		if (sensors == null) {
-			sensors = new ArrayList<Sensor>();
+		if (!sensors.contains(sensor)) {
+			sensors.add(sensor);
 		}
-		sensors.add(sensor);
 	}
 
 	public List<Alert> getAlerts() {
 		return alerts;
 	}
 
+	@OneToMany(mappedBy = "deviceType", fetch = FetchType.LAZY)
 	public void setAlerts(List<Alert> alerts) {
 		this.alerts = alerts;
 	}
 
 	public void addAlert(Alert alert) {
-		if (alerts == null) {
-			alerts = new ArrayList<Alert>();
+		if (!alerts.contains(alert)) {
+			alerts.add(alert);
 		}
-		alerts.add(alert);
 	}
 
 	public boolean isRetired() {

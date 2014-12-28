@@ -1,13 +1,8 @@
 package com.esrinea.dotGeo.tracking.service.facade.business;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.persistence.NoResultException;
-
-import org.apache.commons.collections.functors.FalsePredicate;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,13 +13,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.esrinea.dotGeo.tracking.model.component.alert.entity.Alert;
-import com.esrinea.dotGeo.tracking.model.component.alertLiveFeed.entity.AlertLiveFeed;
-import com.esrinea.dotGeo.tracking.model.component.sensorLiveFeed.entity.SensorLiveFeed;
 import com.esrinea.dotGeo.tracking.service.component.alert.AlertService;
 import com.esrinea.dotGeo.tracking.service.component.alertConfiguration.AlertConfigurationService;
 import com.esrinea.dotGeo.tracking.service.component.alertLiveFeed.AlertLiveFeedService;
-import com.esrinea.dotGeo.tracking.service.component.fence.FenceService;
 import com.esrinea.dotGeo.tracking.service.component.sensor.SensorService;
 import com.esrinea.dotGeo.tracking.service.component.sensorLiveFeed.SensorLiveFeedService;
 import com.esrinea.dotGeo.tracking.service.facade.dto.EventData;
@@ -66,7 +57,8 @@ public class TrackingServiceFacadeTest {
 	
 	@Test
 	@Rollback(value=false)
-	public void testDeviceFeedReceived() throws NumberFormatException, IOException {
+	public void testDeviceFeedReceived() throws Exception {
+		trackingServiceFacade.initializeCache();
 		trackingServiceFacade.deviceFeedReceived(EventData.createWithDummyData()); // Check if sensorConfigurations inserted right in sensorLiveFeed
 		/*
 		 * // find sensorLiveFeed by sensor value SensorLiveFeed oilSensorLiveFeed = sensorLiveFeedService.find("in"); Assert.assertNotNull(oilSensorLiveFeed); Assert.assertEquals("OIL", oilSensorLiveFeed.getSensorConfiguration().getSensor().getNameEn());
@@ -79,16 +71,5 @@ public class TrackingServiceFacadeTest {
 		 * // Check if alertConfigurations inserted right in alertLiveFeed Alert compoundAlert2 = alertService.find(5); try { AlertLiveFeed alertLiveFeed2 = alertLiveFeedService.findByAlert(compoundAlert2.getId()); Assert.fail("the alert should not exist"); } catch (NoResultException ex) { }
 		 */
 	}
-
-	@Test
-	@Rollback(value = false)
-	public void testSensorSpeed() {
-		// serviceFacade.deviceFeedReceived(eventData);
-	}
-
-	/*@Test
-	public void testCacheResourcesByDevice() {
-		trackingServiceFacade.cacheResourcesByDevice();
-	}*/
 
 }

@@ -32,7 +32,7 @@ public class ResourceDAOImpl extends AbstractDAO<Resource> implements ResourceDA
 
 	@Override
 	public Resource find(int deviceId, boolean retired) {
-		LOG.debug(String.format("Resouce.findByDeviceIdRetired, parameters: %s, %s", deviceId, retired));
+		LOG.debug(String.format("Resource.findByDeviceIdRetired, parameters: %s, %s", deviceId, retired));
 		Resource resource = null;
 		try {
 			resource = entityManager.createNamedQuery("Resource.findByDeviceIdRetired", Resource.class).setParameter("deviceId", deviceId).setParameter("retired", retired).getSingleResult();

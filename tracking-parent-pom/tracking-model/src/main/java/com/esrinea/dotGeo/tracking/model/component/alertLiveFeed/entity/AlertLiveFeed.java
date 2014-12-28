@@ -57,7 +57,7 @@ public class AlertLiveFeed implements Serializable {
 	@Column(name = "Y_Coord", precision = 53)
 	private double yCoord;
 
-	@Column(name = "SenosrType")
+	@Column(name = "SensorType")
 	private String sensorTypeId;
 
 	@Column(name = "SensorValue")
@@ -87,7 +87,10 @@ public class AlertLiveFeed implements Serializable {
 
 	@Override
 	public String toString() {
-		return "AlertLiveFeed [id=" + id + ", feedDateTime=" + feedDateTime + ", alert=" + alert + ", device=" + device + ", zone=" + zone + "]";
+		return "AlertLiveFeed [id=" + id + ", feedDateTime=" + feedDateTime + ", alert description=" + alert.getNameEn() + ", device id=" + device.getId() + ", zone=" + zone + ", xCoord=" + xCoord + ", yCoord=" + yCoord + ", sensorTypeId=" + sensorTypeId
+				+ ", geoFenceLayerIdAndFenceId(Sensor Value)=" + geoFenceLayerIdAndFenceId + "]";
 	}
+
+	
 
 }

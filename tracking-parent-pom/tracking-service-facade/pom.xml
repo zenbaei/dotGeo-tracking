@@ -55,7 +55,7 @@
 							<outputDirectory>${basedir}/target/test-classes/spring</outputDirectory>
 							<resources>
 								<resource>
-									<directory>${project.parent.basedir}/tracking-model/src/test/resources/*</directory>
+									<directory>${project.parent.basedir}/tracking-model/src/test/resources/spring</directory>
 								</resource>
 								<resource>
 									<directory>${project.parent.basedir}/tracking-service/src/test/resources/spring</directory>

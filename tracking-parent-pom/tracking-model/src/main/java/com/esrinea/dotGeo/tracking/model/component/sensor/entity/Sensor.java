@@ -26,7 +26,7 @@ import com.esrinea.dotGeo.tracking.model.component.sensorType.entity.SensorType;
 @Table(name = "Sensors")
 @NamedQueries({ @NamedQuery(name = "Sensor.findAll", query = "SELECT s FROM Sensor s"),
 	@NamedQuery(name = "Sensor.findByNameEn", query = "SELECT s FROM Sensor s WHERE s.nameEn = :sensorNameEn"),
-		@NamedQuery(name = "Sensor.findByDeviceTypeRetired", query = "SELECT s FROM Sensor s WHERE s.deviceType.id = :id AND s.retired = :retired") })
+		@NamedQuery(name = "Sensor.findByDeviceTypeIdRetired", query = "SELECT s FROM Sensor s WHERE s.deviceType.id = :id AND s.retired = :retired") })
 public class Sensor implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -80,12 +80,12 @@ public class Sensor implements Serializable {
 		return sensorType;
 	}
 
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + id;
-		result = prime * result + ((nameEn == null) ? 0 : nameEn.hashCode());
 		return result;
 	}
 
@@ -99,11 +99,6 @@ public class Sensor implements Serializable {
 			return false;
 		Sensor other = (Sensor) obj;
 		if (id != other.id)
-			return false;
-		if (nameEn == null) {
-			if (other.nameEn != null)
-				return false;
-		} else if (!nameEn.equals(other.nameEn))
 			return false;
 		return true;
 	}
