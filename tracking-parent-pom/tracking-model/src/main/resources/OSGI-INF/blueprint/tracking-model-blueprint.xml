@@ -27,7 +27,6 @@
 	<bean id="deviceDAO"
 		class="com.esrinea.dotGeo.tracking.model.component.device.dao.DeviceDAOImpl">
 		<jpa:context property="entityManager" unitname="tracking" />
-		<tx:transaction method="*" value="Required" />
 	</bean>
 	<service
 		interface="com.esrinea.dotGeo.tracking.model.component.device.dao.DeviceDAO"
@@ -39,7 +38,6 @@
 	<bean id="resourceLiveFeedDAO"
 		class="com.esrinea.dotGeo.tracking.model.component.resourceLiveFeed.dao.ResourceLiveFeedDAOImpl">
 		<jpa:context property="entityManager" unitname="tracking" />
-		<tx:transaction method="*" value="Required" />
 	</bean>
 	<service
 		interface="com.esrinea.dotGeo.tracking.model.component.resourceLiveFeed.dao.ResourceLiveFeedDAO"
@@ -53,7 +51,6 @@
 	<bean id="sensorLiveFeedDAO"
 		class="com.esrinea.dotGeo.tracking.model.component.sensorLiveFeed.dao.SensorLiveFeedDAOImpl">
 		<jpa:context property="entityManager" unitname="tracking" />
-		<tx:transaction method="*" value="Required" />
 	</bean>
 	<service
 		interface="com.esrinea.dotGeo.tracking.model.component.sensorLiveFeed.dao.SensorLiveFeedDAO"
@@ -66,7 +63,6 @@
 	<bean id="sensorDAO"
 		class="com.esrinea.dotGeo.tracking.model.component.sensor.dao.SensorDAOImpl">
 		<jpa:context property="entityManager" unitname="tracking" />
-		<tx:transaction method="*" value="Required" />
 	</bean>
 	<service
 		interface="com.esrinea.dotGeo.tracking.model.component.sensor.dao.SensorDAO"
@@ -79,7 +75,6 @@
 	<bean id="sensorConfigurationDAO"
 		class="com.esrinea.dotGeo.tracking.model.component.sensorConfiguration.dao.SensorConfigurationDAOImpl">
 		<jpa:context property="entityManager" unitname="tracking" />
-		<tx:transaction method="*" value="Required" />
 	</bean>
 	<service
 		interface="com.esrinea.dotGeo.tracking.model.component.sensorConfiguration.dao.SensorConfigurationDAO"
@@ -93,7 +88,6 @@
 	<bean id="alertDAO"
 		class="com.esrinea.dotGeo.tracking.model.component.alert.dao.AlertDAOImpl">
 		<jpa:context property="entityManager" unitname="tracking" />
-		<tx:transaction method="*" value="Required" />
 	</bean>
 	<service
 		interface="com.esrinea.dotGeo.tracking.model.component.alert.dao.AlertDAO"
@@ -106,7 +100,6 @@
 	<bean id="alertConfigurationDAO"
 		class="com.esrinea.dotGeo.tracking.model.component.alertConfiguration.dao.AlertConfigurationDAOImpl">
 		<jpa:context property="entityManager" unitname="tracking" />
-		<tx:transaction method="*" value="Required" />
 	</bean>
 	<service
 		interface="com.esrinea.dotGeo.tracking.model.component.alertConfiguration.dao.AlertConfigurationDAO"
@@ -118,7 +111,6 @@
 	<bean id="deviceTypeDAO"
 		class="com.esrinea.dotGeo.tracking.model.component.deviceType.dao.DeviceTypeDAOImpl">
 		<jpa:context property="entityManager" unitname="tracking" />
-		<tx:transaction method="*" value="Required" />
 	</bean>
 	<service
 		interface="com.esrinea.dotGeo.tracking.model.component.deviceType.dao.DeviceTypeDAO"
@@ -130,7 +122,6 @@
 	<bean id="alertLiveFeedDAO"
 		class="com.esrinea.dotGeo.tracking.model.component.alertLiveFeed.dao.AlertLiveFeedDAOImpl">
 		<jpa:context property="entityManager" unitname="tracking" />
-		<tx:transaction method="*" value="Required" />
 	</bean>
 	<service
 		interface="com.esrinea.dotGeo.tracking.model.component.alertLiveFeed.dao.AlertLiveFeedDAO"
@@ -141,7 +132,6 @@
 	<bean id="alertSensorLiveFeedDAO"
 		class="com.esrinea.dotGeo.tracking.model.component.alertSensorLiveFeed.dao.AlertSensorLiveFeedDAOImpl">
 		<jpa:context property="entityManager" unitname="tracking" />
-		<tx:transaction method="*" value="Required" />
 	</bean>
 	<service
 		interface="com.esrinea.dotGeo.tracking.model.component.alertSensorLiveFeed.dao.AlertSensorLiveFeedDAO"
@@ -152,7 +142,6 @@
 	<bean id="resourceGroupDAO"
 		class="com.esrinea.dotGeo.tracking.model.component.resourceGroup.dao.ResourceGroupDAOImpl">
 		<jpa:context property="entityManager" unitname="tracking" />
-		<tx:transaction method="*" value="Required" />
 	</bean>
 	<service
 		interface="com.esrinea.dotGeo.tracking.model.component.resourceGroup.dao.ResourceGroupDAO"
@@ -162,6 +151,7 @@
 	<!-- Group-Start -->
 	<bean id="groupDAO"
 		class="com.esrinea.dotGeo.tracking.model.component.group.dao.GroupDAOImpl">
+		<jpa:context property="entityManager" unitname="tracking" />
 	</bean>
 	<service
 		interface="com.esrinea.dotGeo.tracking.model.component.group.dao.GroupDAO"
@@ -171,6 +161,7 @@
 	<!-- Fence-Start -->
 	<bean id="fenceDAO"
 		class="com.esrinea.dotGeo.tracking.model.component.fence.dao.FenceDAOImpl">
+		<jpa:context property="entityManager" unitname="tracking" />
 	</bean>
 	<service
 		interface="com.esrinea.dotGeo.tracking.model.component.fence.dao.FenceDAO"
@@ -180,6 +171,7 @@
 	<!-- Resource-Start -->
 	<bean id="resourceDAO"
 		class="com.esrinea.dotGeo.tracking.model.component.resource.dao.ResourceDAOImpl">
+		<jpa:context property="entityManager" unitname="tracking" />
 	</bean>
 	<service
 		interface="com.esrinea.dotGeo.tracking.model.component.resource.dao.ResourceDAO"

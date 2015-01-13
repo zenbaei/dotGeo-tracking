@@ -2,12 +2,12 @@ package com.esrinea.dotGeo.tracking.service.facade.dto;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -135,23 +135,27 @@ public class EventData {
 	 * For test purposes.
 	 * 
 	 * @return
-	 * @throws IOException 
-	 * @throws NumberFormatException 
+	 * @throws IOException
+	 * @throws NumberFormatException
 	 */
-	public static EventData createWithDummyData() throws NumberFormatException, IOException {
+	public static List<EventData> createWithDummyData(String filePath) throws NumberFormatException, IOException {
 		EventData eventData = null;
 		String line = "";
-		BufferedReader test_data = new BufferedReader(new FileReader(new File("C:/test_data.txt")));
+		BufferedReader test_data = new BufferedReader(new FileReader(new File(filePath)));
+		List<EventData> eventDatas = new ArrayList<EventData>();
 		while ((line = test_data.readLine()) != null) {
 			String[] tokens = line.split(",");
+			if (tokens[0].equals(""))
+				continue;
 			eventData = new EventData(tokens[0], new Double(tokens[1].trim()), new Double(tokens[2].trim()), new Integer(tokens[3].trim()), new Double(tokens[4].trim()));
 			Map<String, Object> sensorValues = new HashMap<String, Object>();
 			sensorValues.put("SPEED", new Double(tokens[5].trim()));
 			sensorValues.put("TEMPERATURE", new Double(tokens[6].trim()));
 			sensorValues.put("SEAT BELT", tokens[7]);
 			eventData.setSensorValues(sensorValues);
+			eventDatas.add(eventData);
 		}
-		return eventData;
+		return eventDatas;
 	}
 
 	@Override

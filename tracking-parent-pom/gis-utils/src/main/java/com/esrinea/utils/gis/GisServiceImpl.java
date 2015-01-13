@@ -1,8 +1,11 @@
-package com.esrinea.dotGeo.tracking.service.common.util;
+package com.esrinea.utils.gis;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
+
+import org.springframework.stereotype.Service;
+
 import com.esri.arcgis.datasourcesGDB.AccessWorkspaceFactory;
 import com.esri.arcgis.datasourcesGDB.FileGDBWorkspaceFactory;
 import com.esri.arcgis.datasourcesGDB.SdeWorkspaceFactory;
@@ -33,19 +36,19 @@ import com.esri.arcgis.system.EngineInitializer;
 import com.esri.arcgis.system.esriLicenseProductCode;
 import com.esri.arcgis.system.esriLicenseStatus;
 
-public class GisUtils {
-	private static final Logger LOG = Logger.getLogger(GisUtils.class);
-	private static Workspace workspace;
-	private static WorkspaceFactory workspaceFactory;
+@Service
+public class GisServiceImpl implements GisService {
+	private final Logger LOG = Logger.getLogger("GisUtilsImpl");
+	private Workspace workspace;
+	private WorkspaceFactory workspaceFactory;
+	IFeatureClass featureClass;
 
 	/**
 	 * For test
 	 * 
 	 * @param args
 	 */
-	public static void main(String[] args) {
-		System.out.println("Starting BrowseFileGDB - An ArcObjects SDK Developer Sample");
-
+	public void initalize() {
 		try {
 			// Initialize engine console application
 			EngineInitializer.initializeEngine();
@@ -53,17 +56,6 @@ public class GisUtils {
 			// Initialize ArcGIS license
 			AoInitialize aoInit = new AoInitialize();
 			initializeArcGISLicenses(aoInit);
-
-			// Get DEVKITHOME Home
-			String devKitHome = System.getenv("AGSDEVKITJAVA");
-
-			// Data access setup
-			String inFGDB = "D:/LA_Zones.gdb";
-			System.out.println("Input is " + inFGDB);
-
-			browse("geodatabase", inFGDB);
-
-			System.out.println("Done.");
 
 			// Ensure any ESRI libraries are unloaded in the correct order
 			aoInit.shutdown();
@@ -81,7 +73,7 @@ public class GisUtils {
 	 * @param aoInit
 	 *            The AoInitialize object instantiated in the main method.
 	 */
-	private static void initializeArcGISLicenses(AoInitialize aoInit) {
+	private void initializeArcGISLicenses(AoInitialize aoInit) {
 		try {
 			if (aoInit.isProductCodeAvailable(esriLicenseProductCode.esriLicenseProductCodeEngine) == esriLicenseStatus.esriLicenseAvailable)
 				aoInit.initialize(esriLicenseProductCode.esriLicenseProductCodeEngine);
@@ -106,7 +98,7 @@ public class GisUtils {
 	 * @throws IOException
 	 *             if couldn't browse data
 	 */
-	public static void browse(String dataType, String inputPath) throws IOException {
+	public void browse(String dataType, String inputPath) throws IOException {
 		try {
 			String fileName = null;
 			WorkspaceFactory workspaceFactory = null;
@@ -191,7 +183,7 @@ public class GisUtils {
 	 * @param datasetNameString
 	 * @throws IOException
 	 */
-	private static void listFeatureClasses(WorkspaceFactory workspaceFactory, Workspace workspace, String featureClasses, String datasetNameString) throws IOException {
+	private void listFeatureClasses(WorkspaceFactory workspaceFactory, Workspace workspace, String featureClasses, String datasetNameString) throws IOException {
 		try {
 			FeatureClass featureClass = null;
 
@@ -286,7 +278,7 @@ public class GisUtils {
 	 * @param datasetName
 	 * @throws IOException
 	 */
-	private static void listDatasets(WorkspaceFactory workspaceFactory, Workspace workspace, String datasetName) throws IOException {
+	private void listDatasets(WorkspaceFactory workspaceFactory, Workspace workspace, String datasetName) throws IOException {
 		try {
 			// Create FeatureDataset name object and Dataset name object
 			FeatureDatasetName localDatasetName = new FeatureDatasetName();
@@ -327,7 +319,9 @@ public class GisUtils {
 		}
 	}
 
-	public static boolean isInFence(String gdbDatasource, String featureFieldName, int id, double xCoord, double yCoord) throws UnknownHostException, IOException, IllegalStateException {
+	public boolean isInFence(String gdbDatasource, String queryByField, int id, double xCoord, double yCoord) throws UnknownHostException, IOException, IllegalStateException {
+		LOG.info(String.format("isInFence called with parameters, GDBDatasource %s, queryByField %s, ID %s, Xcoord %s, Ycoord %s", gdbDatasource, queryByField, id, xCoord, yCoord));
+
 		if (workspaceFactory == null) {
 			// Initialize engine console application
 			EngineInitializer.initializeEngine();
@@ -339,27 +333,28 @@ public class GisUtils {
 			workspaceFactory = new WorkspaceFactory(new FileGDBWorkspaceFactory());
 			// Get the workspace
 			workspace = new Workspace(workspaceFactory.openFromFile(gdbDatasource, 0));
+			IEnumDatasetName enumDatasetName = workspace.getDatasetNames(esriDatasetType.esriDTFeatureDataset);
+			IDatasetName datasetName = enumDatasetName.next();
+			featureClass = workspace.openFeatureClass(datasetName.getName());
+			aoInit.shutdown();
 		}
-		IEnumDatasetName enumDatasetName = workspace.getDatasetNames(esriDatasetType.esriDTFeatureDataset);
-		IDatasetName datasetName = enumDatasetName.next();
-		IFeatureClass featureClass = workspace.openFeatureClass(datasetName.getName());
 
-		IFeature feature = queryFeature(featureClass, featureFieldName, id);
+		IFeature feature = queryFeature(featureClass, queryByField, id);
 		if (feature == null) {
-			String msg = String.format("No Feature found with criteria of %s= %s.", featureFieldName, id);
+			String msg = String.format("No Feature found with criteria of %s= %s.", queryByField, id);
 			LOG.info(msg);
 			throw new IllegalStateException(msg);
 		}
 		boolean intersected = intersect(feature, xCoord, yCoord);
 		if (intersected) {
-			LOG.debug("Point is within the fence");
+			LOG.info("Point is within fence");
 		} else {
-			LOG.debug("Point is out the fence");
+			LOG.info("Point is out fence");
 		}
 		return intersected;
 	}
 
-	public static IFeature queryFeature(IFeatureClass featureClass, String fieldName, int id) throws UnknownHostException, IOException {
+	public IFeature queryFeature(IFeatureClass featureClass, String fieldName, int id) throws UnknownHostException, IOException {
 		IFeature feature = null;
 		IQueryFilter filter = new QueryFilter();
 		filter.setWhereClause(fieldName + "=" + id);
@@ -368,14 +363,14 @@ public class GisUtils {
 		return feature;
 	}
 
-	public static void listFields(IFeatureClass featureClass) throws AutomationException, IOException {
+	public void listFields(IFeatureClass featureClass) throws AutomationException, IOException {
 		IFields iFields = featureClass.getFields();
 		for (int i = 0; i < iFields.getFieldCount(); i++) {
 			System.out.println("Field: " + iFields.getField(i).getName());
 		}
 	}
 
-	public static boolean intersect(IFeature feature, double xCoord, double yCoord) throws UnknownHostException, IOException {
+	public boolean intersect(IFeature feature, double xCoord, double yCoord) throws UnknownHostException, IOException {
 		IPoint point = new Point();
 		point.setX(xCoord);
 		point.setY(yCoord);

@@ -106,6 +106,7 @@
 	<bean id="fenceService"
 		class="com.esrinea.dotGeo.tracking.service.component.fence.FenceServiceImpl">
 		<constructor-arg ref="fenceDAO" />
+		<property name="gisServiceURL" value="http://localhost:8090/isInFence" />
 	</bean>
 	<bean id="resourceService"
 		class="com.esrinea.dotGeo.tracking.service.component.resource.ResourceServiceImpl">

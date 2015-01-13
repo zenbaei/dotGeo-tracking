@@ -51,15 +51,16 @@ public class TrackingServiceFacadeTest {
 		sensorValues.put("TEMP", 50);// this falls under Med configText in sensorConfiguration
 		sensorValues.put("SPEED", 130); // SENSOR SPEED
 		eventData = new EventData("1", 2.365, 5.245, 100, 222, sensorValues);
-
+		trackingServiceFacade.initializeCache();
 	}
 
-	
 	@Test
-	@Rollback(value=false)
+	@Transactional(propagation = Propagation.REQUIRED)
+	@Rollback(value = true)
 	public void testDeviceFeedReceived() throws Exception {
-		trackingServiceFacade.initializeCache();
-		trackingServiceFacade.deviceFeedReceived(EventData.createWithDummyData()); // Check if sensorConfigurations inserted right in sensorLiveFeed
+		for (EventData eventData : EventData.createWithDummyData("C:/test_data.txt")) {
+			trackingServiceFacade.deviceFeedReceived(eventData); // Check if sensorConfigurations inserted right in sensorLiveFeed
+		}
 		/*
 		 * // find sensorLiveFeed by sensor value SensorLiveFeed oilSensorLiveFeed = sensorLiveFeedService.find("in"); Assert.assertNotNull(oilSensorLiveFeed); Assert.assertEquals("OIL", oilSensorLiveFeed.getSensorConfiguration().getSensor().getNameEn());
 		 * 
@@ -71,5 +72,4 @@ public class TrackingServiceFacadeTest {
 		 * // Check if alertConfigurations inserted right in alertLiveFeed Alert compoundAlert2 = alertService.find(5); try { AlertLiveFeed alertLiveFeed2 = alertLiveFeedService.findByAlert(compoundAlert2.getId()); Assert.fail("the alert should not exist"); } catch (NoResultException ex) { }
 		 */
 	}
-
 }

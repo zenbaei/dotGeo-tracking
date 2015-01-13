@@ -9,10 +9,10 @@ import javax.jms.IllegalStateException;
 import com.esrinea.dotGeo.tracking.model.common.dao.GenericDAO;
 import com.esrinea.dotGeo.tracking.model.component.fence.entity.Fence;
 
-public interface FenceService extends GenericDAO<Fence>{
-	
+public interface FenceService extends GenericDAO<Fence> {
+
 	List<Fence> find(int groupId, boolean retired);
 
-	boolean intersect(Fence fence, String gdbDatasource, String featureFieldName, double xCoord, double yCoord)throws UnknownHostException, IOException, IllegalStateException;
+	boolean intersect(Fence fence, String gdbDataSource, String queryByField, double xCoord, double yCoord) throws UnknownHostException, IOException, IllegalStateException, InstantiationException, IllegalAccessException, ClassNotFoundException;
 
 }

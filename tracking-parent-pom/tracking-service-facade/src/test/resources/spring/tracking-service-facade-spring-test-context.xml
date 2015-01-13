@@ -31,8 +31,8 @@
 		<property name="resourceService" ref="resourceService" />
 		<property name="resourceGroupService" ref="resourceGroupService" />
 		<property name="groupService" ref="groupService" />
-		<property name="gdbDatasource" value="D:/LA_Zones.gdb" />
-		<property name="featureFieldName" value="ID" />
+		<property name="gdbDatasource" value="D:LA_Zones.gdb" />
+		<property name="queryByField" value="ID" />
 	</bean>
 
 

@@ -37,9 +37,9 @@ public class ResourceDAOImpl extends AbstractDAO<Resource> implements ResourceDA
 		try {
 			resource = entityManager.createNamedQuery("Resource.findByDeviceIdRetired", Resource.class).setParameter("deviceId", deviceId).setParameter("retired", retired).getSingleResult();
 		} catch (NoResultException ex) {
-			throw new NoResultException(String.format("%s with Device ID %s does not exist in database or is %s.", "Resource", deviceId, retired ? "not retired" : "retired"));
+		LOG.warn(String.format("%s with Device ID %s does not exist in database or is %s.", "Resource", deviceId, retired ? "not retired" : "retired"));
 		} catch (NonUniqueResultException ex) {
-			throw new NonUniqueResultException(String.format("%s for Device ID of %s is duplicated or the one to one realtion it is joining with is refering it, more than once by mistake.", "Resource", deviceId));
+			LOG.warn(String.format("%s for Device ID of %s is duplicated or the one to one realtion it is joining with is refering it, more than once by mistake.", "Resource", deviceId));
 		}
 		return resource;
 	}

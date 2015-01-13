@@ -163,6 +163,7 @@
 	<bean id="fenceService"
 		class="com.esrinea.dotGeo.tracking.service.component.fence.FenceServiceImpl">
 		<argument ref="fenceDAO" />
+		<property name="gisServiceURL" value="http://localhost:8090/isInFence" />
 	</bean>
 	<service
 		interface="com.esrinea.dotGeo.tracking.service.component.fence.FenceService"
@@ -193,7 +194,7 @@
 		ref="resourceService" />
 	<!-- Resource-End -->
 
-	<!-- Resource-Start -->
+	<!-- ResourceGroup-Start -->
 	<reference id="resourceGroupDAO"
 		interface="com.esrinea.dotGeo.tracking.model.component.resourceGroup.dao.ResourceGroupDAO" />
 	<bean id="resourceGroupService"
@@ -203,6 +204,7 @@
 	<service
 		interface="com.esrinea.dotGeo.tracking.service.component.resourceGroup.ResourceGroupService"
 		ref="resourceGroupService" />
-	<!-- Resource-End -->
+	<!-- ResourceGroup-End -->
+
 
 </blueprint>

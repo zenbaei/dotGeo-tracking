@@ -32,7 +32,7 @@
 			<property name="openjpa.Log"
 				value="DefaultLevel=INFO, Tool=INFO,
 				Runtime=INFO" />
-			<property name="openjpa.jdbc.DBDictionary" value="oracle" />
+			<property name="openjpa.jdbc.DBDictionary" value="sqlserver" />
 			<property name="DynamicEnhancementAgent " value="false" />
 		</properties>
 

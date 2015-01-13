@@ -55,8 +55,8 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 	private FenceService fenceService;
 	private GeoEventDataExtractor geoEventDataExtractor;
 	private String gdbDatasource;
-	private String featureFieldName;
-	private volatile Map<String, Device> devicesCache = new HashMap<String, Device>();// this Map will act as cache of devices, using Serial as key
+	private String queryByField;
+	private Map<String, Device> devicesCache; // this Map will act as cache of devices, using Serial as key
 
 	@Override
 	public void process(GeoEvent geoEvent) throws Exception {
@@ -72,8 +72,9 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 	// TODO: refresh on intervals
 	// called by init-method in blueprint.xml
 	// TODO:add synchronized
-	public synchronized void initializeCache() {
+	public void initializeCache() {
 		LOG.info("initializeCache is called. All active devices along with its tree will be cached.");
+		devicesCache = new HashMap<String, Device>();
 
 		List<Device> devices = deviceService.findAndFetchDeviceType(false);
 
@@ -180,9 +181,9 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 	private void setActiveResource(Device device) {
 		LOG.info(String.format("Checking Active Resources along with its Groups for Device with Serial %s.", device.getSerial()));
 
-		try {
-			device.setResource(resourceService.find(device.getId(), false));
-		} catch (Exception ex) { // NonUniqueResultException | NoResultException
+		device.setResource(resourceService.find(device.getId(), false));
+
+		if (device.getResource() == null) {
 			LOG.info(String.format("Device with Serial %s has no Resource nevertheless it's a valid device.", device.getSerial()));
 			return;
 		}
@@ -195,14 +196,19 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 
 		if (resourceGroups != null) {
 			for (ResourceGroup resourceGroup : resourceGroups) {
-				resourceGroup.setGroup(groupService.findByNotNullFenceLayer(resourceGroup.getGroup().getId(), false));
-				if (resourceGroup.getGroup() != null) {// Only interested in groups that has fence, thus if it doesn't then no need to cache it.
-					resourceGroup.getGroup().setFences(fenceService.find(resourceGroup.getGroup().getId(), false));// retrieve fences
-					if (resourceGroup.getGroup().getFences() != null && !resourceGroup.getGroup().getFences().isEmpty()) {// only interested in groups that have active fences
-						device.getResource().addResourceGroup(resourceGroup);
-						LOG.debug(String.format("Resource with ID of %s and Device with Serial %s belong to %s Group.", device.getResource().getId(), device.getSerial(), resourceGroup.getGroup().getDescEn()));
-					}
+				if (resourceGroup.getGroup() == null || resourceGroup.getGroup().getFenceLayer() == null) {
+					LOG.info(String.format("Resource Group with ID %s will be escaped as it has no fence layer or is retired.", resourceGroup.getId()));
+					continue;
 				}
+				resourceGroup.getGroup().setFences(fenceService.find(resourceGroup.getGroup().getId(), false));// retrieve fences
+
+				if (resourceGroup.getGroup().getFences() == null || resourceGroup.getGroup().getFences().isEmpty()) {// only interested in groups that have active fences
+					LOG.info(String.format("Group with ID %s has no fences, this group will be escaped.", resourceGroup.getGroup().getId()));
+					continue;
+				}
+
+				device.getResource().addResourceGroup(resourceGroup);
+				LOG.debug(String.format("Resource with ID of %s and Device with Serial %s belong to %s Group.", device.getResource().getId(), device.getSerial(), resourceGroup.getGroup().getDescEn()));
 			}
 		}
 	}
@@ -292,7 +298,7 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 			for (Fence fence : resourceGroup.getGroup().getFences()) {
 				LOG.debug(String.format("\n---------------------------\n   GROUP %s SHOULD BE %s FENCE WITH ID OF %s\n---------------------------", resourceGroup.getGroup().getDescEn(), fence.getRule().toUpperCase(), fence.getFenceId()));
 				try {
-					boolean inFence = fenceService.intersect(fence, gdbDatasource, featureFieldName, eventData.getxCoord(), eventData.getyCoord());
+					boolean inFence = fenceService.intersect(fence, gdbDatasource, queryByField, eventData.getxCoord(), eventData.getyCoord());
 
 					SensorLiveFeed sensorLiveFeed = null;
 					SensorConfiguration sensorConfiguration = null;
@@ -319,7 +325,7 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 						sensorConfigurationsAssociatedWithNewSensorLiveFeeds.put(sensorLiveFeed.getSensorConfiguration(), sensorLiveFeed);
 					}
 				} catch (IOException e) {
-					LOG.error(String.format("Unable to Open gdb datasource %s.\n%s", gdbDatasource), e);
+					LOG.error(String.format("Unable to Open gdb datasource %s\n", gdbDatasource), e);
 				} catch (IllegalStateException ex) {
 					LOG.info(ex.getMessage());
 					LOG.debug(String.format("\n---------------------------\n   FENCE WITH ID %s DOES NOT EXIST IN GIS DATASOURCE\n---------------------------", fence.getFenceId()));
@@ -455,7 +461,7 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 		this.gdbDatasource = gdbDatasource;
 	}
 
-	public void setFeatureFieldName(String featureFieldName) {
-		this.featureFieldName = featureFieldName;
+	public void setQueryByField(String queryByField) {
+		this.queryByField = queryByField;
 	}
 }

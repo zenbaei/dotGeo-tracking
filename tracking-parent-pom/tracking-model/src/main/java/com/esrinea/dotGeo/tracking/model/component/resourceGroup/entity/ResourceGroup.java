@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.esrinea.dotGeo.tracking.model.component.group.entity.Group;
 import com.esrinea.dotGeo.tracking.model.component.resource.entity.Resource;
@@ -19,7 +20,7 @@ import com.esrinea.dotGeo.tracking.model.component.resource.entity.Resource;
 @Table(name = "Tracking_Resource_ResGroup_Ass")
 @NamedQueries(value = {
 		@NamedQuery(name = "ResourceGroup.findByDeviceSerialRetired", query = "SELECT r FROM ResourceGroup r WHERE r.resource.device.serial = :deviceSerial AND r.retired = :retired AND r.resource.retired = :retired AND r.resource.device.retired = :retired"),
-		@NamedQuery(name = "ResourceGroup.findByRetiredFence", query = "SELECT r FROM ResourceGroup r JOIN FETCH r.group WHERE r.group.fenceLayer IS NOT NULL"),
+	//	@NamedQuery(name = "ResourceGroup.findByRetiredFence", query = "SELECT r FROM ResourceGroup r JOIN FETCH r.group WHERE r.group.fenceLayer IS NOT NULL"),
 		@NamedQuery(name = "ResourceGroup.findByResourceIdRetired", query = "SELECT r FROM ResourceGroup r WHERE r.resource.id = :resourceId AND r.retired = :retired")
 
 })
@@ -41,6 +42,10 @@ public class ResourceGroup implements Serializable {
 
 	@Column(name = "IsRetired")
 	private boolean retired;
+	
+	public int getId() {
+		return id;
+	}
 
 	public boolean isRetired() {
 		return retired;

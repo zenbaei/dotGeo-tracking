@@ -30,14 +30,14 @@ public class GroupDAOImpl extends AbstractDAO<Group> implements GroupDAO {
 
 	@Override
 	public Group findByNotNullFenceLayer(int id, boolean retired) {
-		LOG.debug(String.format("Group.findByRetiredFenceLayer, parameteres are ID %s, RETIRED %s and FenceLayer is not Null.", id, retired));
+		LOG.debug(String.format("Group.findByIdRetiredFenceLayer, parameteres are ID %s, RETIRED %s and FenceLayer is not Null.", id, retired));
 		Group group = null;
 		try {
 			group = entityManager.createNamedQuery("Group.findByIdRetiredFenceLayer", Group.class).setParameter("id", id).setParameter("retired", retired).getSingleResult();
 		} catch (NoResultException ex) {
-			throw new NoResultException(String.format("%s with criteria of ID is %s, RETIRED is %s and FENCE LAYER is not Null does not exist in DB.", "Group", id, retired));
+			LOG.warn(String.format("%s with criteria of ID is %s, RETIRED is %s and FENCE LAYER is not Null does not exist in DB.", "Group", id, retired));
 		} catch (NonUniqueResultException ex) {
-			throw new NonUniqueResultException(String.format("%s with criteria of ID is %s, RETIRED is %s and FENCE LAYER is not Null is duplicated or the one to one realtion it is joining with is refering it, more than once by mistake.", "Group",
+			LOG.warn(String.format("%s with criteria of ID is %s, RETIRED is %s and FENCE LAYER is not Null is duplicated or the one to one realtion it is joining with is refering it, more than once by mistake.", "Group",
 					id, retired));
 		}
 		return group;

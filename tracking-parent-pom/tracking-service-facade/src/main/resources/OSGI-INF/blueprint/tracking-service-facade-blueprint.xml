@@ -120,8 +120,8 @@
 		<property name="resourceService" ref="resourceService" />
 		<property name="resourceGroupService" ref="resourceGroupService" />
 		<property name="fenceService" ref="fenceService" />
-		<property name="gdbDatasource" value="C:/LA_Zones.gdb" />
-		<property name="featureFieldName" value="ID" />
+		<property name="gdbDatasource" value="D:LA_Zones.gdb" />
+		<property name="queryByField" value="ID" />
 		<tx:transaction method="*" value="Required" />
 	</bean>
 	<service ref="trackingServiceFacade"

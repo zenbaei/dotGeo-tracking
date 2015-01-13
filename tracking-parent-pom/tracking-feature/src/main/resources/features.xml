@@ -21,12 +21,19 @@
 		<bundle>mvn:org.osgi/org.osgi.enterprise/5.0.0</bundle>
 		<bundle>mvn:org.osgi/org.osgi.compendium/4.3.0</bundle>
 		<bundle>mvn:org.apache.openjpa/openjpa/2.2.0</bundle>
-		
+
 		<!-- application bundles -->
-		<bundle start-level="80">mvn:com.esrinea.dotGeo/tracking-datasource/1.0.0</bundle>
-		<bundle start-level="85">mvn:com.esrinea.dotGeo/tracking-model/1.0.0</bundle>
-		<bundle start-level="90">mvn:com.esrinea.dotGeo/tracking-service/1.0.0</bundle>
-		<bundle start-level="95">mvn:com.esrinea.dotGeo/tracking-service-facade/1.0.0</bundle>
-		<bundle start-level="100">mvn:com.esrinea.dotGeo/tracking-processor/1.0.0</bundle>
+		<bundle start-level="80">mvn:com.esrinea.dotGeo/tracking-datasource/1.0.0
+		</bundle>
+		<bundle start-level="85">mvn:com.esrinea.dotGeo/tracking-model/1.0.0
+		</bundle>
+	<!-- <bundle start-level="85">mvn:com.esrinea.dotGeo/tracking-gis-utils/1.0.0 
+		</bundle> -->
+		<bundle start-level="90">mvn:com.esrinea.dotGeo/tracking-service/1.0.0
+		</bundle>
+		<bundle start-level="95">mvn:com.esrinea.dotGeo/tracking-service-facade/1.0.0
+		</bundle>
+		<bundle start-level="100">mvn:com.esrinea.dotGeo/tracking-processor/1.0.0
+		</bundle>
 	</feature>
 </features>
