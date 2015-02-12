@@ -1,0 +1,2 @@
+add my gis-utils one level folder down Arcgis bin directory
+java -classpath .;.\* com.esrinea.utils.gis.Application

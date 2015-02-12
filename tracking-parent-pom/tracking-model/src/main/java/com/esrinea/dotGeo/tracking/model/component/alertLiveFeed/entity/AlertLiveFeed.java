@@ -77,6 +77,15 @@ public class AlertLiveFeed implements Serializable {
 		this.geoFenceLayerIdAndFenceId = geoFenceLayerIdAndFenceId;
 	}
 
+	public AlertLiveFeed(Device device, Alert alert, Date feedDateTime, String zone, double xCoord, double yCoord) {
+		this.device = device;
+		this.alert = alert;
+		this.feedDateTime = feedDateTime;
+		this.zone = zone;
+		this.xCoord = xCoord;
+		this.yCoord = yCoord;
+	}
+
 	public int getId() {
 		return id;
 	}
@@ -87,10 +96,8 @@ public class AlertLiveFeed implements Serializable {
 
 	@Override
 	public String toString() {
-		return "AlertLiveFeed [id=" + id + ", feedDateTime=" + feedDateTime + ", alert description=" + alert.getNameEn() + ", device id=" + device.getId() + ", zone=" + zone + ", xCoord=" + xCoord + ", yCoord=" + yCoord + ", sensorTypeId=" + sensorTypeId
-				+ ", geoFenceLayerIdAndFenceId(Sensor Value)=" + geoFenceLayerIdAndFenceId + "]";
+		return "AlertLiveFeed [id=" + id + ", feedDateTime=" + feedDateTime + ", alert description=" + alert.getNameEn() + ", device id=" + device.getId() + ", zone=" + zone + ", xCoord=" + xCoord + ", yCoord=" + yCoord + ", sensorTypeId="
+				+ sensorTypeId + ", geoFenceLayerIdAndFenceId(Sensor Value)=" + geoFenceLayerIdAndFenceId + "]";
 	}
-
-	
 
 }

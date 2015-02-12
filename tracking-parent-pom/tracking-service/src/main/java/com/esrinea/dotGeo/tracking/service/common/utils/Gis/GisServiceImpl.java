@@ -1,11 +1,11 @@
-package com.esrinea.utils.gis;
+package com.esrinea.dotGeo.tracking.service.common.utils.Gis;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
-import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.esri.arcgis.datasourcesGDB.AccessWorkspaceFactory;
@@ -15,9 +15,7 @@ import com.esri.arcgis.datasourcesfile.ArcInfoWorkspaceFactory;
 import com.esri.arcgis.datasourcesfile.ShapefileWorkspaceFactory;
 import com.esri.arcgis.geodatabase.FeatureClass;
 import com.esri.arcgis.geodatabase.FeatureDatasetName;
-import com.esri.arcgis.geodatabase.IDataset;
 import com.esri.arcgis.geodatabase.IDatasetName;
-import com.esri.arcgis.geodatabase.IEnumDataset;
 import com.esri.arcgis.geodatabase.IEnumDatasetName;
 import com.esri.arcgis.geodatabase.IFeature;
 import com.esri.arcgis.geodatabase.IFeatureClass;
@@ -30,12 +28,9 @@ import com.esri.arcgis.geodatabase.Workspace;
 import com.esri.arcgis.geodatabase.WorkspaceFactory;
 import com.esri.arcgis.geodatabase.WorkspaceName;
 import com.esri.arcgis.geodatabase.esriDatasetType;
-import com.esri.arcgis.geometry.IGeometry;
 import com.esri.arcgis.geometry.IPoint;
 import com.esri.arcgis.geometry.IRelationalOperator;
-import com.esri.arcgis.geometry.ITopologicalOperator;
 import com.esri.arcgis.geometry.Point;
-import com.esri.arcgis.geometry.esriGeometryDimension;
 import com.esri.arcgis.geometry.esriGeometryType;
 import com.esri.arcgis.interop.AutomationException;
 import com.esri.arcgis.system.AoInitialize;
@@ -45,7 +40,7 @@ import com.esri.arcgis.system.esriLicenseStatus;
 
 @Service
 public class GisServiceImpl implements GisService {
-	private final Logger LOG = Logger.getLogger(GisServiceImpl.class);
+	private final Logger LOG = Logger.getLogger("GisUtilsImpl");
 	private Workspace workspace;
 	private WorkspaceFactory workspaceFactory;
 	private Map<String, IFeatureClass> featureClasses = new HashMap<String, IFeatureClass>();
@@ -341,30 +336,21 @@ public class GisServiceImpl implements GisService {
 		workspaceFactory = new WorkspaceFactory(new FileGDBWorkspaceFactory());
 		// Get the workspace
 		workspace = new Workspace(workspaceFactory.openFromFile(gdbDatasource, 0));
-		// TODO: handle whether a gdb has datasets or feature class directly
 		IEnumDatasetName enumDatasetName = workspace.getDatasetNames(esriDatasetType.esriDTFeatureDataset);
 		IDatasetName datasetName = enumDatasetName.next();
-		if (datasetName != null) {
-			while (datasetName != null) {
-				IFeatureClass feature = workspace.openFeatureClass(datasetName.getName());
-				featureClasses.put(datasetName.getName(), feature);
-				LOG.info(String.format("Dataset with name %s has been cached.", datasetName.getName()));
-				datasetName = enumDatasetName.next();
-			}
-		} else {
-			LOG.info(String.format("GDB Datasource with name %s doesn't contain datasets.", gdbDatasource));
-			IEnumDataset datasets = workspace.getSubsets();
-			IDataset dataset = datasets.next();
-			LOG.info(String.format("Dataset Name: %s", dataset.getName()));
-			IFeatureClass featureClass = workspace.openFeatureClass(dataset.getName());
-			featureClasses.put(dataset.getName(), featureClass);
+		listDatasets(workspaceFactory, workspace, datasetName.getName());
+		while (datasetName != null) {
+			IFeatureClass feature = workspace.openFeatureClass(datasetName.getName());
+			featureClasses.put(datasetName.getName(), feature);
+			LOG.info(String.format("Dataset with name %s has been cached.", datasetName.getName()));
+			datasetName = enumDatasetName.next();
 		}
 		aoInit.shutdown();
 
 	}
 
 	public boolean isInFence(String gdbDatasource, String datasetName, String queryByField, int id, double xCoord, double yCoord) throws UnknownHostException, IOException, IllegalStateException {
-		LOG.debug(String.format("isInFence called with parameters, GDBDatasource %s, queryByField %s, ID %s, Xcoord %s, Ycoord %s", gdbDatasource, queryByField, id, xCoord, yCoord));
+		LOG.info(String.format("isInFence called with parameters, GDBDatasource %s, queryByField %s, ID %s, Xcoord %s, Ycoord %s", gdbDatasource, queryByField, id, xCoord, yCoord));
 
 		if (!featureClasses.containsKey(datasetName)) {
 			cacheGdbDataSource(gdbDatasource);
@@ -377,17 +363,16 @@ public class GisServiceImpl implements GisService {
 			LOG.info(msg);
 			throw new IllegalStateException(msg);
 		}
-		boolean contains = contains(feature, xCoord, yCoord);
-		if (contains) {
-			LOG.debug("Point is within fence");
+		boolean intersected = intersect(feature, xCoord, yCoord);
+		if (intersected) {
+			LOG.info("Point is within fence");
 		} else {
-			LOG.debug("Point is out of fence");
+			LOG.info("Point is out of fence");
 		}
-		return contains;
+		return intersected;
 	}
 
 	public IFeature queryFeature(IFeatureClass featureClass, String fieldName, int id) throws UnknownHostException, IOException {
-		LOG.debug(String.format("queryFeature with criteria of %s= %s", fieldName, id));
 		IFeature feature = null;
 		IQueryFilter filter = new QueryFilter();
 		filter.setWhereClause(fieldName + "=" + id);
@@ -403,45 +388,16 @@ public class GisServiceImpl implements GisService {
 		}
 	}
 
-	public boolean contains(IFeature feature, double xCoord, double yCoord) throws UnknownHostException, IOException {
-		LOG.debug(String.format("Creating Point with X %s and Y %s and intersecting it with feature.", xCoord, yCoord));
+	public boolean intersect(IFeature feature, double xCoord, double yCoord) throws UnknownHostException, IOException {
 		IPoint point = new Point();
 		point.setX(xCoord);
 		point.setY(yCoord);
 		point.setSpatialReferenceByRef(feature.getExtent().getSpatialReference());
-		boolean contains = ((IRelationalOperator) feature.getShape()).contains(point);
-		LOG.debug(String.format("Point is %s feature.", contains ? "with" : "out of"));
-		return contains;
-	}
-
-	public IGeometry intersect(IFeature feature, double xCoord, double yCoord) throws UnknownHostException, IOException {
-		IPoint point = new Point();
-		point.setX(xCoord);
-		point.setY(yCoord);
-		point.setSpatialReferenceByRef(feature.getExtent().getSpatialReference());
-		return ((ITopologicalOperator) feature.getShape()).intersect(point, esriGeometryDimension.esriGeometry0Dimension);
+		return ((IRelationalOperator) feature.getShape()).contains(point);
 	}
 
 	@Override
-	public String getAddress(String gdbDatasource, String datasetName, String fieldName, double xCoord, double yCoord) throws UnknownHostException, IOException {
-		if (!featureClasses.containsKey(datasetName)) {
-			cacheGdbDataSource(gdbDatasource);
-		}
-		if (featureClasses.get(datasetName) == null) {
-			LOG.info(String.format("DataSet with name %s is not found in GDB Datasource %s.", datasetName, gdbDatasource));
-			return "";
-		}
-		IFeatureCursor cursor = featureClasses.get(datasetName).search(null, true);
-		IFeature feature = cursor.nextFeature();
-		while (feature != null) {
-			IGeometry geometry = intersect(feature, xCoord, yCoord);
-			if (geometry != null) {
-				break;
-			}
-			feature = cursor.nextFeature();
-		}
-		String address = (String) feature.getValue(feature.getFields().findField(fieldName));
-		LOG.debug(String.format("Point's %s and %s address is %s.", xCoord, yCoord, address));
-		return address;
+	public String getAddress(String gdbDatasource, String datasetName, String queryByField, double xCoord, double yCoord) {
+		return "";
 	}
 }

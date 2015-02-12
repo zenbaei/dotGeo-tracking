@@ -107,6 +107,7 @@
 		class="com.esrinea.dotGeo.tracking.service.component.fence.FenceServiceImpl">
 		<constructor-arg ref="fenceDAO" />
 		<property name="gisServiceURL" value="http://localhost:8090/isInFence" />
+		<property name="gisService" ref="gisService" />
 	</bean>
 	<bean id="resourceService"
 		class="com.esrinea.dotGeo.tracking.service.component.resource.ResourceServiceImpl">
@@ -115,6 +116,9 @@
 	<bean id="resourceGroupService"
 		class="com.esrinea.dotGeo.tracking.service.component.resourceGroup.ResourceGroupServiceImpl">
 		<constructor-arg ref="resourceGroupDAO" />
+	</bean>
+	<bean id="gisService"
+		class="com.esrinea.dotGeo.tracking.service.common.utils.Gis.GisServiceImpl">
 	</bean>
 </beans>
 

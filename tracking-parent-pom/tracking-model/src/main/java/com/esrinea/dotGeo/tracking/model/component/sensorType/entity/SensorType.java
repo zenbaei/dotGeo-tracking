@@ -13,7 +13,7 @@ public class SensorType implements Serializable {
 
 	private static final long serialVersionUID = -7570462376610694687L;
 	
-	public static enum Type{GeoFence}
+	public static final String GEOFENCE = "GeoFence";
 
 	@Id
 	@Column(name = "Sensor_Type_DBID")

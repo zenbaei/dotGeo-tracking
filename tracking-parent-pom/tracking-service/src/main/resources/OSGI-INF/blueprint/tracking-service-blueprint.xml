@@ -164,6 +164,7 @@
 		class="com.esrinea.dotGeo.tracking.service.component.fence.FenceServiceImpl">
 		<argument ref="fenceDAO" />
 		<property name="gisServiceURL" value="http://localhost:8090/isInFence" />
+		<property name="gisService" ref="gisService" />
 	</bean>
 	<service
 		interface="com.esrinea.dotGeo.tracking.service.component.fence.FenceService"
@@ -206,5 +207,10 @@
 		ref="resourceGroupService" />
 	<!-- ResourceGroup-End -->
 
+	<!-- GisService-Start -->
+	<bean id="gisService"
+		class="com.esrinea.dotGeo.tracking.service.common.utils.Gis.GisServiceImpl">
+	</bean>
+	<!-- GisService-End -->
 
 </blueprint>

@@ -1,11 +1,13 @@
 package com.esrinea.dotGeo.tracking.service.facade.business;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.springframework.web.client.RestTemplate;
 
 import com.esri.ges.core.geoevent.GeoEvent;
 import com.esrinea.dotGeo.tracking.model.component.alert.entity.Alert;
@@ -27,7 +29,6 @@ import com.esrinea.dotGeo.tracking.service.component.alertLiveFeed.AlertLiveFeed
 import com.esrinea.dotGeo.tracking.service.component.alertSensorLiveFeed.AlertSensorLiveFeedService;
 import com.esrinea.dotGeo.tracking.service.component.device.DeviceService;
 import com.esrinea.dotGeo.tracking.service.component.fence.FenceService;
-import com.esrinea.dotGeo.tracking.service.component.group.GroupService;
 import com.esrinea.dotGeo.tracking.service.component.resource.ResourceService;
 import com.esrinea.dotGeo.tracking.service.component.resourceGroup.ResourceGroupService;
 import com.esrinea.dotGeo.tracking.service.component.resourceLiveFeed.ResourceLiveFeedService;
@@ -49,15 +50,24 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 	private AlertConfigurationService alertConfigurationService;
 	private AlertSensorLiveFeedService alertSensorLiveFeedService;
 	private SensorLiveFeedService sensorLiveFeedService;
-	private GroupService groupService;
 	private ResourceService resourceService;
 	private ResourceGroupService resourceGroupService;
 	private FenceService fenceService;
 	private GeoEventDataExtractor geoEventDataExtractor;
-	private String gdbDatasource;
+	private String fenceServiceURL;
+	private String zoneServiceURL;
+	private String fenceGdbDatasource;
+	private String zoneGdbDatasource;
+	private String zoneDatasetName;
+	private String zoneAddressFieldName;
 	private String queryByField;
+	private SensorConfiguration geoFenceInSensorConfiguration;
+	private SensorConfiguration geoFenceOutSensorConfiguration;
+	private String geoFenceSensorTypeId;
+	private RestTemplate restTemplate = new RestTemplate();
 	private Map<String, Device> devicesCache; // this Map will act as cache of devices, using Serial as key
 
+	// TODO: test while sending many request in same second
 	@Override
 	public void process(GeoEvent geoEvent) throws Exception {
 		deviceFeedReceived(geoEventDataExtractor.extract(geoEvent));
@@ -102,7 +112,7 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 				LOG.info(String.format("Device with Serial %s and Device Type of %s is active.", device.getSerial(), device.getDeviceType().getDesc()));
 			}
 		}
-		LOG.info("Devices have been retireved and cached.");
+		LOG.info("Devices have been retrieved and cached.");
 	}
 
 	/**
@@ -165,6 +175,25 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 				LOG.warn(String.format("The Sensor %s has no Sensor Configurations. This sensor will be escaped.", sensor.getNameEn()));
 				continue;
 			}
+
+			// set in and out GeoFence sensor's configuration
+			if (sensor.getSensorType() != null && sensor.getSensorType().getDescription() != null && sensor.getSensorType().getDescription().equalsIgnoreCase(SensorType.GEOFENCE)) {
+				for (SensorConfiguration sensorConfiguration : sensor.getSensorConfigurations()) {
+					if (sensorConfiguration.getTextValue().equalsIgnoreCase("in")) {
+						geoFenceInSensorConfiguration = sensorConfiguration;
+					} else if (sensorConfiguration.getTextValue().equalsIgnoreCase("out")) {
+						geoFenceOutSensorConfiguration = sensorConfiguration;
+					}
+				}
+				geoFenceSensorTypeId = String.valueOf(sensor.getSensorType().getId());
+			}
+
+			// in case GeoFence sensor misses its in or out configuration then escape it
+			if (geoFenceInSensorConfiguration == null || geoFenceOutSensorConfiguration == null) {
+				LOG.warn("GeoFence Sensor won't be used because its IN or OUT sensorConfiguration is missing in the Database.");
+				continue;
+			}
+
 			device.getDeviceType().addSensor(sensor);
 			LOG.debug(String.format("Sensor %s is valid.", sensor.getNameEn()));
 		}
@@ -224,9 +253,11 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 		// TODO: simplify definition
 		/**
 		 * a set to hold sensor configurations along with their associated newly created sensorLiveFeeds for a specific device's value that passed the configured business rule on that device's type.<br>
-		 * This set will be used to check against alerts configuration the newly created sensorLiveFeed is required when inserting into AlertSensorLiveFeed
+		 * This Map will be used to check against alerts configuration. The newly created sensorLiveFeed is required when inserting into AlertSensorLiveFeed.<br>
+		 * I'm using a list of SensorLiveFeeds as values to accommodate the case of an Alert that has a GeoFence SensorConfiguration it might has more than one SensorLiveFeed for each group it belongs to(a resource is in one fence and also in another one at same time),<br>
+		 * for Alerts that doesn't have a GeoFence SensorConfiguration its corresponding SensorLiveFeeds List will always have one entry.
 		 */
-		Map<SensorConfiguration, SensorLiveFeed> sensorConfigurationsAssociatedWithNewSensorLiveFeeds = new HashMap<SensorConfiguration, SensorLiveFeed>();
+		Map<SensorConfiguration, List<SensorLiveFeed>> sensorLiveFeedsAssociatedWithSensorConfiguration = new HashMap<SensorConfiguration, List<SensorLiveFeed>>();
 
 		Device device = devicesCache.get(eventData.getSerial());
 
@@ -237,17 +268,24 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 			return;
 		}
 
+		// http://localhost:8090/getAddress/C/Zones_Addresses.gdb/Zones_Addresses/Name/-118.193821/34.07633682
+		// http://localhost:8090/isInFence/c/LA_Zones.gdb/LA_Zones/ID/5/-118.193821/34.07633682
+		// get resource current zone(address)
+		String URL = zoneServiceURL + "/" + zoneGdbDatasource.split(":")[0] + "/" + zoneGdbDatasource.split(":")[1] + "/" + zoneDatasetName + "/" + zoneAddressFieldName + "/" + eventData.getxCoord() + "/" + eventData.getyCoord();
+		LOG.info(URL);
+		eventData.setZone(restTemplate.getForObject(URL, String.class));
+
 		// insert into resource live feed
 		resourceLiveFeedService.create(new ResourceLiveFeed(device, eventData.getFeedDateTime(), eventData.getxCoord(), eventData.getyCoord(), eventData.getSpeed(), eventData.getHeading(), eventData.getZone()));
 
-		executeSensors(device, eventData, sensorConfigurationsAssociatedWithNewSensorLiveFeeds);
+		executeSensors(device, eventData, sensorLiveFeedsAssociatedWithSensorConfiguration);
 
-		executeAlerts(device, eventData, sensorConfigurationsAssociatedWithNewSensorLiveFeeds);
+		executeAlerts(device, eventData, sensorLiveFeedsAssociatedWithSensorConfiguration);
 
 		LOG.debug("\n--------------------------------------------------------------------------\n" + "PROCESSING DEVICE COMPLETED\n" + "--------------------------------------------------------------------------");
 	}
 
-	private void executeSensors(Device device, EventData eventData, Map<SensorConfiguration, SensorLiveFeed> sensorConfigurationsAssociatedWithNewSensorLiveFeeds) throws Exception {
+	private void executeSensors(Device device, EventData eventData, Map<SensorConfiguration, List<SensorLiveFeed>> sensorLiveFeedsAssociatedWithSensorConfiguration) throws Exception {
 		LOG.debug("\n---------------------------\nPROCESSING SENSORS BEGINS\n---------------------------");
 
 		if (device.getDeviceType().getSensors() == null || device.getDeviceType().getSensors().isEmpty()) {
@@ -262,8 +300,8 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 
 			Object sensorValue = eventData.getSensorValuesWithKeyCapitalized().get(sensor.getNameEn().toUpperCase());// get received sensor value from EventData's sensorValues Map using cached deviceType sensors' name, it should be saved as TEMP for key and the received value
 			if (sensorValue == null) { // count for an input stream that was configured to send some of the deviceType's sensors
-				if (sensor.getSensorType() != null && sensor.getSensorType().getDescription() != null && !sensor.getSensorType().getDescription().isEmpty() && sensor.getSensorType().getDescription().equals(SensorType.Type.GeoFence.toString())) {
-					executeGeoFenceSensor(device, eventData, sensor, sensorConfigurationsAssociatedWithNewSensorLiveFeeds);
+				if (sensor.getSensorType() != null && sensor.getSensorType().getDescription() != null && sensor.getSensorType().getDescription().equals(SensorType.GEOFENCE)) {
+					executeGeoFenceSensor(device, eventData, sensorLiveFeedsAssociatedWithSensorConfiguration);
 					continue;// check next sensor
 				}
 				LOG.warn(String.format("Device Type with ID %s defined to has a Sensor with the name of %s, but no data was received for this Sensor.", device.getDeviceType().getId(), sensor.getNameEn().toUpperCase()));
@@ -275,7 +313,9 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 				if (sensorConfigurationService.isBusinessRuleSatisfiedDelegate(sensorConfiguration, sensorValue)) {// received sensor value fall under the business rule, the 3 TEMP sensor configurations will be checked against the received value
 					SensorLiveFeed sensorLiveFeed = new SensorLiveFeed(device, sensorConfiguration, String.valueOf(sensorValue), eventData.getFeedDateTime()); // insert SensorLiveFeed into Database
 					sensorLiveFeedService.create(sensorLiveFeed);
-					sensorConfigurationsAssociatedWithNewSensorLiveFeeds.put(sensorLiveFeed.getSensorConfiguration(), sensorLiveFeed); // keep sensor configurations that fall under the business rule
+					List<SensorLiveFeed> sensorLiveFeeds = new ArrayList<SensorLiveFeed>();
+					sensorLiveFeeds.add(sensorLiveFeed);
+					sensorLiveFeedsAssociatedWithSensorConfiguration.put(sensorLiveFeed.getSensorConfiguration(), sensorLiveFeeds); // keep sensor configurations that fall under the business rule
 					continue OUTER; // if reached then one sensor configuration of a specific sensor has succeed then move to the next sensor (ex; Temp sensor has 3 configurations: High, Medium and Low. Definitely Temp sensor value(one input value) would be either High, Medium or Low
 				}
 			}
@@ -284,7 +324,7 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 		LOG.debug("\n---------------------------\nPROCESSING SENSORS ENDS\n---------------------------");
 	}
 
-	private void executeGeoFenceSensor(Device device, EventData eventData, Sensor geoFenceSensor, Map<SensorConfiguration, SensorLiveFeed> sensorConfigurationsAssociatedWithNewSensorLiveFeeds) throws Exception {
+	private void executeGeoFenceSensor(Device device, EventData eventData, Map<SensorConfiguration, List<SensorLiveFeed>> sensorLiveFeedsAssociatedWithSensorConfiguration) throws Exception {
 		LOG.debug(String.format("Processing GeoFence Sensor on Device with Serial %s.", device.getSerial()));
 
 		if (device.getResource() == null || device.getResource().getResourceGroups() == null || device.getResource().getResourceGroups().isEmpty()) {
@@ -298,34 +338,27 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 			for (Fence fence : resourceGroup.getGroup().getFences()) {
 				LOG.debug(String.format("\n---------------------------\n   GROUP %s SHOULD BE %s FENCE WITH ID OF %s\n---------------------------", resourceGroup.getGroup().getDescEn(), fence.getRule().toUpperCase(), fence.getFenceId()));
 				try {
-					boolean inFence = fenceService.intersect(fence, gdbDatasource, queryByField, eventData.getxCoord(), eventData.getyCoord());
+					// TODO:change dataset from DB
+					boolean inFence = fenceService.intersect(fence, fenceGdbDatasource, "LA_Zones", queryByField, eventData.getxCoord(), eventData.getyCoord());
+					LOG.debug(String.format("\n---------------------------\n   GROUP %s IS %s FENCE WITH ID %s\n---------------------------", resourceGroup.getGroup().getDescEn(), inFence ? "IN" : "OUT", fence.getFenceId()));
 
-					SensorLiveFeed sensorLiveFeed = null;
-					SensorConfiguration sensorConfiguration = null;
-
-					if (inFence) {
-						sensorConfiguration = getGeoFenceSensorConfiguration(geoFenceSensor.getSensorConfigurations(), "in");
-					} else {
-						sensorConfiguration = getGeoFenceSensorConfiguration(geoFenceSensor.getSensorConfigurations(), "out");
-					}
-
-					if (sensorConfiguration == null) {
-						LOG.error("GeoFence Sensor has no sensorConfigurations while it is mandatory in order to fill Sensor Live Feeds. This sensor will be discarded.");
-						LOG.debug("\n---------------------------\nGEOFENCE SENSOR CHECKING COMPLETED\n---------------------------");
-						return;
-					}
-
-					LOG.debug(String.format("\n---------------------------\n   GROUP %s IS %s FENCE WITH ID %s\n---------------------------", resourceGroup.getGroup().getDescEn(), sensorConfiguration.getTextValue().toUpperCase(), fence.getFenceId()));
-
-					sensorLiveFeed = new SensorLiveFeed(device, sensorConfiguration, String.format("%s#%s#%s", resourceGroup.getGroup().getFenceLayer().getId(), fence.getFenceId(), fence.getRule()), eventData.getFeedDateTime());
+					SensorLiveFeed sensorLiveFeed = new SensorLiveFeed(device, inFence ? geoFenceInSensorConfiguration : geoFenceOutSensorConfiguration, String.format("%s#%s#%s", resourceGroup.getGroup().getFenceLayer().getId(), fence.getFenceId(),
+							fence.getRule()), eventData.getFeedDateTime());
 					sensorLiveFeedService.create(sensorLiveFeed);
 					// TODO:simplify
 					// add to map only when intersect result is not as supposed(as alerts checks on them later and we don't want to report true ones.
 					if (inFence != fence.getRule().equalsIgnoreCase("in") ? true : false) {
-						sensorConfigurationsAssociatedWithNewSensorLiveFeeds.put(sensorLiveFeed.getSensorConfiguration(), sensorLiveFeed);
+						// same sensorConfiguration may contains many sensorLiveFeeds corresponding to the groups it belongs to.
+						if (sensorLiveFeedsAssociatedWithSensorConfiguration.get(sensorLiveFeed.getSensorConfiguration()) == null) {
+							List<SensorLiveFeed> sensorLiveFeeds = new ArrayList<SensorLiveFeed>();
+							sensorLiveFeeds.add(sensorLiveFeed);
+							sensorLiveFeedsAssociatedWithSensorConfiguration.put(sensorLiveFeed.getSensorConfiguration(), sensorLiveFeeds);
+						} else {
+							sensorLiveFeedsAssociatedWithSensorConfiguration.get(sensorLiveFeed.getSensorConfiguration()).add(sensorLiveFeed);
+						}
 					}
 				} catch (IOException e) {
-					LOG.error(String.format("Unable to Open gdb datasource %s\n", gdbDatasource), e);
+					LOG.error(String.format("Unable to Open gdb datasource %s\n", fenceGdbDatasource), e);
 				} catch (IllegalStateException ex) {
 					LOG.info(ex.getMessage());
 					LOG.debug(String.format("\n---------------------------\n   FENCE WITH ID %s DOES NOT EXIST IN GIS DATASOURCE\n---------------------------", fence.getFenceId()));
@@ -335,21 +368,9 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 		LOG.debug("\n---------------------------\nGEOFENCE SENSOR CHECKING COMPLETED\n---------------------------");
 	}
 
-	private SensorConfiguration getGeoFenceSensorConfiguration(List<SensorConfiguration> sensorConfigurations, String type) {
-		// set sensorConfiguarion with in and out value
-		for (SensorConfiguration sensorConfiguration : sensorConfigurations) {
-			if (sensorConfiguration.getTextValue() == null || sensorConfiguration.getTextValue().isEmpty()) {
-				return null;
-			}
-			if (sensorConfiguration.getTextValue().equalsIgnoreCase(type)) {
-				return sensorConfiguration;
-			}
-		}
-		return null;
-	}
-
-	private void executeAlerts(Device device, EventData eventData, Map<SensorConfiguration, SensorLiveFeed> sensorConfigurationsAssociatedWithNewSensorLiveFeeds) throws Exception {
+	private void executeAlerts(Device device, EventData eventData, Map<SensorConfiguration, List<SensorLiveFeed>> sensorLiveFeedsAssociatedWithSensorConfiguration) throws Exception {
 		LOG.debug("\n---------------------------\nPROCESSING ALERTS BEGINS\n---------------------------");
+		boolean geoFenceAlert = false;
 
 		if (device.getDeviceType().getAlerts() == null || device.getDeviceType().getAlerts().isEmpty()) {
 			LOG.warn(String.format("Device with Serial %s has no alerts.", device.getSerial()));
@@ -360,22 +381,17 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 		// check if deviceType's alerts are not excluded from that device
 		OUTER: for (Alert alert : device.getDeviceType().getAlerts()) {// loop on deviceType's alerts
 			LOG.debug(String.format("\n---------------------------\nCHECKING %s ALERT FOR DEVICE WITH SERIAL %s\n---------------------------", alert.getNameEn().toUpperCase(), device.getSerial()));
-			String sensorTypeId = null;
-			String geoFenceLayerIdAndFenceId = null;
 
 			for (AlertConfiguration alertConfiguration : alert.getAlertConfigurations()) {// loop on deviceType alert's alertConfiguration, compound alerts will have more than configuration that group sensor configurations together, for instance OIL level is low and TEMP is 50
 				LOG.debug(String.format("Checking %s", alertConfiguration.getSensorConfiguration()));
 
 				// check if the Alert Configuration configured on the device's DeviceType has its sensorConfiguration //TODO: complete description
-				if (sensorConfigurationsAssociatedWithNewSensorLiveFeeds.containsKey(alertConfiguration.getSensorConfiguration())) {// an alert could be compound(hold more than a rule) if one rule is not satisfied then move to next alert
+				if (sensorLiveFeedsAssociatedWithSensorConfiguration.containsKey(alertConfiguration.getSensorConfiguration())) {// an alert could be compound(hold more than a rule) if one rule is not satisfied then move to next alert
 					LOG.debug(String.format("Alert configuration passed on Alert %s.", alert.getNameEn().toUpperCase()));
-					// for GeoFence keep sensorTypeId and geoFenceLayerIdAndFenceId in order to insert it when creating AlertLiveFeed
-					SensorLiveFeed sensorLiveFeed = sensorConfigurationsAssociatedWithNewSensorLiveFeeds.get(alertConfiguration.getSensorConfiguration());
-					if (sensorLiveFeed.getSensorConfiguration().getSensor().getSensorType() != null && !sensorLiveFeed.getSensorConfiguration().getSensor().getSensorType().getDescription().isEmpty()
-							&& sensorLiveFeed.getSensorConfiguration().getSensor().getSensorType().getDescription().equalsIgnoreCase(SensorType.Type.GeoFence.toString())) {
-						// TODO: add description
-						sensorTypeId = String.valueOf(sensorLiveFeed.getSensorConfiguration().getSensor().getSensorType().getId());
-						geoFenceLayerIdAndFenceId = sensorLiveFeed.getSensorValue();
+					// check if one of the configuration is of type GeoFence
+					if (alertConfiguration.getSensorConfiguration().getSensor().getSensorType() != null && alertConfiguration.getSensorConfiguration().getSensor().getSensorType().getDescription() != null
+							&& alertConfiguration.getSensorConfiguration().getSensor().getSensorType().getDescription().equalsIgnoreCase(SensorType.GEOFENCE)) {
+						geoFenceAlert = true;
 					}
 					continue;// as long as rules are included in the current alert then continue checking
 				} else {
@@ -385,20 +401,60 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 					continue OUTER;// if a rule isn't included then ignore the current alert and check the next alert
 				}
 			}
-
-			// if this line is reached then all alertConfiguration in an alert had their rules satisfied
-			AlertLiveFeed alertLiveFeed = new AlertLiveFeed(device, alert, eventData.getFeedDateTime(), eventData.getZone(), eventData.getxCoord(), eventData.getyCoord(), sensorTypeId, geoFenceLayerIdAndFenceId);// insert AlertLiveFeed only if all rules in an alert are satisfied
-			alertLiveFeedService.create(alertLiveFeed);
 			LOG.debug(String.format("\n----------------------------------------------\nALERT %s HAS SUCCEEDED\n----------------------------------------------", alert.getNameEn().toUpperCase()));
 
-			// TODO:simply definition + re check whether to use alertLiveFeed or use Alert directly or other
-			// create AlertSensorLiveFeed, use the newly created alertLiveFeed to get its Alert and then its AlertConfiguration and then its SensorConfigurations
-			for (AlertConfiguration alertConfiguration : alert.getAlertConfigurations()) {
-				AlertSensorLiveFeed alertSensorLiveFeed = new AlertSensorLiveFeed(new AlertSensorLiveFeedId(alertLiveFeed.getId(), sensorConfigurationsAssociatedWithNewSensorLiveFeeds.get(alertConfiguration.getSensorConfiguration()).getId()));
-				alertSensorLiveFeedService.create(alertSensorLiveFeed);
+			LOG.debug(String.format("\n---------------------------\nCREATING ALERT LIVE FEEDS FOR DEVICE WITH SERIAL %s\n---------------------------", device.getSerial()));
+			// if this line is reached then all alertConfiguration in an alert had their rules satisfied
+			if (geoFenceAlert) {
+				handleGeoFenceAlert(device, alert, eventData, sensorLiveFeedsAssociatedWithSensorConfiguration);
+			} else {
+				handleNonGeoFenceAlert(device, alert, eventData, sensorLiveFeedsAssociatedWithSensorConfiguration);
 			}
 		}
 		LOG.debug("\n---------------------------\nPROCESSING ALERTS ENDS\n---------------------------");
+	}
+
+	private void handleGeoFenceAlert(Device device, Alert alert, EventData eventData, Map<SensorConfiguration, List<SensorLiveFeed>> sensorLiveFeedsAssociatedWithSensorConfiguration) throws Exception {
+		Map<AlertLiveFeed, SensorLiveFeed> alertSensorLiveFeeds = new HashMap<AlertLiveFeed, SensorLiveFeed>();
+		// create a newly AlertLiveFeed for every different SensorLiveFeed that corresponds to a group that belongs to different Fence
+		for (AlertConfiguration alertConfiguration : alert.getAlertConfigurations()) {
+			if (alertConfiguration.getSensorConfiguration().getSensor().getSensorType() != null && alertConfiguration.getSensorConfiguration().getSensor().getSensorType().getDescription() != null
+					&& alertConfiguration.getSensorConfiguration().getSensor().getSensorType().getDescription().equalsIgnoreCase(SensorType.GEOFENCE)) {
+				for (SensorLiveFeed sensorLiveFeed : sensorLiveFeedsAssociatedWithSensorConfiguration.get(alertConfiguration.getSensorConfiguration())) {
+					AlertLiveFeed alertLiveFeed = new AlertLiveFeed(device, alert, eventData.getFeedDateTime(), eventData.getZone(), eventData.getxCoord(), eventData.getyCoord(), geoFenceSensorTypeId, sensorLiveFeed.getSensorValue());
+					alertLiveFeedService.create(alertLiveFeed);
+					alertSensorLiveFeeds.put(alertLiveFeed, sensorLiveFeed);
+				}
+			}
+		}
+		// TODO: add definition
+		for (AlertLiveFeed alertLiveFeed : alertSensorLiveFeeds.keySet()) {
+			for (AlertConfiguration alertConfiguration : alert.getAlertConfigurations()) {
+				if (alertConfiguration.getSensorConfiguration().getSensor().getSensorType() != null && alertConfiguration.getSensorConfiguration().getSensor().getSensorType().getDescription() != null
+						&& alertConfiguration.getSensorConfiguration().getSensor().getSensorType().getDescription().equalsIgnoreCase(SensorType.GEOFENCE)) {
+					AlertSensorLiveFeed alertSensorLiveFeed = new AlertSensorLiveFeed(new AlertSensorLiveFeedId(alertLiveFeed.getId(), alertSensorLiveFeeds.get(alertLiveFeed).getId()));
+					alertSensorLiveFeedService.create(alertSensorLiveFeed);
+				} else { // OIL SENSOR
+					createAlertSensorLiveFeed(alert, alertLiveFeed, sensorLiveFeedsAssociatedWithSensorConfiguration);
+				}
+			}
+		}
+
+	}
+
+	private void handleNonGeoFenceAlert(Device device, Alert alert, EventData eventData, Map<SensorConfiguration, List<SensorLiveFeed>> sensorLiveFeedsAssociatedWithSensorConfiguration) throws Exception {
+		AlertLiveFeed alertLiveFeed = new AlertLiveFeed(device, alert, eventData.getFeedDateTime(), eventData.getZone(), eventData.getxCoord(), eventData.getyCoord());// insert AlertLiveFeed only if all rules in an alert are satisfied
+		alertLiveFeedService.create(alertLiveFeed);
+		// TODO:simply definition + re check whether to use alertLiveFeed or use Alert directly or other
+		// create AlertSensorLiveFeed, use the newly created alertLiveFeed to get its Alert and then its AlertConfiguration and then its SensorConfigurations
+		createAlertSensorLiveFeed(alert, alertLiveFeed, sensorLiveFeedsAssociatedWithSensorConfiguration);
+	}
+
+	private void createAlertSensorLiveFeed(Alert alert, AlertLiveFeed alertLiveFeed, Map<SensorConfiguration, List<SensorLiveFeed>> sensorLiveFeedsAssociatedWithSensorConfiguration) throws Exception {
+		for (AlertConfiguration alertConfiguration : alert.getAlertConfigurations()) {
+			AlertSensorLiveFeed alertSensorLiveFeed = new AlertSensorLiveFeed(new AlertSensorLiveFeedId(alertLiveFeed.getId(), sensorLiveFeedsAssociatedWithSensorConfiguration.get(alertConfiguration.getSensorConfiguration()).get(0).getId()));
+			alertSensorLiveFeedService.create(alertSensorLiveFeed);
+		}
 	}
 
 	public void setDeviceService(DeviceService deviceService) {
@@ -441,10 +497,6 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 		this.geoEventDataExtractor = geoEventDataExtractor;
 	}
 
-	public void setGroupService(GroupService groupService) {
-		this.groupService = groupService;
-	}
-
 	public void setResourceService(ResourceService resourceService) {
 		this.resourceService = resourceService;
 	}
@@ -457,11 +509,31 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 		this.fenceService = fenceService;
 	}
 
-	public void setGdbDatasource(String gdbDatasource) {
-		this.gdbDatasource = gdbDatasource;
+	public void setFenceGdbDatasource(String fenceGdbDatasource) {
+		this.fenceGdbDatasource = fenceGdbDatasource;
+	}
+
+	public void setZoneGdbDatasource(String zoneGdbDatasource) {
+		this.zoneGdbDatasource = zoneGdbDatasource;
 	}
 
 	public void setQueryByField(String queryByField) {
 		this.queryByField = queryByField;
+	}
+
+	public void setFenceServiceURL(String fenceServiceURL) {
+		this.fenceServiceURL = fenceServiceURL;
+	}
+
+	public void setZoneAddressFieldName(String zoneAddressFieldName) {
+		this.zoneAddressFieldName = zoneAddressFieldName;
+	}
+
+	public void setZoneServiceURL(String zoneServiceURL) {
+		this.zoneServiceURL = zoneServiceURL;
+	}
+
+	public void setZoneDatasetName(String zoneDatasetName) {
+		this.zoneDatasetName = zoneDatasetName;
 	}
 }

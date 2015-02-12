@@ -13,6 +13,7 @@ public interface FenceService extends GenericDAO<Fence> {
 
 	List<Fence> find(int groupId, boolean retired);
 
-	boolean intersect(Fence fence, String gdbDataSource, String queryByField, double xCoord, double yCoord) throws UnknownHostException, IOException, IllegalStateException, InstantiationException, IllegalAccessException, ClassNotFoundException;
+	boolean intersect(Fence fence, String gdbDataSource, String datasetName, String queryByField, double xCoord, double yCoord) throws UnknownHostException, IOException, IllegalStateException, InstantiationException, IllegalAccessException,
+			ClassNotFoundException;
 
 }

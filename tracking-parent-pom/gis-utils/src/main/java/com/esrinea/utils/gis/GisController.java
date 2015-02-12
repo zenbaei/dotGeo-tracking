@@ -14,10 +14,16 @@ public class GisController {
 	@Autowired
 	private GisService gisUtils;
 
-	@RequestMapping("/isInFence/{drivePath}/{gdbDatasource}/{queryByField}/{id}/{xCoord}/{yCoord}")
-	public boolean isInFence(@PathVariable String gdbDatasource, @PathVariable String drivePath, @PathVariable String queryByField, @PathVariable int id, @PathVariable double xCoord, @PathVariable double yCoord) throws UnknownHostException,
+	@RequestMapping("/isInFence/{drivePath}/{gdbDatasource}/{datasetName}/{queryByField}/{id}/{xCoord}/{yCoord}")
+	public boolean isInFence(@PathVariable String gdbDatasource, @PathVariable String drivePath, @PathVariable String datasetName, @PathVariable String queryByField, @PathVariable int id, @PathVariable double xCoord, @PathVariable double yCoord)
+			throws UnknownHostException, IllegalStateException, IOException {
+		return gisUtils.isInFence(drivePath + ":/" + gdbDatasource, datasetName, queryByField, id, xCoord, yCoord);
+	}
+
+	@RequestMapping("/getAddress/{drivePath}/{gdbDatasource}/{datasetName}/{fieldName}/{xCoord}/{yCoord}")
+	public String getAddress(@PathVariable String gdbDatasource, @PathVariable String drivePath, @PathVariable String datasetName, @PathVariable String fieldName, @PathVariable double xCoord, @PathVariable double yCoord) throws UnknownHostException,
 			IllegalStateException, IOException {
-		return gisUtils.isInFence(drivePath + ":/" + gdbDatasource, queryByField, id, xCoord, yCoord);
+		return gisUtils.getAddress(drivePath + ":/" + gdbDatasource, datasetName, fieldName, xCoord, yCoord);
 	}
 
 }

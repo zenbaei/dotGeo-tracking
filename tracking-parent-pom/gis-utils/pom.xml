@@ -23,10 +23,22 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
+	<dependency>
+		<groupId>com.esrinea.dotGeo</groupId>
+		<artifactId>arcobjects-server</artifactId>
+		<version>10.2</version>
+	</dependency>
+	
+	
 		<dependency>
-			<groupId>com.esrinea.dotGeo</groupId>
-			<artifactId>arcobjects</artifactId>
-			<version>10.2</version>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
+		</dependency>
+		<dependency>
+			<groupId>org.neo4j</groupId>
+			<artifactId>neo4j-cypher-compiler-2.1</artifactId>
+			<version>2.1.5</version>
 		</dependency>
 	</dependencies>
 

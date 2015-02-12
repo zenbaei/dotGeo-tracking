@@ -1,8 +1,5 @@
 package com.esrinea.dotGeo.tracking.service.facade.business;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +24,6 @@ public class TrackingServiceFacadeTest {
 
 	@Autowired
 	private TrackingServiceFacade trackingServiceFacade;
-	private EventData eventData;
 	@Autowired
 	private SensorService sensorService;
 	@Autowired
@@ -39,18 +35,9 @@ public class TrackingServiceFacadeTest {
 	@Autowired
 	private AlertService alertService;
 
-	/*
-	 * @Autowired private FenceService fenceService;
-	 */
 
 	@Before
 	public void init() {
-		Map<String, Object> sensorValues = new HashMap<String, Object>();
-		sensorValues.put("OIL", "in");
-		sensorValues.put("HEAT", 95);// HEAT sensor is configured as retired in DB.
-		sensorValues.put("TEMP", 50);// this falls under Med configText in sensorConfiguration
-		sensorValues.put("SPEED", 130); // SENSOR SPEED
-		eventData = new EventData("1", 2.365, 5.245, 100, 222, sensorValues);
 		trackingServiceFacade.initializeCache();
 	}
 
@@ -58,7 +45,7 @@ public class TrackingServiceFacadeTest {
 	@Transactional(propagation = Propagation.REQUIRED)
 	@Rollback(value = true)
 	public void testDeviceFeedReceived() throws Exception {
-		for (EventData eventData : EventData.createWithDummyData("C:/test_data.txt")) {
+		for (EventData eventData : EventData.createWithDummyData("C:/devices.txt")) {
 			trackingServiceFacade.deviceFeedReceived(eventData); // Check if sensorConfigurations inserted right in sensorLiveFeed
 		}
 		/*

@@ -120,8 +120,13 @@
 		<property name="resourceService" ref="resourceService" />
 		<property name="resourceGroupService" ref="resourceGroupService" />
 		<property name="fenceService" ref="fenceService" />
-		<property name="gdbDatasource" value="D:LA_Zones.gdb" />
+		<property name="fenceGdbDatasource" value="C:LA_Zones.gdb" />
+		<property name="fenceServiceURL" value="http://localhost:8090/isInFence" />
 		<property name="queryByField" value="ID" />
+		<property name="zoneGdbDatasource" value="C:Zones_Addresses.gdb" />
+		<property name="zoneServiceURL" value="http://localhost:8090/getAddress" />
+		<property name="zoneDatasetName" value="Zones_Addresses" />
+		<property name="zoneAddressFieldName" value="Name" />
 		<tx:transaction method="*" value="Required" />
 	</bean>
 	<service ref="trackingServiceFacade"
