@@ -4,6 +4,8 @@ add the gis-utils folder one level folder down Arcgis bin directory
 from cmd step in gis-utils folder and run:
 java -classpath .;.\* com.esrinea.utils.gis.Application
 
+make sure LA_Zones.gdb and Zones_Addresses.gdb are on drive C or change the drive in Rest call as below.
+
 REST Service sample:
 for Zones use:
 http://localhost:8090/isInFence/C/LA_Zones.gdb/LA_Zones/ID/5/-118.193821/34.07633682
