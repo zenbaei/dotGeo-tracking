@@ -4,6 +4,9 @@ add the gis-utils folder one level folder down Arcgis bin directory
 from cmd step in gis-utils folder and run:
 java -classpath .;.\* com.esrinea.utils.gis.Application
 
+to install tracking-feature
+features:addUrl mvn:com.esrinea.dotGeo/tracking-feature/1.0.0/xml/features
+
 make sure LA_Zones.gdb and Zones_Addresses.gdb are on drive C or change the drive in Rest call as below.
 
 REST Service sample:
