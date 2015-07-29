@@ -15,6 +15,7 @@
 	</bean>
 	<!-- test bean-End -->
 
+
 	<!-- GeoEventDataExtractor-Start -->
 	<bean id="geoEventDataExtractor"
 		class="com.esrinea.dotGeo.tracking.service.facade.dataMapper.GeoEventDataExtractorStaticImpl" />
@@ -27,14 +28,10 @@
 	<!-- Devices-End -->
 
 
-
-
 	<!-- ResourceLiveFeed-Start -->
 	<reference id="resourceLiveFeedService"
 		interface="com.esrinea.dotGeo.tracking.service.component.resourceLiveFeed.ResourceLiveFeedService" />
 	<!-- ResourceLiveFeed-End -->
-
-
 
 
 	<!-- SensorLiveFeed-Start -->
@@ -43,28 +40,23 @@
 	<!-- SensorLiveFeed-End -->
 
 
-
 	<!-- Sensor-Start -->
 	<reference id="sensorService"
 		interface="com.esrinea.dotGeo.tracking.service.component.sensor.SensorService" />
 	<!-- Sensor-End -->
 
 
-
 	<!-- SensorConfiguration-Start -->
 	<reference id="sensorConfigurationService"
 		interface="com.esrinea.dotGeo.tracking.service.component.sensorConfiguration.SensorConfigurationService" />
 	<!-- SensorConfiguration-End -->
-
-
-
-
+	
+	
 	<!-- Alert-Start -->
 	<reference id="alertService"
 		interface="com.esrinea.dotGeo.tracking.service.component.alert.AlertService" />
 	<!-- Alert-End -->
-
-
+	
 
 	<!-- AlertConfiguration-Start -->
 	<reference id="alertConfigurationService"
@@ -83,20 +75,24 @@
 		interface="com.esrinea.dotGeo.tracking.service.component.alertLiveFeed.AlertLiveFeedService" />
 	<!-- AlertLiveFeed-End -->
 
+
 	<!-- AlertSensorLiveFeed-Start -->
 	<reference id="alertSensorLiveFeedService"
 		interface="com.esrinea.dotGeo.tracking.service.component.alertSensorLiveFeed.AlertSensorLiveFeedService" />
 	<!-- AlertSensorLiveFeed-End -->
+
 
 	<!-- Resource-Start -->
 	<reference id="resourceService"
 		interface="com.esrinea.dotGeo.tracking.service.component.resource.ResourceService" />
 	<!-- Resource-End -->
 
+
 	<!-- ResourceGroup-Start -->
 	<reference id="resourceGroupService"
 		interface="com.esrinea.dotGeo.tracking.service.component.resourceGroup.ResourceGroupService" />
 	<!-- ResourceGroup-End -->
+
 
 	<!-- Fence-Strat -->
 	<reference id="fenceService"
