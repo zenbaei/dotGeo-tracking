@@ -81,7 +81,7 @@ public class TrackingServiceFacadeImpl implements TrackingServiceFacade {
 	 */
 	// TODO: refresh on intervals
 	// called by init-method in blueprint.xml
-	public synchronized void initializeCache() {
+	public void initializeCache() {
 		LOG.info("initializeCache is called. All active devices along with its tree will be cached.");
 		devicesCache = new HashMap<String, Device>();
 

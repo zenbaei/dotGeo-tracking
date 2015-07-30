@@ -1,0 +1,2 @@
+1- add oracle-jdbc and sqlserver-jdbc and arcgis jars under ..\ArcGIS\Server\GeoEventProcessor\deploy folder
+2- run gis-utils standalone app

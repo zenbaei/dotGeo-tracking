@@ -355,9 +355,10 @@ public class GisServiceImpl implements GisService {
 			LOG.info(String.format("GDB Datasource with name %s doesn't contain datasets.", gdbDatasource));
 			IEnumDataset datasets = workspace.getSubsets();
 			IDataset dataset = datasets.next();
-			LOG.info(String.format("Dataset Name: %s", dataset.getName()));
+			LOG.info(String.format("DataSubSet Name: %s", dataset.getName()));
 			IFeatureClass featureClass = workspace.openFeatureClass(dataset.getName());
 			featureClasses.put(dataset.getName(), featureClass);
+			LOG.info(String.format("DataSubSet with name %s has been cached.", dataset.getName()));
 		}
 		aoInit.shutdown();
 
@@ -370,7 +371,6 @@ public class GisServiceImpl implements GisService {
 			cacheGdbDataSource(gdbDatasource);
 		}
 
-		// TODO: until featureLayer is name is known it'll be with name LA_Zones
 		IFeature feature = queryFeature(featureClasses.get(datasetName), queryByField, id);
 		if (feature == null) {
 			String msg = String.format("No Feature found with criteria of %s= %s.", queryByField, id);
