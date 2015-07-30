@@ -12,9 +12,25 @@ import com.esrinea.dotGeo.tracking.service.facade.dto.EventData;
  */
 public interface TrackingServiceFacade {
 
+	/**
+	 * Extracts Data from {@link GeoEvent} into a custom object {@link EventData},<br>
+	 * then process the passed info against Device's configurations.
+	 */
 	void process(GeoEvent geoEvent) throws Exception;
-	//TODO:add description
+
+	/**
+	 * 
+	 * Retrieve all active devices along with active deviceTypes and active (not retired) sensors, sensors configurations,<br>
+	 * alerts and alerts configurations, resources and its groups then add them to map that will act as a cache for devices.
+	 * 
+	 */
 	void initializeCache();
 
+	/**
+	 * Process Received Device and check its passed information against its configurations using the cached data then acts accordingly.<br>
+	 * Note: Device info will only exist in cache if it has an active deviceType and sensorConfigurations.
+	 * 
+	 * @throws Exception
+	 */
 	void deviceFeedReceived(EventData eventData) throws Exception;
 }

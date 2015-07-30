@@ -312,7 +312,7 @@ public class GisServiceImpl implements GisService {
 			IDatasetName datasetNameOnFeatureClassName = null;
 			while (featureClassName != null) {
 				datasetNameOnFeatureClassName = (IDatasetName) featureClassName;
-				// TODD: code that loads what feature classes are in dataset name
+				// TODO: code that loads what feature classes are in dataset name
 				System.out.println("Feature Classes: " + datasetNameOnFeatureClassName.getName());
 				listFeatureClasses(workspaceFactory, workspace, datasetNameOnFeatureClassName.getName(), datasetName);
 

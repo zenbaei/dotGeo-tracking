@@ -5,7 +5,7 @@
 	<feature name="tracking" version="1.0.0" description="DotGeo Tracking Modules">
 
 		<!-- features:addurl mvn:com.esrinea.dotGeo/tracking-feature/1.0.0/xml/features -->
-
+		<!-- features:install tracking -->
 
 		<!-- feature dependencies -->
 		<feature>jpa</feature>
@@ -27,8 +27,8 @@
 		</bundle>
 		<bundle start-level="85">mvn:com.esrinea.dotGeo/tracking-model/1.0.0
 		</bundle>
-	<!-- <bundle start-level="85">mvn:com.esrinea.dotGeo/tracking-gis-utils/1.0.0 
-		</bundle> -->
+		<!-- <bundle start-level="85">mvn:com.esrinea.dotGeo/tracking-gis-utils/1.0.0 
+			</bundle> -->
 		<bundle start-level="90">mvn:com.esrinea.dotGeo/tracking-service/1.0.0
 		</bundle>
 		<bundle start-level="95">mvn:com.esrinea.dotGeo/tracking-service-facade/1.0.0

@@ -12,7 +12,7 @@ import com.esrinea.dotGeo.tracking.service.facade.dto.EventData;
 public interface GeoEventDataExtractor {
 	
 	/**
-	 * Extracts Data from {@link GeoEvent} then construct a {@link EventData}.
+	 * Extracts Data from {@link GeoEvent} into a custom object {@link EventData}.
 	 * 
 	 * @param geoEvent
 	 * @return
